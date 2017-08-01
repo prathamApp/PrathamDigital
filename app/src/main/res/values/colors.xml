@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#7A8B5A</color>
+    <color name="green">#7A8B5A</color>
+    <color name="colorPrimaryDark">#2E3B41</color>
+    //#004853
+    <color name="colorAccent">#b3c135</color>
+    <color name="splash_background">#F6F6F6</color>
+    <color name="toolbar_background">#37474f</color>
+    //#005765
+    <color name="light_grey">#d7d7db</color>
+    <color name="dark_blue">#37474f</color>
+    <color name="blue">#00BEDE</color>
+    <color name="black_20">#92000000</color>
+    <color name="light_black">#424242</color>
+    <color name="light_blue">#bfd7e7e4</color>
+    <color name="light_pink">#E7DEDE</color>
+    <color name="ghost_white">#FAFAFC</color>
+    <color name="yellow_sand">#fff1b9</color>
+    <color name="red">#FF3A41</color>
+    <color name="brand_green">#b3c135</color>
+    <color name="oslo_grey">#eb828786</color>
+    <color name="golden">#D8C372</color>
+    <color name="ttl_item_grey">#c1c4c6</color>
+    <color name="vanilla">#A8A1F7</color>
+
+    <color name="stpi_default_circle_color">#b3bdc2</color>
+    <color name="stpi_default_primary_color">#00b47c</color>
+    <color name="stpi_default_line_color">#313b49</color>
+
+    <color name="demo_light_transparent">#16000000</color>
+    <color name="demo_dark_transparent">#24000000</color>
+</resources>
