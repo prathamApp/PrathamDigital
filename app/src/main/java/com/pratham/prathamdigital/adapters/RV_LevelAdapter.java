@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pratham.prathamdigital.R;
@@ -41,17 +42,7 @@ public class RV_LevelAdapter extends RecyclerView.Adapter<RV_LevelAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        if (selectedIndex != -1 && selectedIndex == position)
-            holder.l_card.setCardBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
-        else
-            holder.l_card.setCardBackgroundColor(context.getResources().getColor(R.color.ghost_white));
         holder.l_name.setText(levels[position]);
-//        holder.l_card.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                browseAdapter_clicks.browserButtonClicked(position);
-//            }
-//        });
     }
 
     @Override
@@ -61,7 +52,7 @@ public class RV_LevelAdapter extends RecyclerView.Adapter<RV_LevelAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.l_card)
-        CardView l_card;
+        LinearLayout l_card;
         @BindView(R.id.l_name)
         TextView l_name;
 

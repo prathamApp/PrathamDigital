@@ -5,22 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.CardView
+    <RelativeLayout
         android:id="@+id/c_card"
+        android:layout_margin="5dp"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        app:cardBackgroundColor="@color/ghost_white"
-        app:cardCornerRadius="5dp"
-        android:clickable="true"
-        app:cardElevation="5dp"
-        app:cardUseCompatPadding="true">
+        android:layout_height="160dp"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:id="@+id/img_folder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/search_content"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_folder_wrapped" />
 
         <TextView
             android:id="@+id/c_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/img_folder"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:textColor="@color/black_20" />
-    </android.support.v7.widget.CardView>
+            android:textSize="17sp"
+            android:textColor="@color/ghost_white" />
+    </RelativeLayout>
 </RelativeLayout>
