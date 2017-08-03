@@ -16,6 +16,7 @@
     <color name="light_blue">#bfd7e7e4</color>
     <color name="light_pink">#E7DEDE</color>
     <color name="ghost_white">#FAFAFC</color>
+    <color name="trans_ghost_white">#c5fafafc</color>
     <color name="yellow_sand">#fff1b9</color>
     <color name="red">#FF3A41</color>
     <color name="brand_green">#b3c135</color>

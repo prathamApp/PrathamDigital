@@ -55,10 +55,10 @@ public class RV_BrowseAdapter extends RecyclerView.Adapter<RV_BrowseAdapter.View
             }
         });
         if (selectedIndex != -1 && selectedIndex == position) {
-            holder.bc_card.setBackground(context.getResources().getDrawable(R.drawable.browse_content_bkgd));
+            holder.bc_card.setBackgroundColor(context.getResources().getColor(R.color.trans_charcoal));
             holder.bc_name.setTextColor(context.getResources().getColor(R.color.ghost_white));
         } else {
-            holder.bc_card.setBackgroundColor(context.getResources().getColor(R.color.lavender));
+            holder.bc_card.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
             holder.bc_name.setTextColor(context.getResources().getColor(R.color.charcoal));
         }
     }
