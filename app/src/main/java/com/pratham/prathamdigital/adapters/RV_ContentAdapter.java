@@ -44,12 +44,12 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.c_name.setText(sub_content[position]);
-        holder.img_folder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                browseAdapter_clicks.contentButtonClicked(position);
-            }
-        });
+//        holder.img_folder.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                browseAdapter_clicks.contentButtonClicked(position);
+//            }
+//        });
     }
 
 //    public void setSelectedIndex(int ind) {
@@ -63,8 +63,8 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.img_folder)
-        ImageView img_folder;
+//        @BindView(R.id.img_folder)
+//        ImageView img_folder;
         @BindView(R.id.c_name)
         TextView c_name;
 

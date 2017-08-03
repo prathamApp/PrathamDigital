@@ -11,6 +11,7 @@ import android.view.ViewTreeObserver;
 import com.pratham.prathamdigital.adapters.RV_BrowseAdapter;
 import com.pratham.prathamdigital.adapters.RV_ContentAdapter;
 import com.pratham.prathamdigital.adapters.RV_LevelAdapter;
+import com.pratham.prathamdigital.custom.ItemDecorator;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 
 import butterknife.BindView;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
     String[] sub_content = {"khelbadi1", "goodmorning1", "hello1", "games1", "maths1", "english1",
             "khelbadi2", "goodmorning2", "hello2", "game2", "maths2", "english2"};
     String[] levels = {"level1", "level2", "level3", "level4"};
+    private ItemDecorator itemDecorator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
         rv_browseAdapter = new RV_BrowseAdapter(this, this, name);
         rv_contentAdapter = new RV_ContentAdapter(this, this, sub_content);
         rv_levelAdapter = new RV_LevelAdapter(this, this, levels);
+        //Negative margin!----for overlapping
+        itemDecorator = new ItemDecorator(-18);
         rv_browse_contents.getViewTreeObserver().addOnPreDrawListener(preDrawListenerBrowse);
     }
 
@@ -55,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
         LinearLayoutManager layoutManager2 = new GridLayoutManager(this, 3);
         rv_contents.setLayoutManager(layoutManager2);
         LinearLayoutManager layoutManager3 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rv_level.addItemDecoration(itemDecorator);
         rv_level.setLayoutManager(layoutManager3);
 
         //inflating the browser content recycler view

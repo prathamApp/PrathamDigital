@@ -32,4 +32,5 @@
     <color name="demo_dark_transparent">#24000000</color>
     <color name="lavender">#D8D2E1</color>
     <color name="charcoal">#34435E</color>
+    <color name="trans_charcoal">#eb34435e</color>
 </resources>

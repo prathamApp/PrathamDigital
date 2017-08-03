@@ -4,30 +4,32 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <com.pratham.prathamdigital.custom.Label_LinearLayout
         android:id="@+id/l_card"
         android:layout_width="120dp"
         android:layout_height="35dp"
         android:layout_margin="3dp"
+        android:padding="2dp"
+        android:orientation="horizontal"
         android:weightSum="1">
 
-        <TextView
+        <com.pratham.prathamdigital.custom.Label_TextView
             android:id="@+id/l_name"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_weight=".78"
-            android:background="@drawable/level_tab_bkgd"
+            android:layout_weight="1"
             android:gravity="center"
+            android:text="sdsdsdsd"
             android:maxLines="1"
             android:padding="3dp"
             android:textColor="@color/charcoal" />
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".22"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/ic_play_arrow_wrapped" />
-    </LinearLayout>
+        <!--<ImageView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight=".22"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--app:srcCompat="@drawable/ic_play_arrow_wrapped" />-->
+    </com.pratham.prathamdigital.custom.Label_LinearLayout>
 </RelativeLayout>
