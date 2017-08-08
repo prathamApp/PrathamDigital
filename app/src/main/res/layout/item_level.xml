@@ -6,8 +6,8 @@
 
     <com.pratham.prathamdigital.custom.Label_LinearLayout
         android:id="@+id/l_card"
-        android:layout_width="120dp"
-        android:layout_height="35dp"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
         android:layout_margin="3dp"
         android:padding="2dp"
         android:orientation="horizontal"
@@ -23,7 +23,7 @@
             android:text="sdsdsdsd"
             android:maxLines="1"
             android:padding="3dp"
-            android:textColor="@color/charcoal" />
+            android:textColor="@color/ghost_white" />
 
         <!--<ImageView-->
             <!--android:layout_width="0dp"-->

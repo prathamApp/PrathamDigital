@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
         rv_levelAdapter = new RV_LevelAdapter(this, this, levels);
         //Negative margin!----for overlapping
         itemDecorator = new ItemDecorator(-18);
+
         rv_browse_contents.getViewTreeObserver().addOnPreDrawListener(preDrawListenerBrowse);
     }
 
