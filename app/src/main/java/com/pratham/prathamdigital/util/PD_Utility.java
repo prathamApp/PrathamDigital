@@ -6,6 +6,7 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -14,7 +15,9 @@ import android.content.pm.Signature;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
@@ -30,11 +33,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -46,7 +53,10 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.Toast;
+
+import com.pratham.prathamdigital.R;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -1160,36 +1170,17 @@ public class PD_Utility {
         return outtoRight;
     }
 
-    //    @OnClick(R.id.btn_flter)
-//    public void showOptions() {
-//        final View dialogView = View.inflate(this, R.layout.dialog_filter_option_layout, null);
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setView(dialogView);
-//        final AlertDialog dialog = builder.create();
-//        dialog.setCanceledOnTouchOutside(false);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-//        layoutParams.gravity = Gravity.TOP | Gravity.RIGHT;
-//        layoutParams.x = 100;
-//        layoutParams.y = 120;
-////        dialog.getWindow().getAttributes().windowAnimations = R.style.PauseDialogAnimation;
-//        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-//            @Override
-//            public void onShow(DialogInterface dialogInterface) {
-//                revealShow(dialogView, true, null);
-//            }
-//        });
-//        Button apply = (Button) dialogView.findViewById(R.id.btn_apply_filter);
-//        apply.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                revealShow(dialogView, false, dialog);
-//            }
-//        });
-//        dialog.show();
-//    }
+    public static void showLoader(Context context) {
+        final View dialogView = View.inflate(context, R.layout.sunbaby_dialog, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(dialogView);
+        final AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
 
 //    private void revealShow(View rootView, boolean reveal, final AlertDialog dialog) {
 //        final View view = rootView.findViewById(R.id.filter_popup);

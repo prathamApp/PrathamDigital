@@ -8,7 +8,7 @@
     <color name="splash_background">#F6F6F6</color>
     <color name="toolbar_background">#37474f</color>
     //#005765
-    <color name="light_grey">#d7d7db</color>
+    <color name="lightGrey">#d7d7db</color>
     <color name="dark_blue">#37474f</color>
     <color name="blue">#00BEDE</color>
     <color name="black_20">#92000000</color>
@@ -34,4 +34,14 @@
     <color name="lavender">#D8D2E1</color>
     <color name="charcoal">#34435E</color>
     <color name="trans_charcoal">#eb34435e</color>
+
+    //chips
+    <color name="chip">#333</color>
+    <color name="dark_grey">#333333</color>
+    <color name="light_grey">#bbbbbb</color>
+    <color name="white">#ffffff</color>
+    <color name="selected_color">#ffffaa</color>
+    <color name="selected_font_color">#999933</color>
+    <color name="deselected_color">#aaffaa</color>
+    <color name="deselected_font_color">#339933</color>
 </resources>

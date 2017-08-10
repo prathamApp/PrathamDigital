@@ -45,6 +45,24 @@
             app:srcCompat="@drawable/recommend_img_selector" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_dash_search"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/library_bkgd_selector"
+        android:clickable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            app:srcCompat="@drawable/search_50px_selector" />
+    </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_ages_filter"
         android:layout_width="wrap_content"

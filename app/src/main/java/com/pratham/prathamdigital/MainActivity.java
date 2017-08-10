@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import com.pratham.prathamdigital.adapters.RV_BrowseAdapter;
 import com.pratham.prathamdigital.adapters.RV_ContentAdapter;
 import com.pratham.prathamdigital.adapters.RV_LevelAdapter;
 import com.pratham.prathamdigital.custom.ItemDecorator;
+import com.pratham.prathamdigital.custom.chips.ChipCloud;
 import com.pratham.prathamdigital.custom.reveal.AnimatorPath;
 import com.pratham.prathamdigital.custom.reveal.PathEvaluator;
 import com.pratham.prathamdigital.custom.reveal.PathPoint;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
     ConstraintLayout root_search;
     @BindView(R.id.img_content_search)
     ImageView img_content_search;
+    @BindView(R.id.search_chipcloud)
+    ChipCloud search_chipcloud;
 
     RV_BrowseAdapter rv_browseAdapter;
     RV_ContentAdapter rv_contentAdapter;
@@ -55,29 +59,29 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
             "khelbadi2", "goodmorning2", "hello2", "game2", "maths2", "english2"};
     String[] levels = {"level1", "level2", "level3", "level4"};
     private ItemDecorator itemDecorator;
+    private boolean isInitialized;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        //Initializing the adapters
-        rv_browseAdapter = new RV_BrowseAdapter(this, this, name);
-        rv_contentAdapter = new RV_ContentAdapter(this, this, sub_content);
-        rv_levelAdapter = new RV_LevelAdapter(this, this, levels);
-        //Negative margin!----for overlapping
-        itemDecorator = new ItemDecorator(-18);
-
-        rv_browse_contents.getViewTreeObserver().addOnPreDrawListener(preDrawListenerBrowse);
+        isInitialized = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        if (!isInitialized) {
+            //Initializing the adapters
+            rv_browseAdapter = new RV_BrowseAdapter(this, this, name);
+            rv_contentAdapter = new RV_ContentAdapter(this, this, sub_content);
+            rv_levelAdapter = new RV_LevelAdapter(this, this, levels);
+            //Negative margin!----for overlapping
+            itemDecorator = new ItemDecorator(-18);
+            rv_browse_contents.getViewTreeObserver().addOnPreDrawListener(preDrawListenerBrowse);
+            isInitialized = true;
+        }
         //Defining the layouts for each recycler view
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rv_browse_contents.setLayoutManager(layoutManager);
@@ -173,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
         img_content_search.setVisibility(View.INVISIBLE);
         root_search.setVisibility(View.VISIBLE);
         animator.start();
+        search_chipcloud.addChips(sub_content);
     }
 
     @OnClick(R.id.img_search)
@@ -189,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
         final int cY = maskBounds.top;
 
         final Animator circularReveal = ViewAnimationUtils.createCircularReveal(root_search, cX, cY,
-                (float) Math.hypot(maskBounds.width() , maskBounds.height() ),
+                (float) Math.hypot(maskBounds.width(), maskBounds.height()),
                 img_content_search.getWidth() / 2f, View.LAYER_TYPE_HARDWARE);
         final float c0X = bounds.centerX() - maskBounds.centerX();
         final float c0Y = bounds.centerY() - maskBounds.centerY();
@@ -214,57 +219,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
         set.start();
     }
 
-//    @OnClick(R.id.reset) void resetUi(View resetCard) {
-//        cardsLine.setVisibility(View.INVISIBLE);
-//
-//        final View target = ButterKnife.findById(this, R.id.activator);
-//
-//        // Coordinates of circle initial point
-//        final ViewGroup parent = (ViewGroup) activatorMask.getParent();
-//        final Rect bounds = new Rect();
-//        final Rect maskBounds = new Rect();
-//
-//        target.getDrawingRect(bounds);
-//        activatorMask.getDrawingRect(maskBounds);
-//        parent.offsetDescendantRectToMyCoords(target, bounds);
-//        parent.offsetDescendantRectToMyCoords(activatorMask, maskBounds);
-//
-//        maskElevation = activatorMask.getCardElevation();
-//        activatorMask.setCardElevation(0);
-//
-//        final int cX = maskBounds.centerX();
-//        final int cY = maskBounds.centerY();
-//
-//        final Animator circularReveal = ViewAnimationUtils.createCircularReveal(activatorMask, cX, cY,
-//                (float) Math.hypot(maskBounds.width() * .5f, maskBounds.height() * .5f),
-//                target.getWidth() / 2f, View.LAYER_TYPE_HARDWARE);
-//
-//        final float c0X = bounds.centerX() - maskBounds.centerX();
-//        final float c0Y = bounds.centerY() - maskBounds.centerY();
-//
-//        AnimatorPath path = new AnimatorPath();
-//        path.moveTo(0, 0);
-//        path.curveTo(0, 0, 0, c0Y, c0X, c0Y);
-//
-//        ObjectAnimator pathAnimator = ObjectAnimator.ofObject(this, "maskLocation", new PathEvaluator(),
-//                path.getPoints().toArray());
-//
-//        AnimatorSet set = new AnimatorSet();
-//        set.playTogether(circularReveal, pathAnimator);
-//        set.setInterpolator(new FastOutSlowInInterpolator());
-//        set.setDuration(SLOW_DURATION);
-//        set.addListener(new AnimatorListenerAdapter() {
-//            @Override public void onAnimationEnd(Animator animation) {
-//                activatorMask.setCardElevation(maskElevation);
-//                activatorMask.setVisibility(View.INVISIBLE);
-//
-//                circlesLine.setVisibility(View.VISIBLE);
-//                executeCirclesDropDown();
-//                target.setEnabled(true);
-//            }
-//        });
-//        set.start();
-//    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
-
+    }
 }
