@@ -7,45 +7,75 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="5dp"
+        android:layout_height="230dp"
         android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
         android:clickable="true"
         app:cardBackgroundColor="@color/lavender"
         app:cardCornerRadius="5dp"
         app:cardElevation="5dp"
         app:cardUseCompatPadding="true">
 
-        <ImageView
+        <RelativeLayout
+            android:id="@+id/item_parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="center"
-            android:src="@drawable/khelbadi"/>
-
-        <RelativeLayout
-            android:layout_width="120dp"
-            android:layout_height="130dp"
-            android:layout_gravity="bottom|right"
-            android:background="@drawable/curved_bkgd">
+            android:clickable="true"
+            android:background="@drawable/pink_blue_gradient">
 
             <ImageView
-                android:id="@+id/c_img_download"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                app:srcCompat="@drawable/ic_download_wrapped" />
+                android:id="@+id/item_content_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/khelbadi" />
 
-            <TextView
-                android:id="@+id/c_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/c_img_download"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:maxLines="2"
-                android:textColor="@color/ghost_white"
-                android:textSize="17sp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true">
+
+                <com.pratham.prathamdigital.custom.progress_indicators.ProgressLayout
+                    android:id="@+id/item_progressLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:autoProgress="true"
+                    app:emptyColor="@color/trans_charcoal"
+                    app:loadedColor="@color/lavender"
+                    app:maxProgress="100" />
+
+                <ImageView
+                    android:id="@+id/c_img_download"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="5dp"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/ic_download_wrapped" />
+
+                <ProgressBar
+                    android:id="@+id/item_progressbar"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/c_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/c_img_download"
+                    android:layout_toStartOf="@+id/c_img_download"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:padding="3dp"
+                    android:text="dskjaksjaksjaksjaskjaskjaksjaksaskajsakjsakjsaksjakjsakjsaksjaksjasakjsakjsakjsaksj"
+                    android:textColor="@color/ghost_white"
+                    android:textSize="18sp" />
+            </RelativeLayout>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </RelativeLayout>

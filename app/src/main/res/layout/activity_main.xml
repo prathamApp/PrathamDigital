@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/kids_wallpaper_one"
-    tools:context="com.pratham.prathamdigital.MainActivity">
+    tools:context="com.pratham.prathamdigital.activities.MainActivity">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/root_content"
@@ -15,7 +15,7 @@
 
         <RelativeLayout
             android:id="@+id/rl_browser"
-            android:layout_width="200dp"
+            android:layout_width="170dp"
             android:layout_height="0dp"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"

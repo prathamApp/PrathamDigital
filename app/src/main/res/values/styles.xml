@@ -13,7 +13,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/charcoal</item>
         <item name="colorPrimaryDark">@color/charcoal</item>
-        <item name="colorAccent">@color/charcoal</item>
+        <item name="colorAccent">@color/ghost_white</item>
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
     </style>
 

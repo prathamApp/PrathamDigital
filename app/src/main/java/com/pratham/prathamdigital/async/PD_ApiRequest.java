@@ -1,6 +1,7 @@
 package com.pratham.prathamdigital.async;
 
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -16,6 +17,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
+import com.pratham.prathamdigital.util.PD_Utility;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,8 +33,7 @@ import java.util.Map;
 public class PD_ApiRequest {
     Context mContext;
     VolleyResult_JSON volleyResult = null;
-//    VolleyResult_String volleyResult_string = null;
-//    private SpotsDialog progressDialog;
+    //    VolleyResult_String volleyResult_string = null;
 
     public PD_ApiRequest(Context context, VolleyResult_JSON volleyResult) {
         this.mContext = context;
@@ -143,7 +144,7 @@ public class PD_ApiRequest {
                 @Override
                 public void onResponse(JSONObject response) {
                     if (volleyResult != null)
-                        volleyResult.notifySuccess(requestType, response);
+                        volleyResult.notifySuccess(requestType, response.toString());
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -255,43 +256,23 @@ public class PD_ApiRequest {
 //        }
 //    }
 
-    public void getDataVolley(final String requestType, String url, final boolean showProgressDialog) {
+    public void getDataVolley(final String requestType, String url) {
         try {
-            if (showProgressDialog) {
-//                if (progressDialog != null)
-//                    progressDialog.show();
-            }
             RequestQueue queue = Volley.newRequestQueue(mContext);
-//            FE_Utility.DEBUG_LOG(1, "volley_url::", url);
+            PD_Utility.DEBUG_LOG(1, "volley_url::", url);
             StringRequest jsonObj = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-//                    if (showProgressDialog) {
-//                        if (progressDialog != null)
-//                            progressDialog.dismiss();
-//                    }
-//                    if (volleyResult_string != null)
-//                        volleyResult_string.responceSuccess(requestType, response);
+                    if (volleyResult != null)
+                        volleyResult.notifySuccess(requestType, response);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-//                    if (progressDialog != null)
-//                        progressDialog.dismiss();
-//                    if (volleyResult_string != null)
-//                        volleyResult_string.responceError(requestType, error);
+                    if (volleyResult != null)
+                        volleyResult.notifyError(requestType, error);
                 }
-            }) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-//                    FE_SharedPreference preference = new FE_SharedPreference(mContext, null);
-//                    FE_Utility.DEBUG_LOG(1, "header_token::", preference.getStringValue(FE_Constant.PREF_KEY_USER_TOKEN, "no_token"));
-                    headers.put("Content-Type", "application/x-www-form-urlencoded");
-//                    headers.put("Authorization", "Token " + preference.getStringValue(FE_Constant.PREF_KEY_USER_TOKEN, "no_token"));
-                    return headers;
-                }
-            };
+            });
             jsonObj.setRetryPolicy(new DefaultRetryPolicy(
                     6000,  /*timeout*/
                     3,      /*MAX_RETRIES*/

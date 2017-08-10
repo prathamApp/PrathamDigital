@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="search_tags">
+        <item>English</item>
+        <item>Maths</item>
+        <item>Games</item>
+        <item>Science</item>
+        <item>Dekho or Seekho</item>
+    </string-array>
+</resources>

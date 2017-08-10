@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
-import com.pratham.prathamdigital.MainActivity;
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.adapters.RV_AgeFilterAdapter;
+import com.pratham.prathamdigital.adapters.RV_ContentAdapter;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 
 import butterknife.BindView;
@@ -86,6 +86,11 @@ public class DashBoard_Activity extends AppCompatActivity implements MainActivit
 
     @Override
     public void contentButtonClicked(int position) {
+
+    }
+
+    @Override
+    public void downloadClick(int position, RV_ContentAdapter.ViewHolder holder) {
 
     }
 

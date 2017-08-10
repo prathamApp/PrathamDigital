@@ -1,10 +1,14 @@
 package com.pratham.prathamdigital.async;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.ProgressBar;
 
+import com.pratham.prathamdigital.custom.progress_indicators.ProgressLayout;
+import com.pratham.prathamdigital.interfaces.ProgressUpdate;
 import com.pratham.prathamdigital.util.UnzipUtil;
 
 import java.io.BufferedInputStream;
@@ -26,16 +30,17 @@ import java.util.zip.ZipFile;
 public class ZipDownloader {
 
     private String url = "http://hlearning.openiscool.org/content/games/AwazChitraH.zip";
-    private String storezipFileLocation = Environment.getExternalStorageDirectory()+"/PrathamContents/";
-    private String directoryName = Environment.getExternalStorageDirectory()+"/unzip/";
-    private ProgressBar progressBar;
+    private String storezipFileLocation = Environment.getExternalStorageDirectory() + "/PrathamContents/";
+    private String directoryName = Environment.getExternalStorageDirectory() + "/unzip/";
+    private ProgressUpdate progressUpdate;
+    private Context context;
 
-    public ZipDownloader(ProgressBar progressBar) {
+    public ZipDownloader(ProgressUpdate progressUpdate) {
 //            this.url = url;
 //            this.storezipFileLocation = location;
-        this.progressBar = progressBar;
+        this.progressUpdate = progressUpdate;
         File testDirectory = new File(storezipFileLocation);
-        if(!testDirectory.exists()){
+        if (!testDirectory.exists()) {
             testDirectory.mkdir();
         }
         File zipDirectory = new File(directoryName);
@@ -51,34 +56,35 @@ public class ZipDownloader {
 
         @Override
         protected String doInBackground(String... aurl) {
-            int count;
+            int count, latestPercentDone;
+            int percentDone = -1;
             try {
-                System.out.println("lucy download");
+                System.out.println("download");
                 URL url = new URL(aurl[0]);
-                System.out.println("lucy download1");
                 URLConnection conexion = url.openConnection();
-                System.out.println("lucy download2");
                 conexion.setDoInput(true);
                 conexion.connect();
                 int lenghtOfFile = conexion.getContentLength();
-                System.out.println("lucy download3");
+                progressUpdate.lengthOfTheFile(lenghtOfFile);
                 InputStream input = new BufferedInputStream(url.openStream());
 
-                OutputStream output = new FileOutputStream(storezipFileLocation+"/file1.zip");
-                System.out.println("lucy download4");
+                OutputStream output = new FileOutputStream(storezipFileLocation + "/file1.zip");
                 byte data[] = new byte[1024];
                 long total = 0;
-                System.out.println("lucy download5");
                 while ((count = input.read(data)) != -1) {
                     total += count;
-                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+                    latestPercentDone = (int) Math.round(total / lenghtOfFile * 100.0);
+                    if (percentDone != latestPercentDone) {
+                        percentDone = latestPercentDone;
+                        publishProgress("" + percentDone);
+                    }
+//                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
                     output.write(data, 0, count);
                 }
-                System.out.println("lucy download6");
                 output.close();
                 input.close();
                 result = "true";
-                System.out.println("lucy download done");
+                System.out.println("download done");
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -90,7 +96,8 @@ public class ZipDownloader {
 
         protected void onProgressUpdate(String... progress) {
             Log.d("ANDRO_ASYNC", progress[0]);
-            progressBar.setProgress(Integer.parseInt(progress[0]));
+            progressUpdate.onProgressUpdate(Integer.parseInt(progress[0]));
+//            progressLayout.setCurrent6Progress(Integer.parseInt(progress[0]));
         }
 
         @Override
@@ -109,7 +116,7 @@ public class ZipDownloader {
     }
 
     public void unzip() throws IOException {
-        new UnZipTask().execute(storezipFileLocation+"/file1.zip", directoryName);
+        new UnZipTask().execute(storezipFileLocation + "/file1.zip", directoryName);
     }
 
     private class UnZipTask extends AsyncTask<String, Void, Boolean> {
@@ -129,7 +136,7 @@ public class ZipDownloader {
                 }
 
                 System.out.println("lucy download UnZipTask util");
-                UnzipUtil d = new UnzipUtil(storezipFileLocation+"/file1.zip", directoryName);
+                UnzipUtil d = new UnzipUtil(storezipFileLocation + "/file1.zip", directoryName);
                 d.unzip();
                 System.out.println("lucy download UnZipTask util done");
 
@@ -144,8 +151,8 @@ public class ZipDownloader {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             try {
-                File file=new File(storezipFileLocation+"/file1.zip");
-                boolean deleted=file.delete();
+                File file = new File(storezipFileLocation + "/file1.zip");
+                boolean deleted = file.delete();
             } catch (Exception e) {
                 e.printStackTrace();
             }

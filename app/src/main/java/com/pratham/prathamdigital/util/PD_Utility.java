@@ -1170,7 +1170,7 @@ public class PD_Utility {
         return outtoRight;
     }
 
-    public static void showLoader(Context context) {
+    public static AlertDialog showLoader(Context context) {
         final View dialogView = View.inflate(context, R.layout.sunbaby_dialog, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -1179,7 +1179,7 @@ public class PD_Utility {
         dialog.setCanceledOnTouchOutside(false);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+        return dialog;
     }
 
 //    private void revealShow(View rootView, boolean reveal, final AlertDialog dialog) {

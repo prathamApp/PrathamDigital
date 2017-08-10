@@ -2,7 +2,7 @@ package com.pratham.prathamdigital.util;
 
 public class PD_Constant {
 
-    public static final String BASE_URL = "http://35.162.11.219/";
+    public static final String BASE_URL = "http://prodigi.openiscool.org/api/pos/";
 
     // POST Request Strings
     public static final String KEY_USER_USERNAME = "username";
@@ -52,7 +52,7 @@ public class PD_Constant {
     public static final String KEY_ISORDER = "is_order";
     public static final String KEY_ISDIETPLAN = "is_dietplan";
     public static final String KEY_TYPE = "type";
-    public static final String KEY_REFER_CODE= "refer_code";
+    public static final String KEY_REFER_CODE = "refer_code";
     public static final String FE_FACEBOOK = "https://www.facebook.com/FirstEat/";
     public static final String FE_TWITTER = "https://twitter.com/firsteat_in";
     public static final String FE_INSTA = "https://www.instagram.com/firsteat_in/";
@@ -90,25 +90,8 @@ public class PD_Constant {
 
     public static enum URL {
 
-        SIGNUP(BASE_URL + "appuser/appusers/"),
-        LOGIN(BASE_URL + "appuser/mobile-login/"),
-        VERIFY(BASE_URL + "appuser/mobile-verify/"),
-        LOCATION(BASE_URL + "appuser/location/"),
-        KITCHEN_AT_LOCATION(BASE_URL + "kitchen/location/"),
-        MEAL_ITEM_ADDONS(BASE_URL + "kitchen/meal-item?"),
-        USER_ADDRESS(BASE_URL + "appuser/useraddress/"),
-        KITCHEN_TIMESLOT(BASE_URL + "kitchen/kitchenslots/?kitchen="),
-        PLACE_ORDER(BASE_URL + "order/orders/"),
-        DIETITIAN(BASE_URL + "dietitian/dietitians/"),
-        KITCHEN_FILTERS(BASE_URL + "kitchen/tags/"),
-        DIET_PLAN(BASE_URL + "dietplan/plans/"),
-        DAILY_PLAN(BASE_URL + "subscription/plans/"),
-        DAILY_PLAN_MENU(BASE_URL + "subscription/plan-menu/?"),
-        SHOW_PLAN(BASE_URL + "dietplan/userdietplan/"),
-        SHOW_DAILY_PLAN(BASE_URL + "subscription/usersubscription/"),
-        GCM(BASE_URL + "fcmdevices/"),
-        APP_SCREEN(BASE_URL + "applayout/screen/"),
-        BMI("https://2-dot-feapiserver.appspot.com/firsteatapi/diet-form/");
+        BROWSE_BY_ID(BASE_URL + "get?id="),
+        SEARCH_BY_KEYWORD(BASE_URL + "GetSearchList?");
 
         private final String name;
 
