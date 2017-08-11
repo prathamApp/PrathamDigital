@@ -18,4 +18,5 @@ public interface MainActivityAdapterListeners {
     public void contentButtonClicked(int position);
     public void levelButtonClicked(int position);
     public void downloadClick(int position, RecyclerView.ViewHolder holder);
+    public void downloadComplete(int position);
 }

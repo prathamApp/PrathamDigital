@@ -146,6 +146,11 @@ public class Fragment_Recommended extends Fragment implements MainActivityAdapte
 
     }
 
+    @Override
+    public void downloadComplete(int position) {
+
+    }
+
     private void showDialog() {
         if (dialog == null)
             dialog = PD_Utility.showLoader(getActivity());

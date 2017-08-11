@@ -30,22 +30,22 @@ import java.util.zip.ZipFile;
  */
 public class ZipDownloader {
 
-    private String url;
-    private String filename;
-    private String storezipFileLocation;
-    private ProgressUpdate progressUpdate;
-    private Context context;
+    private final File mydir;
+    String url;
+    String filename;
+    ProgressUpdate progressUpdate;
+    Context context;
+    private File fileWithinMyDir;
 
-    public ZipDownloader(ProgressUpdate progressUpdate, String url, String foldername, String filename) {
+    public ZipDownloader(Context context, ProgressUpdate progressUpdate, String url, String foldername, String filename) {
+        this.context = context;
         this.url = url;
         PD_Utility.DEBUG_LOG(1, "url:::", url);
         this.filename = filename;
-        this.storezipFileLocation = Environment.getExternalStorageDirectory() + "/PrathamContents/" + foldername;
         this.progressUpdate = progressUpdate;
-        File testDirectory = new File(storezipFileLocation);
-        if (!testDirectory.exists()) {
-            testDirectory.mkdir();
-        }
+        mydir = context.getDir("Pratham" + foldername, Context.MODE_PRIVATE); //Creating an internal dir;
+        if (mydir.exists()) mydir.mkdirs();
+        Log.d("internal_file", mydir.getAbsolutePath());
         DownloadZipfile mew = new DownloadZipfile();
         mew.execute(url);
     }
@@ -66,14 +66,11 @@ public class ZipDownloader {
                 int lenghtOfFile = conexion.getContentLength();
                 progressUpdate.lengthOfTheFile(lenghtOfFile);
                 InputStream input = new BufferedInputStream(url.openStream());
-
-                OutputStream output = new FileOutputStream(storezipFileLocation + "/" + filename);
+                fileWithinMyDir = new File(mydir, filename); //Getting a file within the dir.
+                OutputStream output = new FileOutputStream(fileWithinMyDir);
                 byte data[] = new byte[1024];
                 long total = 0;
                 while ((count = input.read(data)) != -1) {
-                    if (isCancelled()) {
-                        return null;
-                    }
                     output.write(data, 0, count);
                     if (lenghtOfFile > 0) {
                         total += count;
@@ -120,14 +117,14 @@ public class ZipDownloader {
     }
 
     public void unzip() throws IOException {
-        new UnZipTask().execute(storezipFileLocation + "/" + filename, storezipFileLocation);
+        Log.d("internal_file", fileWithinMyDir.getAbsolutePath());
+        new UnZipTask().execute(fileWithinMyDir.getAbsolutePath(), mydir.getAbsolutePath());
     }
 
     private class UnZipTask extends AsyncTask<String, Void, Boolean> {
         @SuppressWarnings("rawtypes")
         @Override
         protected Boolean doInBackground(String... params) {
-            System.out.println("lucy download UnZipTask");
             String filePath = params[0];
             String destinationPath = params[1];
 
@@ -138,9 +135,7 @@ public class ZipDownloader {
                     ZipEntry entry = (ZipEntry) e.nextElement();
                     unzipEntry(zipfile, entry, destinationPath);
                 }
-
-                System.out.println("lucy download UnZipTask util");
-                UnzipUtil d = new UnzipUtil(storezipFileLocation + "/" + filename, storezipFileLocation);
+                UnzipUtil d = new UnzipUtil(fileWithinMyDir.getAbsolutePath(), mydir.getAbsolutePath());
                 d.unzip();
                 System.out.println("lucy download UnZipTask util done");
 
@@ -155,8 +150,9 @@ public class ZipDownloader {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             try {
-                File file = new File(storezipFileLocation + "/" + filename);
+                File file = new File(fileWithinMyDir.getAbsolutePath());
                 boolean deleted = file.delete();
+                if (deleted) Log.d("file:::", "deleted");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -164,7 +160,7 @@ public class ZipDownloader {
 
         private void unzipEntry(ZipFile zipfile, ZipEntry entry, String outputDir) throws IOException {
             if (entry.isDirectory()) {
-                createDir(new File(outputDir, entry.getName()));
+                createDir(new File(outputDir, "/"+entry.getName()));
                 return;
             }
 

@@ -86,6 +86,7 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
                 holder.item_progressLayout.stop();
                 holder.item_progressbar.setVisibility(View.INVISIBLE);
                 progress = 0;
+                browseAdapter_clicks.downloadComplete(position);
             }
 
             @Override

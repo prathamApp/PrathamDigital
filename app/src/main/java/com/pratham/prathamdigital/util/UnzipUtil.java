@@ -20,7 +20,7 @@ public class UnzipUtil {
         this.zipFile = zipFile;
         this.location = location;
 
-        dirChecker("");
+        dirChecker(location);
     }
 
     public void unzip() {
@@ -29,11 +29,12 @@ public class UnzipUtil {
             ZipInputStream zin = new ZipInputStream(fin);
             ZipEntry ze = null;
             while ((ze = zin.getNextEntry()) != null) {
-                Log.v("Decompress", "Unzipping " + ze.getName());
+                Log.d("Decompress", "Unzipping " + ze.getName());
                 if (ze.isDirectory()) {
                     dirChecker(ze.getName());
+                    Log.d("unziputil::", "dir created");
                 } else {
-                    FileOutputStream fout = new FileOutputStream(location + ze.getName());
+                    FileOutputStream fout = new FileOutputStream(location + "/" + ze.getName());
                     byte[] buffer = new byte[8192];
                     int len;
                     while ((len = zin.read(buffer)) != -1) {
@@ -50,7 +51,7 @@ public class UnzipUtil {
     }
 
     private void dirChecker(String dir) {
-        File f = new File(location + dir);
+        File f = new File(dir);
         if (!f.isDirectory()) {
             f.mkdirs();
         }

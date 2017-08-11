@@ -178,6 +178,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
 //        showProgressOnNotification(position);
     }
 
+    @Override
+    public void downloadComplete(int position) {
+        arrayList_content.remove(position);
+        rv_contentAdapter.notifyItemRemoved(position);
+    }
+
     private void showProgressOnNotification(final int position) {
         // configure the intent
         Intent intent = new Intent(this, MainActivity.class);
@@ -424,11 +430,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
                 JSONObject jsonObject = new JSONObject(response);
                 Modal_DownloadContent download_content = gson.fromJson(jsonObject.toString(), Modal_DownloadContent.class);
                 PD_Utility.DEBUG_LOG(1, TAG, "nodelist_length:::" + download_content.getNodelist().size());
-                PD_Utility.DEBUG_LOG(1, TAG, "filename:::" + download_content.getFoldername());
+                PD_Utility.DEBUG_LOG(1, TAG, "foldername:::" + download_content.getFoldername());
                 String fileName = download_content.getDownloadurl().substring(download_content.getDownloadurl().lastIndexOf('/') + 1);
                 PD_Utility.DEBUG_LOG(1, TAG, "filename:::" + fileName);
                 if (download_content.getDownloadurl().length() > 0) {
-                    new ZipDownloader(MainActivity.this, download_content.getDownloadurl(),
+                    new ZipDownloader(MainActivity.this, MainActivity.this, download_content.getDownloadurl(),
                             download_content.getFoldername(), fileName);
                 }
             }
