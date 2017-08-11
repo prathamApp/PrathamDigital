@@ -26,7 +26,7 @@ public class Label_TextView extends android.support.v7.widget.AppCompatTextView{
     @Override
     protected void onDraw(Canvas canvas) {
         Paint mPaint = new Paint();
-        int color = getResources().getColor(R.color.charcoal);
+        int color = getResources().getColor(R.color.ghost_white);
 
         mPaint.setColor(color);
         Path mPath = new Path();

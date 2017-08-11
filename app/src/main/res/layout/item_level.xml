@@ -4,25 +4,28 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.pratham.prathamdigital.custom.Label_LinearLayout
+    <LinearLayout
         android:id="@+id/l_card"
-        android:layout_width="200dp"
-        android:layout_height="60dp"
-        android:layout_margin="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_margin="2dp"
+        android:background="@drawable/level_tab_bkgd"
+        android:minWidth="90dp"
         android:orientation="horizontal"
         android:padding="2dp"
         android:weightSum="1">
 
-        <com.pratham.prathamdigital.custom.Label_TextView
+        <TextView
             android:id="@+id/l_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
             android:maxLines="1"
-            android:padding="3dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:text="sdsdsdsd"
-            android:textColor="@color/ghost_white" />
-    </com.pratham.prathamdigital.custom.Label_LinearLayout>
+            android:textColor="@color/charcoal" />
+    </LinearLayout>
 </RelativeLayout>

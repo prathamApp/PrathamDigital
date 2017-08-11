@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 
 import com.pratham.prathamdigital.custom.progress_indicators.ProgressLayout;
 import com.pratham.prathamdigital.interfaces.ProgressUpdate;
+import com.pratham.prathamdigital.util.PD_Utility;
 import com.pratham.prathamdigital.util.UnzipUtil;
 
 import java.io.BufferedInputStream;
@@ -29,23 +30,21 @@ import java.util.zip.ZipFile;
  */
 public class ZipDownloader {
 
-    private String url = "http://hlearning.openiscool.org/content/games/AwazChitraH.zip";
-    private String storezipFileLocation = Environment.getExternalStorageDirectory() + "/PrathamContents/";
-    private String directoryName = Environment.getExternalStorageDirectory() + "/unzip/";
+    private String url;
+    private String filename;
+    private String storezipFileLocation;
     private ProgressUpdate progressUpdate;
     private Context context;
 
-    public ZipDownloader(ProgressUpdate progressUpdate) {
-//            this.url = url;
-//            this.storezipFileLocation = location;
+    public ZipDownloader(ProgressUpdate progressUpdate, String url, String foldername, String filename) {
+        this.url = url;
+        PD_Utility.DEBUG_LOG(1, "url:::", url);
+        this.filename = filename;
+        this.storezipFileLocation = Environment.getExternalStorageDirectory() + "/PrathamContents/" + foldername;
         this.progressUpdate = progressUpdate;
         File testDirectory = new File(storezipFileLocation);
         if (!testDirectory.exists()) {
             testDirectory.mkdir();
-        }
-        File zipDirectory = new File(directoryName);
-        if (!zipDirectory.exists()) {
-            zipDirectory.mkdir();
         }
         DownloadZipfile mew = new DownloadZipfile();
         mew.execute(url);
@@ -68,18 +67,23 @@ public class ZipDownloader {
                 progressUpdate.lengthOfTheFile(lenghtOfFile);
                 InputStream input = new BufferedInputStream(url.openStream());
 
-                OutputStream output = new FileOutputStream(storezipFileLocation + "/file1.zip");
+                OutputStream output = new FileOutputStream(storezipFileLocation + "/" + filename);
                 byte data[] = new byte[1024];
                 long total = 0;
                 while ((count = input.read(data)) != -1) {
-                    total += count;
-                    latestPercentDone = (int) Math.round(total / lenghtOfFile * 100.0);
-                    if (percentDone != latestPercentDone) {
-                        percentDone = latestPercentDone;
-                        publishProgress("" + percentDone);
+                    if (isCancelled()) {
+                        return null;
+                    }
+                    output.write(data, 0, count);
+                    if (lenghtOfFile > 0) {
+                        total += count;
+                        latestPercentDone = (int) Math.round(total / lenghtOfFile * 100.0);
+                        if (latestPercentDone >= percentDone + 1) {
+                            percentDone = latestPercentDone;
+                            publishProgress("" + percentDone);
+                        }
                     }
 //                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
-                    output.write(data, 0, count);
                 }
                 output.close();
                 input.close();
@@ -116,7 +120,7 @@ public class ZipDownloader {
     }
 
     public void unzip() throws IOException {
-        new UnZipTask().execute(storezipFileLocation + "/file1.zip", directoryName);
+        new UnZipTask().execute(storezipFileLocation + "/" + filename, storezipFileLocation);
     }
 
     private class UnZipTask extends AsyncTask<String, Void, Boolean> {
@@ -136,7 +140,7 @@ public class ZipDownloader {
                 }
 
                 System.out.println("lucy download UnZipTask util");
-                UnzipUtil d = new UnzipUtil(storezipFileLocation + "/file1.zip", directoryName);
+                UnzipUtil d = new UnzipUtil(storezipFileLocation + "/" + filename, storezipFileLocation);
                 d.unzip();
                 System.out.println("lucy download UnZipTask util done");
 
@@ -151,7 +155,7 @@ public class ZipDownloader {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             try {
-                File file = new File(storezipFileLocation + "/file1.zip");
+                File file = new File(storezipFileLocation + "/" + filename);
                 boolean deleted = file.delete();
             } catch (Exception e) {
                 e.printStackTrace();

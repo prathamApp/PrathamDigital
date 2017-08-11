@@ -47,9 +47,12 @@ import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 import com.pratham.prathamdigital.interfaces.ProgressUpdate;
 import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
+import com.pratham.prathamdigital.models.Modal_DownloadContent;
 import com.pratham.prathamdigital.models.Modal_Level;
 import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
     private ArrayList<String> search_tags = new ArrayList<>();
     private ArrayList<Modal_Level> arrayList_level = new ArrayList<>();
     private ArrayList<Modal_ContentDetail> arrayList_content = new ArrayList<>();
-    private ItemDecorator itemDecorator;
+    //    private ItemDecorator itemDecorator;
     private boolean isInitialized;
     private int progress = 0;
     private AlertDialog dialog = null;
@@ -128,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
 
     @Override
     public void contentButtonClicked(final int position) {
-        dialog.show();
+        showDialog();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -144,25 +147,31 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
 
     @Override
     public void levelButtonClicked(final int position) {
-        dialog.show();
+        showDialog();
         selected_level_position = position;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("LEVEL",
-                        PD_Constant.URL.BROWSE_BY_ID.toString() + arrayList_level.get(position).getId());
-            }
-        }, 2000);
+        if (PD_Utility.isInternetAvailable(MainActivity.this)) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("LEVEL",
+                            PD_Constant.URL.BROWSE_BY_ID.toString() + arrayList_level.get(position).getId());
+                }
+            }, 2000);
+        }
     }
 
     private void showDialog() {
+        if (dialog == null)
+            dialog = PD_Utility.showLoader(MainActivity.this);
+        dialog.show();
     }
 
     @Override
-    public void downloadClick(int position, RV_ContentAdapter.ViewHolder holder) {
-        rv_contentAdapter.setSelectedIndex(position, holder);
+    public void downloadClick(int position, RecyclerView.ViewHolder holder) {
+        rv_contentAdapter.setSelectedIndex(position, (RV_ContentAdapter.ViewHolder) holder);
         if (PD_Utility.isInternetAvailable(getApplicationContext())) {
-            new ZipDownloader(this);
+            new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("DOWNLOAD",
+                    PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + arrayList_content.get(position).getNodeid());
         } else {
             Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
         }
@@ -294,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
     public void search() {
         if (et_edit_address.getText().toString().length() > 0 &&
                 PD_Utility.isInternetAvailable(getApplicationContext())) {
-            dialog.show();
+            showDialog();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -393,9 +402,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
                 //inflating the level recycler view
                 //Negative margin!----for overlapping
                 if (rv_levelAdapter == null) {
-                    itemDecorator = new ItemDecorator(-18);
+//                    itemDecorator = new ItemDecorator(-18);
+//                    rv_level.addItemDecoration(itemDecorator);
                     LinearLayoutManager layoutManager3 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-                    rv_level.addItemDecoration(itemDecorator);
                     rv_level.setLayoutManager(layoutManager3);
                     rv_level.getViewTreeObserver().addOnPreDrawListener(preDrawListenerLevel);
                     rv_levelAdapter = new RV_LevelAdapter(this, this, arrayList_level);
@@ -409,6 +418,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
                 arrayList_content = gson.fromJson(response, listType);
                 PD_Utility.DEBUG_LOG(1, TAG, "content_length:::" + arrayList_content.size());
                 rv_contentAdapter.notifyDataSetChanged();
+                arrayList_level.subList(selected_level_position, arrayList_level.size()).clear();
+                rv_levelAdapter.notifyDataSetChanged();
+            } else if (requestType.equalsIgnoreCase("DOWNLOAD")) {
+                JSONObject jsonObject = new JSONObject(response);
+                Modal_DownloadContent download_content = gson.fromJson(jsonObject.toString(), Modal_DownloadContent.class);
+                PD_Utility.DEBUG_LOG(1, TAG, "nodelist_length:::" + download_content.getNodelist().size());
+                PD_Utility.DEBUG_LOG(1, TAG, "filename:::" + download_content.getFoldername());
+                String fileName = download_content.getDownloadurl().substring(download_content.getDownloadurl().lastIndexOf('/') + 1);
+                PD_Utility.DEBUG_LOG(1, TAG, "filename:::" + fileName);
+                if (download_content.getDownloadurl().length() > 0) {
+                    new ZipDownloader(MainActivity.this, download_content.getDownloadurl(),
+                            download_content.getFoldername(), fileName);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -418,14 +440,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
             }
             closeReveal();
         }
-//        JSONObject jsonObject = new JSONObject(response);
-//        Modal_Order order_item = gson.fromJson(jsonObject.toString(), Modal_Order.class);
     }
 
     @Override
     public void notifyError(String requestType, VolleyError error) {
         try {
-            Log.d("error:::", error.getMessage());
+            Log.d("response:::", "requestType:: " + requestType);
+            Log.d("error:::", error.toString());
+            if (requestType.equalsIgnoreCase("LEVEL") || requestType.equalsIgnoreCase("BROWSE")) {
+                arrayList_level.remove(arrayList_level.size() - 1);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

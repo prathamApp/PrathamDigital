@@ -2,7 +2,6 @@ package com.pratham.prathamdigital.adapters;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +28,7 @@ import butterknife.ButterKnife;
  * Created by HP on 01-08-2017.
  */
 
-public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.ViewHolder> {
+public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapter.ViewHolder> {
 
     private Context context;
     private MainActivityAdapterListeners browseAdapter_clicks;
@@ -47,8 +46,8 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
         }
     };
 
-    public RV_ContentAdapter(Context context, MainActivityAdapterListeners browseAdapter_clicks,
-                             ArrayList<Modal_ContentDetail> sub_content) {
+    public RV_RecommendAdapter(Context context, MainActivityAdapterListeners browseAdapter_clicks,
+                               ArrayList<Modal_ContentDetail> sub_content) {
         this.context = context;
         this.browseAdapter_clicks = browseAdapter_clicks;
         this.sub_content = sub_content;
@@ -57,34 +56,29 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_content, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recommend, parent, false);
         ViewHolder holder = new ViewHolder(v);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.c_name.setText(sub_content.get(position).getNodetitle());
-        Picasso.with(context).load(sub_content.get(position).getNodeserverimage()).into(holder.item_content_img);
-        holder.item_progressLayout.setMaxProgress(100);
-        if (sub_content.get(position).getNodetype().equalsIgnoreCase("Resource")) {
-            if (selectedIndex != -1 && selectedIndex == position) {
-                holder.c_img_download.setVisibility(View.INVISIBLE);
-                holder.item_progressbar.setVisibility(View.VISIBLE);
-                holder.item_progressLayout.setCurrentProgress(progress);
-                if (isPlaying) holder.item_progressLayout.start();
-            } else {
-                holder.item_progressLayout.cancel();
-            }
-        }else {
-            holder.c_img_download.setVisibility(View.GONE);
-            holder.item_progressbar.setVisibility(View.GONE);
+        holder.recom_name.setText(sub_content.get(position).getNodetitle());
+        Picasso.with(context).load(sub_content.get(position).getNodeserverimage()).into(holder.recommend_content_img);
+        holder.recom_progressLayout.setMaxProgress(100);
+        if (selectedIndex != -1 && selectedIndex == position) {
+            holder.recom_img_download.setVisibility(View.INVISIBLE);
+            holder.recom_progressbar.setVisibility(View.VISIBLE);
+            holder.recom_progressLayout.setCurrentProgress(progress);
+            if (isPlaying) holder.recom_progressLayout.start();
+        } else {
+            holder.recom_progressLayout.cancel();
         }
-        holder.item_progressLayout.setProgressLayoutListener(new ProgressLayoutListener() {
+        holder.recom_progressLayout.setProgressLayoutListener(new ProgressLayoutListener() {
             @Override
             public void onProgressCompleted() {
-                holder.item_progressLayout.stop();
-                holder.item_progressbar.setVisibility(View.INVISIBLE);
+                holder.recom_progressLayout.stop();
+                holder.recom_progressbar.setVisibility(View.INVISIBLE);
                 progress = 0;
             }
 
@@ -93,13 +87,13 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
                 Log.d("progress::", "is changed");
             }
         });
-        holder.c_img_download.setOnClickListener(new View.OnClickListener() {
+        holder.recom_img_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 browseAdapter_clicks.downloadClick(position, holder);
             }
         });
-        holder.item_parent.setOnClickListener(new View.OnClickListener() {
+        holder.card_recom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 browseAdapter_clicks.contentButtonClicked(position);
@@ -114,13 +108,13 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
 //            mHandler.removeCallbacks(mRunnable);
             progress = 0;
         }
-        if (!holder.item_progressLayout.isPlaying()) {
+        if (!holder.recom_progressLayout.isPlaying()) {
             isPlaying = true;
-            holder.item_progressLayout.start();
+            holder.recom_progressLayout.start();
 //            mHandler.postDelayed(mRunnable, 0);
         } else {
             isPlaying = false;
-            holder.item_progressLayout.stop();
+            holder.recom_progressLayout.stop();
 //            mHandler.removeCallbacks(mRunnable);
         }
         notifyDataSetChanged();
@@ -128,6 +122,12 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
 
     public void setProgress(int pro) {
         progress = pro;
+        Log.d("progress::", "" + progress + "::::::" + pro);
+    }
+
+    public void updateData(ArrayList<Modal_ContentDetail> arrayList_content) {
+        this.sub_content=arrayList_content;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -136,18 +136,18 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.c_img_download)
-        ImageView c_img_download;
-        @BindView(R.id.c_name)
-        TextView c_name;
-        @BindView(R.id.item_progressbar)
-        ProgressBar item_progressbar;
-        @BindView(R.id.item_progressLayout)
-        ProgressLayout item_progressLayout;
-        @BindView(R.id.item_content_img)
-        ImageView item_content_img;
-        @BindView(R.id.item_parent)
-        RelativeLayout item_parent;
+        @BindView(R.id.recom_img_download)
+        ImageView recom_img_download;
+        @BindView(R.id.recom_name)
+        TextView recom_name;
+        @BindView(R.id.recom_progressbar)
+        ProgressBar recom_progressbar;
+        @BindView(R.id.recom_progressLayout)
+        ProgressLayout recom_progressLayout;
+        @BindView(R.id.recommend_content_img)
+        ImageView recommend_content_img;
+        @BindView(R.id.card_recom)
+        RelativeLayout card_recom;
 
         public ViewHolder(View itemView) {
             super(itemView);

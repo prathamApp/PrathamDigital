@@ -91,7 +91,8 @@ public class PD_Constant {
     public static enum URL {
 
         BROWSE_BY_ID(BASE_URL + "get?id="),
-        SEARCH_BY_KEYWORD(BASE_URL + "GetSearchList?");
+        SEARCH_BY_KEYWORD(BASE_URL + "GetSearchList?"),
+        DOWNLOAD_RESOURCE(BASE_URL + "DownloadResource?resid=");
 
         private final String name;
 

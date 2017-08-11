@@ -31,6 +31,10 @@ public class Modal_ContentDetail {
     String resourcepath;
     @SerializedName("nodeserverpath")
     String nodeserverpath;
+    @SerializedName("level")
+    int level;
+    @SerializedName("parentid")
+    int parentid;
 
     public int getNodeid() {
         return nodeid;
@@ -126,5 +130,21 @@ public class Modal_ContentDetail {
 
     public void setNodeserverpath(String nodeserverpath) {
         this.nodeserverpath = nodeserverpath;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getParentid() {
+        return parentid;
+    }
+
+    public void setParentid(int parentid) {
+        this.parentid = parentid;
     }
 }

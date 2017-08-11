@@ -1,5 +1,6 @@
 package com.pratham.prathamdigital.interfaces;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.android.volley.VolleyError;
@@ -16,5 +17,5 @@ public interface MainActivityAdapterListeners {
     public void browserButtonClicked(int position);
     public void contentButtonClicked(int position);
     public void levelButtonClicked(int position);
-    public void downloadClick(int position, RV_ContentAdapter.ViewHolder holder);
+    public void downloadClick(int position, RecyclerView.ViewHolder holder);
 }
