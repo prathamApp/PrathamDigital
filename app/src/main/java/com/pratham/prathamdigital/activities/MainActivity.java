@@ -47,6 +47,7 @@ import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 import com.pratham.prathamdigital.interfaces.ProgressUpdate;
 import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
+import com.pratham.prathamdigital.models.Modal_Level;
 import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
 
@@ -80,14 +81,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
     String[] name = {"khelbadi", "goodmorning", "hello", "games", "maths", "english"};
     String[] sub_content = {"khelbadi1", "goodmorning1", "hello1", "games1", "maths1", "english1",
             "khelbadi2", "goodmorning2", "hello2", "game2", "maths2", "english2"};
-    String[] levels = {"level1", "level2", "level3", "level4"};
     private ArrayList<String> search_tags = new ArrayList<>();
+    private ArrayList<Modal_Level> arrayList_level = new ArrayList<>();
     private ArrayList<Modal_ContentDetail> arrayList_content = new ArrayList<>();
     private ItemDecorator itemDecorator;
     private boolean isInitialized;
     private int progress = 0;
     private AlertDialog dialog = null;
     private String TAG = MainActivity.class.getSimpleName();
+    private int selected_level_position = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,16 +106,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
         if (!isInitialized) {
             //Initializing the adapters
             rv_browseAdapter = new RV_BrowseAdapter(this, this, name);
-            rv_levelAdapter = new RV_LevelAdapter(this, this, levels);
-            //Negative margin!----for overlapping
-            itemDecorator = new ItemDecorator(-18);
             rv_browse_contents.getViewTreeObserver().addOnPreDrawListener(preDrawListenerBrowse);
             //Defining the layouts for each recycler view
             LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             rv_browse_contents.setLayoutManager(layoutManager);
-            LinearLayoutManager layoutManager3 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            rv_level.addItemDecoration(itemDecorator);
-            rv_level.setLayoutManager(layoutManager3);
 
             String[] tags = getResources().getStringArray(R.array.search_tags);
             for (int i = 0; i < tags.length; i++) {
@@ -136,13 +132,30 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                Modal_Level modal_level = new Modal_Level();
+                modal_level.setName(arrayList_content.get(position).getNodetitle());
+                modal_level.setId(arrayList_content.get(position).getNodeid());
+                arrayList_level.add(modal_level);
                 new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("BROWSE",
                         PD_Constant.URL.BROWSE_BY_ID.toString() + arrayList_content.get(position).getNodeid());
             }
         }, 2000);
-        //inflating the content recycler view
-//        rv_level.getViewTreeObserver().addOnPreDrawListener(preDrawListenerLevel);
-//        rv_level.setAdapter(rv_levelAdapter);
+    }
+
+    @Override
+    public void levelButtonClicked(final int position) {
+        dialog.show();
+        selected_level_position = position;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("LEVEL",
+                        PD_Constant.URL.BROWSE_BY_ID.toString() + arrayList_level.get(position).getId());
+            }
+        }, 2000);
+    }
+
+    private void showDialog() {
     }
 
     @Override
@@ -372,6 +385,25 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
                 rv_browseAdapter.setSelectedIndex(-1);
             } else if (requestType.equalsIgnoreCase("BROWSE")) {
                 arrayList_content.clear();
+                Type listType = new TypeToken<ArrayList<Modal_ContentDetail>>() {
+                }.getType();
+                arrayList_content = gson.fromJson(response, listType);
+                PD_Utility.DEBUG_LOG(1, TAG, "content_length:::" + arrayList_content.size());
+                rv_contentAdapter.notifyDataSetChanged();
+                //inflating the level recycler view
+                //Negative margin!----for overlapping
+                if (rv_levelAdapter == null) {
+                    itemDecorator = new ItemDecorator(-18);
+                    LinearLayoutManager layoutManager3 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+                    rv_level.addItemDecoration(itemDecorator);
+                    rv_level.setLayoutManager(layoutManager3);
+                    rv_level.getViewTreeObserver().addOnPreDrawListener(preDrawListenerLevel);
+                    rv_levelAdapter = new RV_LevelAdapter(this, this, arrayList_level);
+                    rv_level.setAdapter(rv_levelAdapter);
+                } else {
+                    rv_levelAdapter.notifyDataSetChanged();
+                }
+            } else if (requestType.equalsIgnoreCase("LEVEL")) {
                 Type listType = new TypeToken<ArrayList<Modal_ContentDetail>>() {
                 }.getType();
                 arrayList_content = gson.fromJson(response, listType);

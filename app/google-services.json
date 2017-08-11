@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "723575559657",
+    "project_id": "prathamdigital-175604"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723575559657:android:a8c99dfca0c44d61",
+        "android_client_info": {
+          "package_name": "com.pratham.prathamdigital"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723575559657-b7obcf9pjc0pir4nkvckb95iv8qfjmf9.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "723575559657-bnppc9kcj2na57m5jnf049qgst3038bl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pratham.prathamdigital",
+            "certificate_hash": "93a1dd1a5c05dab901000d31d2293db7c5d8bd2f"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQwhZHShRyM2HH8P20zPs5zth8mNguA54"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

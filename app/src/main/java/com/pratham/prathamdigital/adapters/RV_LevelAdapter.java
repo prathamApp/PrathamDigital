@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
+import com.pratham.prathamdigital.models.Modal_Level;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,10 +27,10 @@ public class RV_LevelAdapter extends RecyclerView.Adapter<RV_LevelAdapter.ViewHo
 
     private Context context;
     private MainActivityAdapterListeners browseAdapter_clicks;
-    private String[] levels;
+    private ArrayList<Modal_Level> levels;
     private int selectedIndex;
 
-    public RV_LevelAdapter(Context context, MainActivityAdapterListeners browseAdapter_clicks, String[] levels) {
+    public RV_LevelAdapter(Context context, MainActivityAdapterListeners browseAdapter_clicks, ArrayList<Modal_Level> levels) {
         this.context = context;
         this.browseAdapter_clicks = browseAdapter_clicks;
         this.levels = levels;
@@ -43,12 +46,18 @@ public class RV_LevelAdapter extends RecyclerView.Adapter<RV_LevelAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        holder.l_name.setText(levels[position]);
+        holder.l_name.setText(levels.get(position).getName());
+        holder.l_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                browseAdapter_clicks.levelButtonClicked(position);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return levels.length;
+        return levels.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -15,5 +15,6 @@ import org.json.JSONObject;
 public interface MainActivityAdapterListeners {
     public void browserButtonClicked(int position);
     public void contentButtonClicked(int position);
+    public void levelButtonClicked(int position);
     public void downloadClick(int position, RV_ContentAdapter.ViewHolder holder);
 }
