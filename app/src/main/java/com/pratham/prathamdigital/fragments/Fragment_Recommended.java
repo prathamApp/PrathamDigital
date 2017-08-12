@@ -12,20 +12,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.activities.DashBoard_Activity;
+import com.pratham.prathamdigital.activities.MainActivity;
 import com.pratham.prathamdigital.adapters.RV_AgeFilterAdapter;
+import com.pratham.prathamdigital.adapters.RV_ContentAdapter;
 import com.pratham.prathamdigital.adapters.RV_RecommendAdapter;
+import com.pratham.prathamdigital.async.ImageDownload;
 import com.pratham.prathamdigital.async.PD_ApiRequest;
+import com.pratham.prathamdigital.async.ZipDownloader;
+import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
+import com.pratham.prathamdigital.interfaces.PermissionResult;
+import com.pratham.prathamdigital.interfaces.ProgressUpdate;
 import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
+import com.pratham.prathamdigital.models.Modal_DownloadContent;
+import com.pratham.prathamdigital.util.FragmentManagePermission;
 import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
+import com.pratham.prathamdigital.util.PermissionUtils;
+
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -37,7 +50,7 @@ import butterknife.ButterKnife;
  * Created by HP on 11-08-2017.
  */
 
-public class Fragment_Recommended extends Fragment implements MainActivityAdapterListeners, VolleyResult_JSON {
+public class Fragment_Recommended extends FragmentManagePermission implements MainActivityAdapterListeners, VolleyResult_JSON, ProgressUpdate {
 
     private static final String TAG = Fragment_Recommended.class.getSimpleName();
     @BindView(R.id.rv_ages_filter)
@@ -53,6 +66,8 @@ public class Fragment_Recommended extends Fragment implements MainActivityAdapte
     private AlertDialog dialog;
     private ArrayList<Modal_ContentDetail> arrayList_content = new ArrayList<>();
     private boolean isInitialized;
+    private Modal_DownloadContent download_content;
+    private DatabaseHandler db;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +85,7 @@ public class Fragment_Recommended extends Fragment implements MainActivityAdapte
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         dialog = PD_Utility.showLoader(getActivity());
+        db = new DatabaseHandler(getActivity());
         isInitialized = false;
     }
 
@@ -132,7 +148,15 @@ public class Fragment_Recommended extends Fragment implements MainActivityAdapte
     }
 
     @Override
-    public void contentButtonClicked(int position) {
+    public void contentButtonClicked(final int position) {
+        showDialog();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                new PD_ApiRequest(getActivity(), Fragment_Recommended.this).getDataVolley("BROWSE",
+                        PD_Constant.URL.BROWSE_BY_ID.toString() + arrayList_content.get(position).getNodeid());
+            }
+        }, 2000);
 
     }
 
@@ -142,13 +166,47 @@ public class Fragment_Recommended extends Fragment implements MainActivityAdapte
     }
 
     @Override
-    public void downloadClick(int position, RecyclerView.ViewHolder holder) {
+    public void downloadClick(final int position, final RecyclerView.ViewHolder holder) {
+        if (!isPermissionsGranted(getActivity(), new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+                PermissionUtils.Manifest_READ_EXTERNAL_STORAGE})) {
+            askCompactPermissions(new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+                    PermissionUtils.Manifest_READ_EXTERNAL_STORAGE}, new PermissionResult() {
+                @Override
+                public void permissionGranted() {
+                    rv_recommendAdapter.setSelectedIndex(position, (RV_RecommendAdapter.ViewHolder) holder);
+                    if (PD_Utility.isInternetAvailable(getActivity())) {
+                        new PD_ApiRequest(getActivity(), Fragment_Recommended.this).getDataVolley("DOWNLOAD",
+                                PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + arrayList_content.get(position).getNodeid());
+                    } else {
+                        Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_LONG).show();
+                    }
+                }
 
+                @Override
+                public void permissionDenied() {
+
+                }
+
+                @Override
+                public void permissionForeverDenied() {
+                    Toast.makeText(getActivity(), "Provide Permission for storage first", Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            rv_recommendAdapter.setSelectedIndex(position, (RV_RecommendAdapter.ViewHolder) holder);
+            if (PD_Utility.isInternetAvailable(getActivity())) {
+                new PD_ApiRequest(getActivity(), Fragment_Recommended.this).getDataVolley("DOWNLOAD",
+                        PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + arrayList_content.get(position).getNodeid());
+            } else {
+                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
     public void downloadComplete(int position) {
-
+        arrayList_content.remove(position);
+        rv_recommendAdapter.notifyItemRemoved(position);
     }
 
     private void showDialog() {
@@ -169,6 +227,17 @@ public class Fragment_Recommended extends Fragment implements MainActivityAdapte
                 }.getType();
                 arrayList_content = gson.fromJson(response, listType);
                 PD_Utility.DEBUG_LOG(1, TAG, "content_length:::" + arrayList_content.size());
+                //retrieving ids of downloaded contents from database
+                ArrayList<String> downloaded_ids = new ArrayList<>();
+                downloaded_ids = db.getDownloadContentID();
+                if (downloaded_ids.size() > 0) {
+                    Log.d("contents_downloaded::", downloaded_ids.size() + "");
+                    for (int i = 0; i < arrayList_content.size(); i++) {
+                        if (downloaded_ids.contains(arrayList_content.get(i).getResourceid())) {
+                            arrayList_content.remove(i);
+                        }
+                    }
+                }
                 //inflating the recommended content recycler view
                 if (rv_recommendAdapter == null) {
                     LinearLayoutManager layoutManager3 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -177,7 +246,19 @@ public class Fragment_Recommended extends Fragment implements MainActivityAdapte
                     rv_recommendAdapter = new RV_RecommendAdapter(getActivity(), this, arrayList_content);
                     rv_recommend_content.setAdapter(rv_recommendAdapter);
                 } else {
+                    rv_recommend_content.getViewTreeObserver().addOnPreDrawListener(preDrawListenerRecommend);
                     rv_recommendAdapter.updateData(arrayList_content);
+                }
+            } else if (requestType.equalsIgnoreCase("DOWNLOAD")) {
+                JSONObject jsonObject = new JSONObject(response);
+                download_content = gson.fromJson(jsonObject.toString(), Modal_DownloadContent.class);
+                PD_Utility.DEBUG_LOG(1, TAG, "nodelist_length:::" + download_content.getNodelist().size());
+                PD_Utility.DEBUG_LOG(1, TAG, "foldername:::" + download_content.getFoldername());
+                String fileName = download_content.getDownloadurl().substring(download_content.getDownloadurl().lastIndexOf('/') + 1);
+                PD_Utility.DEBUG_LOG(1, TAG, "filename:::" + fileName);
+                if (download_content.getDownloadurl().length() > 0) {
+                    new ZipDownloader(getActivity(), Fragment_Recommended.this, download_content.getDownloadurl(),
+                            download_content.getFoldername(), fileName);
                 }
             }
         } catch (Exception e) {
@@ -201,5 +282,28 @@ public class Fragment_Recommended extends Fragment implements MainActivityAdapte
                 dialog.dismiss();
             }
         }
+    }
+
+    @Override
+    public void onProgressUpdate(int progress) {
+        rv_recommendAdapter.setProgress(progress);
+    }
+
+    @Override
+    public void onZipDownloaded(boolean isDownloaded) {
+        if (isDownloaded) {
+            for (int i = 0; i < download_content.getNodelist().size(); i++) {
+                String fileName = download_content.getNodelist().get(i).getNodeserverimage()
+                        .substring(download_content.getNodelist().get(i).getNodeserverimage().lastIndexOf('/') + 1);
+                new ImageDownload(getActivity(), fileName).execute(download_content.getNodelist().get(i).getNodeserverimage());
+            }
+            db.Add_Content(download_content);
+            db.Add_DOownloadedFileDetail(download_content.getNodelist().get(download_content.getNodelist().size() - 1));
+        }
+    }
+
+    @Override
+    public void lengthOfTheFile(int length) {
+        Log.d("lenghtOfFile::", length + "");
     }
 }

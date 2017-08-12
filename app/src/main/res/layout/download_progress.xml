@@ -9,8 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:background="@color/charcoal"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="@color/charcoal" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,16 +22,14 @@
             android:id="@+id/status_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/charcoal"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+            android:textColor="@color/charcoal" />
 
         <ProgressBar
             android:id="@+id/status_progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/status_text"
-            android:indeterminate="false"
-            android:indeterminateOnly="false"
-            android:progressDrawable="@android:drawable/progress_horizontal" />
+            android:layout_below="@id/status_text" />
     </RelativeLayout>
 </RelativeLayout>

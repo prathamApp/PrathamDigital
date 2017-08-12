@@ -4,16 +4,19 @@ public class PD_Constant {
 
     public static final String BASE_URL = "http://prodigi.openiscool.org/api/pos/";
 
-    // POST Request Strings
-    public static final String KEY_USER_USERNAME = "username";
-    public static final String KEY_USER_PASSWORD = "password";
-    public static final String KEY_USER = "user";
-    public static final String KEY_FIRST_NAME = "first_name";
-    public static final String KEY_LAST_NAME = "last_name";
-    public static final String KEY_MOBILE = "mobile";
-    public static final String KEY_EMAIL = "email";
-    public static final String KEY_ADDRESS = "address";
-    public static final String KEY_LOCATION = "location";
+    //DATABASE TABLES
+    public static final String TABLE_CONTENTS = "table_contents";
+    // DATABASE KEYS
+    public static final String KEY_NODEID = "nodeid";
+    public static final String KEY_NODETYPE = "nodetype";
+    public static final String KEY_NODETITLE = "nodetitle";
+    public static final String KEY_NODEIMAGE = "nodeimage";
+    public static final String KEY_NODESERVERIMAGE = "nodeserverimage";
+    public static final String KEY_RESOURCEPATH = "resourcepath";
+    public static final String KEY_NODELIST = "nodelist";
+    public static final String KEY_DOWNLOADURL= "downloadurl";
+    public static final String KEY_FOLDERNAME= "foldername";
+
     public static final String KEY_GENDER = "gender";
     public static final String KEY_STATUS = "status";
     public static final String KEY_TOKEN = "token";
@@ -86,6 +89,7 @@ public class PD_Constant {
     // id to handle the notification in the notification tray
     public static final int NOTIFICATION_ID = 100;
     public static final int NOTIFICATION_ID_BIG_IMAGE = 101;
+    public static final int WEBVIEW = 1;
 //    public static final String SHARED_PREF = "ah_firebase";
 
     public static enum URL {

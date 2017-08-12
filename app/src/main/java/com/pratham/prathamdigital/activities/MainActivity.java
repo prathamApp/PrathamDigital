@@ -4,17 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +20,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -35,22 +29,26 @@ import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.adapters.RV_BrowseAdapter;
 import com.pratham.prathamdigital.adapters.RV_ContentAdapter;
 import com.pratham.prathamdigital.adapters.RV_LevelAdapter;
+import com.pratham.prathamdigital.async.ImageDownload;
 import com.pratham.prathamdigital.async.PD_ApiRequest;
 import com.pratham.prathamdigital.async.ZipDownloader;
-import com.pratham.prathamdigital.custom.ItemDecorator;
 import com.pratham.prathamdigital.custom.chips.ChipCloud;
 import com.pratham.prathamdigital.custom.chips.ChipListener;
 import com.pratham.prathamdigital.custom.reveal.AnimatorPath;
 import com.pratham.prathamdigital.custom.reveal.PathEvaluator;
 import com.pratham.prathamdigital.custom.reveal.ViewAnimationUtils;
+import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
+import com.pratham.prathamdigital.interfaces.PermissionResult;
 import com.pratham.prathamdigital.interfaces.ProgressUpdate;
 import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
 import com.pratham.prathamdigital.models.Modal_DownloadContent;
 import com.pratham.prathamdigital.models.Modal_Level;
+import com.pratham.prathamdigital.util.ActivityManagePermission;
 import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
+import com.pratham.prathamdigital.util.PermissionUtils;
 
 import org.json.JSONObject;
 
@@ -61,7 +59,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements MainActivityAdapterListeners, ProgressUpdate, VolleyResult_JSON {
+public class MainActivity extends ActivityManagePermission implements MainActivityAdapterListeners, ProgressUpdate, VolleyResult_JSON {
 
     @BindView(R.id.rv_browse_contents)
     RecyclerView rv_browse_contents;
@@ -93,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
     private AlertDialog dialog = null;
     private String TAG = MainActivity.class.getSimpleName();
     private int selected_level_position = -1;
+    private Modal_DownloadContent download_content;
+    private DatabaseHandler db;
+    private boolean isDownloading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         dialog = PD_Utility.showLoader(MainActivity.this);
+        db = new DatabaseHandler(MainActivity.this);
         isInitialized = false;
     }
 
@@ -167,63 +169,53 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
     }
 
     @Override
-    public void downloadClick(int position, RecyclerView.ViewHolder holder) {
-        rv_contentAdapter.setSelectedIndex(position, (RV_ContentAdapter.ViewHolder) holder);
-        if (PD_Utility.isInternetAvailable(getApplicationContext())) {
-            new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("DOWNLOAD",
-                    PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + arrayList_content.get(position).getNodeid());
+    public void downloadClick(final int position, final RecyclerView.ViewHolder holder) {
+        if (!isPermissionsGranted(MainActivity.this, new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+                PermissionUtils.Manifest_READ_EXTERNAL_STORAGE})) {
+            askCompactPermissions(new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+                    PermissionUtils.Manifest_READ_EXTERNAL_STORAGE}, new PermissionResult() {
+                @Override
+                public void permissionGranted() {
+                    if (!isDownloading) {
+                        rv_contentAdapter.setSelectedIndex(position, (RV_ContentAdapter.ViewHolder) holder);
+                        if (PD_Utility.isInternetAvailable(getApplicationContext())) {
+                            new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("DOWNLOAD",
+                                    PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + arrayList_content.get(position).getNodeid());
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+                        }
+                    }else {
+                        Toast.makeText(getApplicationContext(), "Let the Downloading Complete First", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void permissionDenied() {
+                }
+
+                @Override
+                public void permissionForeverDenied() {
+                    Toast.makeText(MainActivity.this, "Provide Permission for storage first", Toast.LENGTH_LONG).show();
+                }
+            });
         } else {
-            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+            rv_contentAdapter.setSelectedIndex(position, (RV_ContentAdapter.ViewHolder) holder);
+            if (PD_Utility.isInternetAvailable(getApplicationContext())) {
+                new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("DOWNLOAD",
+                        PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + arrayList_content.get(position).getNodeid());
+            } else {
+                Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+            }
         }
-//        showProgressOnNotification(position);
     }
 
     @Override
     public void downloadComplete(int position) {
+        isDownloading = false;
         arrayList_content.remove(position);
         rv_contentAdapter.notifyItemRemoved(position);
     }
 
-    private void showProgressOnNotification(final int position) {
-        // configure the intent
-        Intent intent = new Intent(this, MainActivity.class);
-        final PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-
-        // configure the notification
-        final Notification notification = new Notification(R.drawable.ic_download_icon, "Downloading your file", System
-                .currentTimeMillis());
-        notification.flags = notification.flags | Notification.FLAG_ONGOING_EVENT;
-        notification.contentView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.download_progress);
-        notification.contentIntent = pendingIntent;
-        notification.contentView.setImageViewResource(R.id.status_icon, R.drawable.ic_search);
-        notification.contentView.setTextViewText(R.id.status_text, "Downloading....");
-        notification.contentView.setProgressBar(R.id.status_progress, 100, progress, false);
-        final NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(
-                getApplicationContext().NOTIFICATION_SERVICE);
-
-        notificationManager.notify(position, notification);
-        // simulate progress
-        Thread download = new Thread() {
-            @Override
-            public void run() {
-                for (int i = 1; i < 100; i++) {
-                    progress++;
-                    notification.contentView.setProgressBar(R.id.status_progress, 100, progress, false);
-                    // inform the progress bar of updates in progress
-                    notificationManager.notify(position, notification);
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-                // remove the notification (we're done)
-                notificationManager.cancel(position);
-            }
-        };
-        download.run();
-    }
 
     ViewTreeObserver.OnPreDrawListener preDrawListenerBrowse = new ViewTreeObserver.OnPreDrawListener() {
         @Override
@@ -366,6 +358,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
 
     @Override
     public void onProgressUpdate(int progress) {
+        isDownloading = true;
         rv_contentAdapter.setProgress(progress);
     }
 
@@ -375,12 +368,26 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
     }
 
     @Override
+    public void onZipDownloaded(boolean isDownloaded) {
+        if (isDownloaded) {
+            for (int i = 0; i < download_content.getNodelist().size(); i++) {
+                String fileName = download_content.getNodelist().get(i).getNodeserverimage()
+                        .substring(download_content.getNodelist().get(i).getNodeserverimage().lastIndexOf('/') + 1);
+                new ImageDownload(MainActivity.this, fileName).execute(download_content.getNodelist().get(i).getNodeserverimage());
+            }
+            db.Add_Content(download_content);
+            db.Add_DOownloadedFileDetail(download_content.getNodelist().get(download_content.getNodelist().size() - 1));
+        }
+    }
+
+    @Override
     public void notifySuccess(String requestType, String response) {
         try {
             Log.d("response:::", response);
             Log.d("response:::", "requestType:: " + requestType);
             Gson gson = new Gson();
             if (requestType.equalsIgnoreCase("SEARCH")) {
+                arrayList_content.clear();
                 if (!search_tags.contains(et_edit_address.getText().toString())) {
                     search_tags.add(et_edit_address.getText().toString());
                 }
@@ -389,12 +396,27 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
                 arrayList_content = gson.fromJson(response, listType);
                 PD_Utility.DEBUG_LOG(1, TAG, "content_length:::" + arrayList_content.size());
 
+                //retrieving ids of downloaded contents from database
+                ArrayList<String> downloaded_ids = new ArrayList<>();
+                downloaded_ids = db.getDownloadContentID();
+                if (downloaded_ids.size() > 0) {
+                    Log.d("contents_downloaded::", downloaded_ids.size() + "");
+                    for (int i = 0; i < arrayList_content.size(); i++) {
+                        if (downloaded_ids.contains(arrayList_content.get(i).getResourceid())) {
+                            arrayList_content.remove(i);
+                        }
+                    }
+                }
                 //inflating the content recycler view
-                LinearLayoutManager layoutManager2 = new GridLayoutManager(this, 3);
-                rv_contents.setLayoutManager(layoutManager2);
-                rv_contentAdapter = new RV_ContentAdapter(this, this, arrayList_content);
-                rv_contents.getViewTreeObserver().addOnPreDrawListener(preDrawListenerContent);
-                rv_contents.setAdapter(rv_contentAdapter);
+                if (rv_contentAdapter == null) {
+                    LinearLayoutManager layoutManager2 = new GridLayoutManager(this, 3);
+                    rv_contents.setLayoutManager(layoutManager2);
+                    rv_contentAdapter = new RV_ContentAdapter(this, this, arrayList_content);
+                    rv_contents.getViewTreeObserver().addOnPreDrawListener(preDrawListenerContent);
+                    rv_contents.setAdapter(rv_contentAdapter);
+                } else {
+                    rv_contentAdapter.notifyDataSetChanged();
+                }
 
                 //deselect selected content of browse adapter
                 rv_browseAdapter.setSelectedIndex(-1);
@@ -428,7 +450,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
                 rv_levelAdapter.notifyDataSetChanged();
             } else if (requestType.equalsIgnoreCase("DOWNLOAD")) {
                 JSONObject jsonObject = new JSONObject(response);
-                Modal_DownloadContent download_content = gson.fromJson(jsonObject.toString(), Modal_DownloadContent.class);
+                download_content = gson.fromJson(jsonObject.toString(), Modal_DownloadContent.class);
                 PD_Utility.DEBUG_LOG(1, TAG, "nodelist_length:::" + download_content.getNodelist().size());
                 PD_Utility.DEBUG_LOG(1, TAG, "foldername:::" + download_content.getFoldername());
                 String fileName = download_content.getDownloadurl().substring(download_content.getDownloadurl().lastIndexOf('/') + 1);

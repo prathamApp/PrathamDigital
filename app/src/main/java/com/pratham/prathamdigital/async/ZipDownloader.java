@@ -1,12 +1,18 @@
 package com.pratham.prathamdigital.async;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.ProgressBar;
 
+import com.pratham.prathamdigital.R;
+import com.pratham.prathamdigital.activities.MainActivity;
 import com.pratham.prathamdigital.custom.progress_indicators.ProgressLayout;
 import com.pratham.prathamdigital.interfaces.ProgressUpdate;
 import com.pratham.prathamdigital.util.PD_Utility;
@@ -30,8 +36,9 @@ import java.util.zip.ZipFile;
  */
 public class ZipDownloader {
 
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
     private final File mydir;
-    String url;
     String filename;
     ProgressUpdate progressUpdate;
     Context context;
@@ -39,12 +46,11 @@ public class ZipDownloader {
 
     public ZipDownloader(Context context, ProgressUpdate progressUpdate, String url, String foldername, String filename) {
         this.context = context;
-        this.url = url;
         PD_Utility.DEBUG_LOG(1, "url:::", url);
         this.filename = filename;
         this.progressUpdate = progressUpdate;
         mydir = context.getDir("Pratham" + foldername, Context.MODE_PRIVATE); //Creating an internal dir;
-        if (mydir.exists()) mydir.mkdirs();
+        if (!mydir.exists()) mydir.mkdirs();
         Log.d("internal_file", mydir.getAbsolutePath());
         DownloadZipfile mew = new DownloadZipfile();
         mew.execute(url);
@@ -54,9 +60,22 @@ public class ZipDownloader {
         String result = "";
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            Intent intent = new Intent(this, MainActivity.class);
+//            final PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            builder = new NotificationCompat.Builder(context);
+            builder.setSmallIcon(R.drawable.ic_download_icon);
+//            builder.setContentIntent(pendingIntent);
+            builder.setContentTitle("Downloading your file");
+            builder.setProgress(0, 0, true);
+            builder.setAutoCancel(false);
+        }
+
+        @Override
         protected String doInBackground(String... aurl) {
-            int count, latestPercentDone;
-            int percentDone = -1;
+            int count;
             try {
                 System.out.println("download");
                 URL url = new URL(aurl[0]);
@@ -65,46 +84,45 @@ public class ZipDownloader {
                 conexion.connect();
                 int lenghtOfFile = conexion.getContentLength();
                 progressUpdate.lengthOfTheFile(lenghtOfFile);
+
                 InputStream input = new BufferedInputStream(url.openStream());
                 fileWithinMyDir = new File(mydir, filename); //Getting a file within the dir.
                 OutputStream output = new FileOutputStream(fileWithinMyDir);
                 byte data[] = new byte[1024];
                 long total = 0;
                 while ((count = input.read(data)) != -1) {
+                    total += count;
+                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
                     output.write(data, 0, count);
-                    if (lenghtOfFile > 0) {
-                        total += count;
-                        latestPercentDone = (int) Math.round(total / lenghtOfFile * 100.0);
-                        if (latestPercentDone >= percentDone + 1) {
-                            percentDone = latestPercentDone;
-                            publishProgress("" + percentDone);
-                        }
-                    }
-//                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
                 }
+
+                output.flush();
                 output.close();
                 input.close();
-                result = "true";
                 System.out.println("download done");
-
+                result = "true";
             } catch (Exception e) {
                 e.printStackTrace();
                 result = "false";
             }
-            return null;
-
+            return result;
         }
 
         protected void onProgressUpdate(String... progress) {
             Log.d("ANDRO_ASYNC", progress[0]);
             progressUpdate.onProgressUpdate(Integer.parseInt(progress[0]));
-//            progressLayout.setCurrent6Progress(Integer.parseInt(progress[0]));
+            builder.setProgress(100, Integer.parseInt(progress[0]), false);
+            notificationManager.notify(1000, builder.build());
         }
 
         @Override
         protected void onPostExecute(String unused) {
             if (result.equalsIgnoreCase("true")) {
                 try {
+                    builder.setContentText("Download complete");
+                    builder.setProgress(0, 0, false);
+                    notificationManager.notify(1000, builder.build());
+                    progressUpdate.onZipDownloaded(true);
                     System.out.println("lucy download unzip");
                     unzip();
                 } catch (IOException e) {
@@ -112,6 +130,7 @@ public class ZipDownloader {
                     e.printStackTrace();
                 }
             } else {
+                progressUpdate.onZipDownloaded(false);
             }
         }
     }
@@ -160,7 +179,7 @@ public class ZipDownloader {
 
         private void unzipEntry(ZipFile zipfile, ZipEntry entry, String outputDir) throws IOException {
             if (entry.isDirectory()) {
-                createDir(new File(outputDir, "/"+entry.getName()));
+                createDir(new File(outputDir, "/" + entry.getName()));
                 return;
             }
 

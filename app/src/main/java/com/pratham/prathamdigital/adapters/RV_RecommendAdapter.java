@@ -66,13 +66,27 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
         holder.recom_name.setText(sub_content.get(position).getNodetitle());
         Picasso.with(context).load(sub_content.get(position).getNodeserverimage()).into(holder.recommend_content_img);
         holder.recom_progressLayout.setMaxProgress(100);
-        if (selectedIndex != -1 && selectedIndex == position) {
-            holder.recom_img_download.setVisibility(View.INVISIBLE);
-            holder.recom_progressbar.setVisibility(View.VISIBLE);
-            holder.recom_progressLayout.setCurrentProgress(progress);
-            if (isPlaying) holder.recom_progressLayout.start();
+        if (sub_content.get(position).getNodetype().equalsIgnoreCase("Resource")) {
+            if (selectedIndex != -1 && selectedIndex == position) {
+                holder.recom_img_download.setVisibility(View.INVISIBLE);
+                holder.recom_progressbar.setVisibility(View.VISIBLE);
+                holder.recom_progressLayout.setCurrentProgress(progress);
+                if (isPlaying) holder.recom_progressLayout.start();
+            } else {
+                holder.recom_progressLayout.cancel();
+                holder.recom_img_download.setVisibility(View.VISIBLE);
+                holder.recom_progressbar.setVisibility(View.INVISIBLE);
+            }
+            holder.card_recom.setOnClickListener(null);
         } else {
-            holder.recom_progressLayout.cancel();
+            holder.recom_img_download.setVisibility(View.GONE);
+            holder.recom_progressbar.setVisibility(View.GONE);
+            holder.card_recom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    browseAdapter_clicks.contentButtonClicked(position);
+                }
+            });
         }
         holder.recom_progressLayout.setProgressLayoutListener(new ProgressLayoutListener() {
             @Override
@@ -80,6 +94,7 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
                 holder.recom_progressLayout.stop();
                 holder.recom_progressbar.setVisibility(View.INVISIBLE);
                 progress = 0;
+                browseAdapter_clicks.downloadComplete(position);
             }
 
             @Override
@@ -91,12 +106,6 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
             @Override
             public void onClick(View view) {
                 browseAdapter_clicks.downloadClick(position, holder);
-            }
-        });
-        holder.card_recom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                browseAdapter_clicks.contentButtonClicked(position);
             }
         });
     }
@@ -122,11 +131,11 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
 
     public void setProgress(int pro) {
         progress = pro;
-        Log.d("progress::", "" + progress + "::::::" + pro);
+        notifyDataSetChanged();
     }
 
     public void updateData(ArrayList<Modal_ContentDetail> arrayList_content) {
-        this.sub_content=arrayList_content;
+        this.sub_content = arrayList_content;
         notifyDataSetChanged();
     }
 

@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
     <!--android:hardwareAccelerated="false"-->
 
     <application
@@ -21,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.DashBoard_Activity"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -30,13 +33,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.DashBoard_Activity"
-            android:screenOrientation="sensorLandscape" />
+        <activity android:name=".content_playing.Activity_WebView"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="sensorLandscape"/>
+        <activity android:name=".content_playing.VideoPlayer"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="sensorLandscape"/>
         <!--<activity-->
-        <!--android:name=".MainActivity"-->
-        <!--android:screenOrientation="sensorLandscape"-->
-        <!--android:windowSoftInputMode="adjustPan" />-->
+            <!--android:name=".activities.DashBoard_Activity"-->
+            <!--android:screenOrientation="sensorLandscape" />-->
+        <activity
+        android:name=".activities.MainActivity"
+        android:screenOrientation="sensorLandscape"
+        android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

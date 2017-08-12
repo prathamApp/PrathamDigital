@@ -21,6 +21,7 @@ import com.pratham.prathamdigital.adapters.RV_ContentAdapter;
 import com.pratham.prathamdigital.adapters.RV_LevelAdapter;
 import com.pratham.prathamdigital.adapters.RV_RecommendAdapter;
 import com.pratham.prathamdigital.async.PD_ApiRequest;
+import com.pratham.prathamdigital.fragments.Fragment_MyLibrary;
 import com.pratham.prathamdigital.fragments.Fragment_Recommended;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
@@ -57,7 +58,7 @@ public class DashBoard_Activity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (!rl_mylibrary.isSelected() && !rl_recommended.isSelected()) {
-            rl_recommended.performClick();
+            rl_mylibrary.performClick();
         }
     }
 
@@ -65,6 +66,8 @@ public class DashBoard_Activity extends AppCompatActivity {
     public void setRl_mylibrary() {
         rl_mylibrary.setSelected(true);
         rl_recommended.setSelected(false);
+        PD_Utility.showFragment(this, new Fragment_MyLibrary(), R.id.frame_container, null,
+                Fragment_MyLibrary.class.getSimpleName());
     }
 
     @OnClick(R.id.rl_recommended)

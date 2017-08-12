@@ -16,6 +16,7 @@ public class Modal_DownloadContent {
     @SerializedName("foldername")
     String foldername;
 
+
     public List<Modal_ContentDetail> getNodelist() {
         return nodelist;
     }

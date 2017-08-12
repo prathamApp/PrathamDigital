@@ -16,37 +16,33 @@
         app:cardUseCompatPadding="true">
 
         <RelativeLayout
-            android:id="@+id/card_age"
+            android:id="@+id/card_sub_lib"
             android:layout_width="match_parent"
-            android:background="@drawable/pink_blue_gradient"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/pink_blue_gradient">
 
             <ImageView
-                android:id="@+id/child_avatar"
+                android:id="@+id/sub_lib_content_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_adult_boy_wrapped" />
+                android:scaleType="centerInside" />
 
             <RelativeLayout
-                android:layout_width="90dp"
-                android:layout_height="60dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/curved_bkgd">
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_alignParentBottom="true">
 
                 <TextView
-                    android:id="@+id/c_age"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="5dp"
+                    android:id="@+id/sub_lib_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/recom_img_download"
+                    android:layout_toStartOf="@+id/recom_img_download"
                     android:gravity="center"
                     android:maxLines="2"
-                    android:text="Age\n3-6"
+                    android:padding="3dp"
                     android:textColor="@color/ghost_white"
-                    android:textSize="17sp" />
+                    android:textSize="18sp" />
             </RelativeLayout>
         </RelativeLayout>
     </android.support.v7.widget.CardView>

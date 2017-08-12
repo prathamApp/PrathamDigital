@@ -75,10 +75,19 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
                 if (isPlaying) holder.item_progressLayout.start();
             } else {
                 holder.item_progressLayout.cancel();
+                holder.c_img_download.setVisibility(View.VISIBLE);
+                holder.item_progressbar.setVisibility(View.INVISIBLE);
             }
-        }else {
+            holder.item_parent.setOnClickListener(null);
+        } else {
             holder.c_img_download.setVisibility(View.GONE);
             holder.item_progressbar.setVisibility(View.GONE);
+            holder.item_parent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    browseAdapter_clicks.contentButtonClicked(position);
+                }
+            });
         }
         holder.item_progressLayout.setProgressLayoutListener(new ProgressLayoutListener() {
             @Override
@@ -98,12 +107,6 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
             @Override
             public void onClick(View view) {
                 browseAdapter_clicks.downloadClick(position, holder);
-            }
-        });
-        holder.item_parent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                browseAdapter_clicks.contentButtonClicked(position);
             }
         });
     }
