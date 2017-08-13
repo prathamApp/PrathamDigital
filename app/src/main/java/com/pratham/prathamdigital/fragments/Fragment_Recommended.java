@@ -1,5 +1,8 @@
 package com.pratham.prathamdigital.fragments;
 
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -12,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -34,6 +39,7 @@ import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
 import com.pratham.prathamdigital.models.Modal_DownloadContent;
 import com.pratham.prathamdigital.util.FragmentManagePermission;
+import com.pratham.prathamdigital.util.NetworkChangeReceiver;
 import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
 import com.pratham.prathamdigital.util.PermissionUtils;
@@ -42,6 +48,8 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,13 +58,20 @@ import butterknife.ButterKnife;
  * Created by HP on 11-08-2017.
  */
 
-public class Fragment_Recommended extends FragmentManagePermission implements MainActivityAdapterListeners, VolleyResult_JSON, ProgressUpdate {
+public class Fragment_Recommended extends FragmentManagePermission implements MainActivityAdapterListeners,
+        VolleyResult_JSON, ProgressUpdate, Observer {
 
     private static final String TAG = Fragment_Recommended.class.getSimpleName();
     @BindView(R.id.rv_ages_filter)
     RecyclerView rv_ages_filter;
     @BindView(R.id.rv_recommend_content)
     RecyclerView rv_recommend_content;
+    @BindView(R.id.rl_not_connected)
+    RelativeLayout rl_not_connected;
+    @BindView(R.id.rl_connected)
+    RelativeLayout rl_connected;
+    @BindView(R.id.img_no_connection)
+    ImageView img_no_connection;
 
     RV_AgeFilterAdapter ageFilterAdapter;
     RV_RecommendAdapter rv_recommendAdapter;
@@ -92,6 +107,7 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
     @Override
     public void onResume() {
         super.onResume();
+        NetworkChangeReceiver.getObservable().addObserver(this);
         if (!isInitialized) {
             ageFilterAdapter = new RV_AgeFilterAdapter(getActivity(), this, age, childs);
             rv_ages_filter.getViewTreeObserver().addOnPreDrawListener(preDrawListenerBrowse);
@@ -305,5 +321,35 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
     @Override
     public void lengthOfTheFile(int length) {
         Log.d("lenghtOfFile::", length + "");
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        Log.d("update:::", "called");
+        if (!PD_Utility.isInternetAvailable(getActivity())) {
+            rl_connected.setVisibility(View.GONE);
+            rl_not_connected.setVisibility(View.VISIBLE);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                AnimatedVectorDrawable avd = (AnimatedVectorDrawable)
+                        getActivity().getDrawable(R.drawable.avd_no_connection);
+                img_no_connection.setImageDrawable(avd);
+            } else {
+                img_no_connection.setImageResource(R.drawable.ic_no_connection_fix_wrapped);
+            }
+            Drawable animation = img_no_connection.getDrawable();
+            if (animation instanceof Animatable) {
+                ((Animatable) animation).start();
+            }
+        } else {
+            rl_connected.setVisibility(View.VISIBLE);
+            rl_not_connected.setVisibility(View.GONE);
+            onResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        NetworkChangeReceiver.getObservable().deleteObserver(this);
     }
 }

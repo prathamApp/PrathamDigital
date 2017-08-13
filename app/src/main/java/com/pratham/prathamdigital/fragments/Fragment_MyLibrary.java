@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.adapters.RV_AgeFilterAdapter;
@@ -26,12 +29,15 @@ import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
 import com.pratham.prathamdigital.models.Modal_DownloadContent;
+import com.pratham.prathamdigital.util.NetworkChangeReceiver;
 import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
 
 import java.io.File;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,7 +46,7 @@ import butterknife.ButterKnife;
  * Created by HP on 11-08-2017.
  */
 
-public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterListeners {
+public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterListeners{
 
     private static final String TAG = Fragment_MyLibrary.class.getSimpleName();
     @BindView(R.id.rv_ages_filter)

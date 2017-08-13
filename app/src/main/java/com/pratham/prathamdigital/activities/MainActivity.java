@@ -5,6 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.graphics.Rect;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
@@ -20,6 +23,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -46,6 +50,7 @@ import com.pratham.prathamdigital.models.Modal_ContentDetail;
 import com.pratham.prathamdigital.models.Modal_DownloadContent;
 import com.pratham.prathamdigital.models.Modal_Level;
 import com.pratham.prathamdigital.util.ActivityManagePermission;
+import com.pratham.prathamdigital.util.NetworkChangeReceiver;
 import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
 import com.pratham.prathamdigital.util.PermissionUtils;
@@ -54,12 +59,15 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends ActivityManagePermission implements MainActivityAdapterListeners, ProgressUpdate, VolleyResult_JSON {
+public class MainActivity extends ActivityManagePermission implements MainActivityAdapterListeners,
+        ProgressUpdate, VolleyResult_JSON, Observer {
 
     @BindView(R.id.rv_browse_contents)
     RecyclerView rv_browse_contents;
@@ -75,6 +83,12 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
     ChipCloud search_chipcloud;
     @BindView(R.id.et_edit_address)
     EditText et_edit_address;
+    @BindView(R.id.rl_main_not_connected)
+    RelativeLayout rl_main_not_connected;
+    @BindView(R.id.img_main_no_connection)
+    ImageView img_main_no_connection;
+    @BindView(R.id.root_content)
+    ConstraintLayout root_content;
 
     RV_BrowseAdapter rv_browseAdapter;
     RV_ContentAdapter rv_contentAdapter;
@@ -108,6 +122,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
     @Override
     protected void onResume() {
         super.onResume();
+        NetworkChangeReceiver.getObservable().addObserver(this);
         if (!isInitialized) {
             //Initializing the adapters
             rv_browseAdapter = new RV_BrowseAdapter(this, this, name);
@@ -184,7 +199,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
                         } else {
                             Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
                         }
-                    }else {
+                    } else {
                         Toast.makeText(getApplicationContext(), "Let the Downloading Complete First", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -487,4 +502,54 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
             closeReveal();
         }
     }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        Log.d("update:::", "called");
+        if (!PD_Utility.isInternetAvailable(MainActivity.this)) {
+            root_content.setVisibility(View.GONE);
+            root_search.setVisibility(View.GONE);
+            rl_main_not_connected.setVisibility(View.VISIBLE);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                AnimatedVectorDrawable avd = (AnimatedVectorDrawable)
+                        getDrawable(R.drawable.avd_no_connection);
+                img_main_no_connection.setImageDrawable(avd);
+            } else {
+                img_main_no_connection.setImageResource(R.drawable.ic_no_connection_fix_wrapped);
+            }
+            Drawable animation = img_main_no_connection.getDrawable();
+            if (animation instanceof Animatable) {
+                ((Animatable) animation).start();
+            }
+        } else {
+            root_content.setVisibility(View.VISIBLE);
+            root_search.setVisibility(View.INVISIBLE);
+            rl_main_not_connected.setVisibility(View.GONE);
+            onResume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        NetworkChangeReceiver.getObservable().deleteObserver(this);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+change progress of content items
+run the javascripts
+clear the concept of heirarchy in my library
+ */

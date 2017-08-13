@@ -33,19 +33,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".content_playing.Activity_WebView"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:screenOrientation="sensorLandscape"/>
-        <activity android:name=".content_playing.VideoPlayer"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:screenOrientation="sensorLandscape"/>
-        <!--<activity-->
-            <!--android:name=".activities.DashBoard_Activity"-->
-            <!--android:screenOrientation="sensorLandscape" />-->
         <activity
-        android:name=".activities.MainActivity"
-        android:screenOrientation="sensorLandscape"
-        android:windowSoftInputMode="adjustPan" />
+            android:name=".content_playing.Activity_WebView"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".content_playing.VideoPlayer"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <!--<activity-->
+        <!--android:name=".activities.DashBoard_Activity"-->
+        <!--android:screenOrientation="sensorLandscape" />-->
+        <activity
+            android:name=".activities.MainActivity"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="adjustPan" />
+        <receiver android:name=".util.NetworkChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
