@@ -37,11 +37,9 @@ public class JSInterface extends Activity {
     JSInterface(Context c, WebView w, String gamePath) {
         mContext = c;
         tts = new TextToSp(mContext);
-        tts.ttsFunction("Welcome kids","eng");
+        tts.ttsFunction("Welcome kids", "eng");
         this.gamePath = gamePath;
         createRecordingFolder();
-
-
 /*
         this.presentStudents = presentStudents;
         this.SessionId = SessionId;
@@ -78,7 +76,7 @@ public class JSInterface extends Activity {
     public String getMediaPath(String gameFolder) {
 //        String path = "";
 //        path = ContentScreen.fpath+"Media/"+gameFolder+"/";
-        return gamePath ;
+        return gamePath;
     }
 
     // Ketan
@@ -352,5 +350,44 @@ public class JSInterface extends Activity {
 
     public static void stopTtsBackground() {
         tts.stopSpeakerDuringJS();
+    }
+
+    @JavascriptInterface
+    public void addScore(String resId, int questionId, int scorefromGame, int totalMarks, int level, String startTime) {
+        boolean _wasSuccessful = false;
+        resId = "";
+//put try catch block for error handling
+        try {
+//            StatusDBHelper statusDBHelper = new StatusDBHelper(mContext);
+//            ScoreDBHelper scoreDBHelper = new ScoreDBHelper(mContext);
+//            AssessmentScoreDBHelper assessmentDBHelper = new AssessmentScoreDBHelper(mContext);
+//            AssessmentScore assessment = new AssessmentScore();
+
+//            Score score = new Score();
+// score.SessionID = SessionId;
+
+//            score.SessionID = MultiPhotoSelectActivity.sessionId;
+//            if (assessmentLogin.assessmentFlg)
+//                score.ResourceID = WebViewActivity.webResId;
+//            else
+//                score.ResourceID = CardAdapter.resId;
+//            score.QuestionId = questionId;
+//            score.ScoredMarks = scorefromGame;
+//            score.TotalMarks = totalMarks;
+//            score.StartTime = startTime;
+// String deviceId = statusDBHelper.getValue("deviceId");
+//            score.GroupID = MultiPhotoSelectActivity.selectedGroupsScore;//ketan 17/6/17
+// if (deviceId.equals("") || deviceId.contains("111111111111111")) {
+//            String deviceId = Build.SERIAL;
+// }
+//            score.DeviceID = deviceId;
+//            score.EndTime = Util.GetCurrentDateTime();
+//            score.Level = level;
+//            _wasSuccessful = scoreDBHelper.Add(score);
+//            BackupDatabase.backup(mContext);
+//
+        } catch (Exception e) {
+        }
+
     }
 }
