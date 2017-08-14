@@ -6,7 +6,7 @@
     <RelativeLayout
         android:id="@+id/bc_card"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/size_100"
         android:clickable="true">
 
         <TextView
@@ -15,6 +15,6 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/charcoal"
-            android:textSize="24sp" />
+            android:textSize="@dimen/size_24sp" />
     </RelativeLayout>
 </RelativeLayout>

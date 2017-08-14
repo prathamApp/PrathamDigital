@@ -14,8 +14,8 @@
         app:cardUseCompatPadding="true">
 
         <com.pratham.prathamdigital.custom.SunBabyLoadingView
-            android:layout_width="@dimen/size_170"
-            android:layout_height="@dimen/size_170" />
+            android:layout_width="@dimen/size_260"
+            android:layout_height="@dimen/size_260" />
     </android.support.v7.widget.CardView>
 
 </RelativeLayout>

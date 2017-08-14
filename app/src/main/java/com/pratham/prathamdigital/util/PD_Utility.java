@@ -58,6 +58,7 @@ import android.widget.Toast;
 
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.activities.DashBoard_Activity;
+import com.pratham.prathamdigital.content_playing.TextToSp;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -96,6 +97,7 @@ public class PD_Utility {
     static Dialog mDateTimeDialog = null;
 
     public static final Pattern otp_pattern = Pattern.compile("(|^)\\d{4}");
+    public static TextToSp ttspeech;
 
     /**
      * Method to Hide Soft Input Keyboard
@@ -214,6 +216,18 @@ public class PD_Utility {
         Toast.makeText(mContext, str_Message, Toast.LENGTH_SHORT).show();
 
     }
+
+    /**
+     * Function to initialize tts
+     *
+     * @param mContext
+     */
+    public static void initializeTTS(Context mContext) {
+
+        ttspeech = new TextToSp(mContext);
+
+    }
+
 
 //    private void startAnim() {
 //        int mainViewHeight = logo_pathview.getRootView().getHeight();

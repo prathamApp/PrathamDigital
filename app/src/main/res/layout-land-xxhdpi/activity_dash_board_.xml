@@ -9,8 +9,8 @@
 
     <RelativeLayout
         android:id="@+id/rl_mylibrary"
-        android:layout_width="@dimen/size_80"
-        android:layout_height="@dimen/size_80"
+        android:layout_width="@dimen/size_70"
+        android:layout_height="@dimen/size_70"
         android:layout_marginTop="@dimen/size_8"
         android:background="@drawable/library_bkgd_selector"
         android:clickable="true"
@@ -30,8 +30,8 @@
 
     <RelativeLayout
         android:id="@+id/rl_recommended"
-        android:layout_width="@dimen/size_80"
-        android:layout_height="@dimen/size_80"
+        android:layout_width="@dimen/size_70"
+        android:layout_height="@dimen/size_70"
         android:layout_marginLeft="@dimen/size_32"
         android:layout_marginStart="@dimen/size_32"
         android:layout_marginTop="@dimen/size_8"
@@ -50,8 +50,8 @@
 
     <RelativeLayout
         android:id="@+id/rl_dash_search"
-        android:layout_width="@dimen/size_80"
-        android:layout_height="@dimen/size_80"
+        android:layout_width="@dimen/size_70"
+        android:layout_height="@dimen/size_70"
         android:layout_marginEnd="@dimen/size_8"
         android:layout_marginRight="@dimen/size_8"
         android:layout_marginTop="@dimen/size_8"

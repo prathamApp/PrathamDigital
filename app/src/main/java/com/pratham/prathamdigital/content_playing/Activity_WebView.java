@@ -24,6 +24,8 @@ import java.io.InputStreamReader;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.pratham.prathamdigital.util.PD_Utility.ttspeech;
+
 
 public class Activity_WebView extends AppCompatActivity {
 
@@ -113,19 +115,13 @@ public class Activity_WebView extends AppCompatActivity {
 
     }
 
-    private String readAssetFile(String fileName) throws IOException {
-        StringBuilder buffer = new StringBuilder();
-        InputStream fileInputStream = new FileInputStream(new File(fileName));
-        BufferedReader bufferReader = new BufferedReader(new InputStreamReader(fileInputStream, "UTF-8"));
-        StringBuilder sb = new StringBuilder();
-        String str;
-
-        while ((str = bufferReader.readLine()) != null) {
-            sb.append(str);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(ttspeech != null) {
+            ttspeech.stopSpeaker();
+            Log.d("tts_destroyed", "TTS Destroyed");
         }
-        fileInputStream.close();
-
-        return sb.toString();
     }
 }
 

@@ -47,14 +47,12 @@ public class DashBoard_Activity extends AppCompatActivity {
     RelativeLayout rl_recommended;
 
     private String TAG = DashBoard_Activity.class.getSimpleName();
-    public static TextToSp ttspeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board_);
         ButterKnife.bind(this);
-        ttspeech = new TextToSp(this);
     }
 
     @Override
@@ -90,14 +88,5 @@ public class DashBoard_Activity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-    }
-
-    @Override
-    protected void onDestroy() {
-        if(ttspeech != null) {
-            ttspeech.stopSpeaker();
-            Log.d("tts_destroyed", "TTS Destroyed");
-        }
-        super.onDestroy();
     }
 }

@@ -18,7 +18,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_ages_filter"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/size_130"
+                android:layout_height="@dimen/size_120"
                 android:layout_centerHorizontal="true"
                 tools:layout_editor_absoluteX="0dp"
                 tools:layout_editor_absoluteY="0dp" />
@@ -26,7 +26,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_recommend_content"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/size_130"
+                android:layout_height="@dimen/size_120"
                 android:layout_below="@+id/rv_ages_filter"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/size_8"
