@@ -36,8 +36,8 @@ public class JSInterface extends Activity {
 
     JSInterface(Context c, WebView w, String gamePath) {
         mContext = c;
-        /*tts = new TextToSp(mContext);
-        tts.ttsFunction("Welcome kids");*/
+        tts = new TextToSp(mContext);
+        tts.ttsFunction("Welcome kids","eng");
         this.gamePath = gamePath;
         createRecordingFolder();
 
@@ -78,7 +78,7 @@ public class JSInterface extends Activity {
     public String getMediaPath(String gameFolder) {
 //        String path = "";
 //        path = ContentScreen.fpath+"Media/"+gameFolder+"/";
-        return gamePath + "/";
+        return gamePath ;
     }
 
     // Ketan

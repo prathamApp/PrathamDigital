@@ -21,6 +21,7 @@ import com.pratham.prathamdigital.adapters.RV_ContentAdapter;
 import com.pratham.prathamdigital.adapters.RV_LevelAdapter;
 import com.pratham.prathamdigital.adapters.RV_RecommendAdapter;
 import com.pratham.prathamdigital.async.PD_ApiRequest;
+import com.pratham.prathamdigital.content_playing.TextToSp;
 import com.pratham.prathamdigital.fragments.Fragment_MyLibrary;
 import com.pratham.prathamdigital.fragments.Fragment_Recommended;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
@@ -46,12 +47,14 @@ public class DashBoard_Activity extends AppCompatActivity {
     RelativeLayout rl_recommended;
 
     private String TAG = DashBoard_Activity.class.getSimpleName();
+    public static TextToSp ttspeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board_);
         ButterKnife.bind(this);
+        ttspeech = new TextToSp(this);
     }
 
     @Override
@@ -87,5 +90,14 @@ public class DashBoard_Activity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(ttspeech != null) {
+            ttspeech.stopSpeaker();
+            Log.d("tts_destroyed", "TTS Destroyed");
+        }
+        super.onDestroy();
     }
 }

@@ -25,6 +25,7 @@ import com.pratham.prathamdigital.adapters.RV_LibraryContentAdapter;
 import com.pratham.prathamdigital.adapters.RV_RecommendAdapter;
 import com.pratham.prathamdigital.adapters.RV_SubLibraryAdapter;
 import com.pratham.prathamdigital.content_playing.Activity_WebView;
+import com.pratham.prathamdigital.content_playing.TextToSp;
 import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
@@ -38,6 +39,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.StringTokenizer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +48,7 @@ import butterknife.ButterKnife;
  * Created by HP on 11-08-2017.
  */
 
-public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterListeners{
+public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterListeners {
 
     private static final String TAG = Fragment_MyLibrary.class.getSimpleName();
     @BindView(R.id.rv_ages_filter)
@@ -161,17 +163,20 @@ public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterL
             if (sub_arrayList.get(position).getResourcetype().equalsIgnoreCase("Game")) {
                 Intent intent = new Intent(getActivity(), Activity_WebView.class);
                 //path to /data/data/yourapp/app_data/dirName
-                ContextWrapper cw = new ContextWrapper(getActivity());
-                File directory = cw.getDir("PrathamGame", Context.MODE_PRIVATE);
+//                ContextWrapper cw = new ContextWrapper(getActivity());
+                File directory = getActivity().getDir("PrathamGame", Context.MODE_PRIVATE);
 //                File filepath = new File(directory, fileName);
-//                Log.d("adapter_filename:::", fileName);
-                Log.d("adapter_filepath:::", directory.toString() + "/" + sub_arrayList.get(position).getResourcepath());
-                intent.putExtra("path", directory.toString() + "/" + sub_arrayList.get(position).getResourcepath());
+                Log.d("directory_path:::", directory.getAbsolutePath());
+                Log.d("game_filepath:::", directory.getAbsolutePath() + "/" + sub_arrayList.get(position).getResourcepath());
+                Log.d("game_filepath:::", new StringTokenizer(sub_arrayList.get(position).getResourcepath(), "/").nextToken() + "/");
+                intent.putExtra("index_path", directory.getAbsolutePath() + "/" + sub_arrayList.get(position).getResourcepath());
+                intent.putExtra("path", directory.getAbsolutePath() + "/" +
+                        new StringTokenizer(sub_arrayList.get(position).getResourcepath(), "/").nextToken() + "/");
                 Runtime rs = Runtime.getRuntime();
                 rs.freeMemory();
                 rs.gc();
                 rs.freeMemory();
-                getActivity().startActivityForResult(intent, PD_Constant.WEBVIEW);
+                getActivity().startActivity(intent);
             }
         } else {
             sub_arrayList.clear();

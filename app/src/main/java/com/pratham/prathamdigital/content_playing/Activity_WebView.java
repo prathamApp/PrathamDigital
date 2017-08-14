@@ -6,12 +6,20 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.pratham.prathamdigital.R;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,35 +44,41 @@ public class Activity_WebView extends AppCompatActivity {
         playVideo = new VideoPlayer();
         setContentView(R.layout.activity_web_view);
         ButterKnife.bind(this);
-        String gamePath = getIntent().getStringExtra("path");
+        String index_path = getIntent().getStringExtra("index_path");
+        String path = getIntent().getStringExtra("path");
 //        webResId=getIntent().getStringExtra("resId");
-        createWebView(Uri.parse(gamePath));
+        createWebView(index_path, path);
 
 
     }
 
-    public void createWebView(Uri GamePath) {
+    public void createWebView(String GamePath, String parse) {
 
-        String myPath = GamePath.toString();
-
-        webView = (android.webkit.WebView) findViewById(R.id.loadPage);
-        webView.loadUrl(myPath);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
-        webView.addJavascriptInterface(new JSInterface(this, webView, myPath), "Android");
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
-                webView.setWebContentsDebuggingEnabled(true);
+        try {
+            webView.loadUrl("file:///" + GamePath);
+//            webView.loadDataWithBaseURL("blarg://ignored", webview_path, "text/html", "utf-8", null);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
             }
-        }
-        webView.setWebViewClient(new WebViewClient());
-        webView.setWebChromeClient(new WebChromeClient());
-        webView.clearCache(true);
+            webView.addJavascriptInterface(new JSInterface(this, webView, "file:///" + parse), "Android");
 
-        webView.getSettings().setLoadsImagesAutomatically(true);
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
+                    webView.setWebContentsDebuggingEnabled(true);
+                }
+            }
+            webView.setWebViewClient(new WebViewClient());
+            webView.setWebChromeClient(new WebChromeClient());
+            webView.clearCache(true);
+
+            webView.getSettings().setLoadsImagesAutomatically(true);
+            webView.getSettings().setDomStorageEnabled(true);
+            webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -99,5 +113,19 @@ public class Activity_WebView extends AppCompatActivity {
 
     }
 
+    private String readAssetFile(String fileName) throws IOException {
+        StringBuilder buffer = new StringBuilder();
+        InputStream fileInputStream = new FileInputStream(new File(fileName));
+        BufferedReader bufferReader = new BufferedReader(new InputStreamReader(fileInputStream, "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        String str;
+
+        while ((str = bufferReader.readLine()) != null) {
+            sb.append(str);
+        }
+        fileInputStream.close();
+
+        return sb.toString();
+    }
 }
 
