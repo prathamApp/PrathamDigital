@@ -76,7 +76,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
     @BindView(R.id.rv_level)
     RecyclerView rv_level;
     @BindView(R.id.root_search)
-    ConstraintLayout root_search;
+    RelativeLayout root_search;
     @BindView(R.id.img_content_search)
     ImageView img_content_search;
     @BindView(R.id.search_chipcloud)
@@ -229,6 +229,8 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
         isDownloading = false;
         arrayList_content.remove(position);
         rv_contentAdapter.notifyItemRemoved(position);
+        rv_contentAdapter.notifyItemRangeChanged(position, arrayList_content.size());
+        rv_contentAdapter.updateData(arrayList_content);
     }
 
 
@@ -416,9 +418,12 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
                 downloaded_ids = db.getDownloadContentID();
                 if (downloaded_ids.size() > 0) {
                     Log.d("contents_downloaded::", downloaded_ids.size() + "");
-                    for (int i = 0; i < arrayList_content.size(); i++) {
-                        if (downloaded_ids.contains(arrayList_content.get(i).getResourceid())) {
-                            arrayList_content.remove(i);
+                    for (int i = 0; i < downloaded_ids.size(); i++) {
+                        for (int j = 0; j < arrayList_content.size(); j++) {
+                            if (arrayList_content.get(j).getResourceid().equalsIgnoreCase(downloaded_ids.get(i))) {
+                                Log.d("contents_downloaded::", "downloaded content removed");
+                                arrayList_content.remove(j);
+                            }
                         }
                     }
                 }
@@ -430,7 +435,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
                     rv_contents.getViewTreeObserver().addOnPreDrawListener(preDrawListenerContent);
                     rv_contents.setAdapter(rv_contentAdapter);
                 } else {
-                    rv_contentAdapter.notifyDataSetChanged();
+                    rv_contentAdapter.updateData(arrayList_content);
                 }
 
                 //deselect selected content of browse adapter
@@ -535,21 +540,3 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
         NetworkChangeReceiver.getObservable().deleteObserver(this);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-change progress of content items
-run the javascripts
-clear the concept of heirarchy in my library
- */

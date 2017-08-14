@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.Environment;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.RadioGroup;
 
 import java.io.File;
+
 
 
 public class JSInterface extends Activity {
@@ -30,14 +30,14 @@ public class JSInterface extends Activity {
     static Boolean audioFlag = false;
     static Boolean trailerFlag = false;
     static Boolean completeFlag = false;
-    static TextToSp tts;
     public String gamePath;
+    private TextToSp textToSp;
 
 
-    JSInterface(Context c, WebView w, String gamePath) {
+    JSInterface(Context c, WebView w, String gamePath, TextToSp textToSp) {
         mContext = c;
-        tts = new TextToSp(mContext);
-        tts.ttsFunction("Welcome kids", "eng");
+        this.textToSp = textToSp;
+        textToSp.ttsFunction("Welcome kids", "eng");
         this.gamePath = gamePath;
         createRecordingFolder();
 /*
@@ -151,8 +151,8 @@ public class JSInterface extends Activity {
         try {
             mp.stop();
             mp.reset();
-            if (tts.textToSpeech.isSpeaking()) {
-                tts.stopSpeakerDuringJS();
+            if (textToSp.textToSpeech.isSpeaking()) {
+                textToSp.stopSpeakerDuringJS();
             }
             String path = "";
             audioFlag = true;
@@ -322,25 +322,25 @@ public class JSInterface extends Activity {
     public void playTts(String theWordWasAndYouSaid, String ttsLanguage) {
         mp.stop();
         mp.reset();
-        if (tts.textToSpeech.isSpeaking()) {
-            tts.stopSpeakerDuringJS();
+        if (textToSp.textToSpeech.isSpeaking()) {
+            textToSp.stopSpeakerDuringJS();
         }
         if (ttsLanguage == null) {
-            tts.ttsFunction(theWordWasAndYouSaid, "eng");
+            textToSp.ttsFunction(theWordWasAndYouSaid, "eng");
         }
         if (ttsLanguage.equals("eng") || ttsLanguage.equals("hin")) {
-            tts.ttsFunction(theWordWasAndYouSaid, ttsLanguage);
+            textToSp.ttsFunction(theWordWasAndYouSaid, ttsLanguage);
         }
     }
 
     @JavascriptInterface
     public void stopTts() {
-        tts.stopSpeakerDuringJS();
+        textToSp.stopSpeakerDuringJS();
     }
 
     @JavascriptInterface
     public void playTts(final String toSpeak) {
-        tts.ttsFunction(toSpeak, "eng");
+        textToSp.ttsFunction(toSpeak, "eng");
     }
 
     @JavascriptInterface
@@ -348,8 +348,8 @@ public class JSInterface extends Activity {
         return completeFlag;
     }
 
-    public static void stopTtsBackground() {
-        tts.stopSpeakerDuringJS();
+    public void stopTtsBackground() {
+        textToSp.stopSpeakerDuringJS();
     }
 
     @JavascriptInterface

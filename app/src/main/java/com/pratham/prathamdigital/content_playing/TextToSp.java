@@ -13,8 +13,8 @@ import java.util.Locale;
  */
 
 public class TextToSp {
-    static TextToSpeech textToSpeech;
-    static TextToSpeech textToSpeechEng;
+    public static TextToSpeech textToSpeech;
+    public static TextToSpeech textToSpeechEng;
     static Context c;
     HashMap<String, String> map;
 
@@ -69,7 +69,7 @@ public class TextToSp {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
 
-    public void stopSpeaker() {
+    public static void stopSpeaker() {
         if (textToSpeech != null) {
             if (textToSpeech.isSpeaking()) {
                 textToSpeech.stop();
@@ -86,7 +86,7 @@ public class TextToSp {
     public void stopSpeakerDuringJS() {
         if (textToSpeech.isSpeaking()) {
             textToSpeech.stop();
-//            textToSpeech.shutdown();
+            textToSpeech.shutdown();
         }
     }
 

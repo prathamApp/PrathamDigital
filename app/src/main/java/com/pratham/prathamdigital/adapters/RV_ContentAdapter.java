@@ -8,12 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pratham.prathamdigital.R;
+import com.pratham.prathamdigital.custom.progress_indicators.CircleProgressView;
+import com.pratham.prathamdigital.custom.progress_indicators.ProgressAnimationListener;
 import com.pratham.prathamdigital.custom.progress_indicators.ProgressLayout;
 import com.pratham.prathamdigital.custom.progress_indicators.ProgressLayoutListener;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
@@ -36,16 +39,6 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
     private ArrayList<Modal_ContentDetail> sub_content;
     private int selectedIndex;
     private int progress = 0;
-    private static final int SECOND_MS = 1000;
-    private boolean isPlaying = false;
-    private Handler mHandler = new Handler();
-    private final Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            progress += 1;
-            mHandler.postDelayed(mRunnable, SECOND_MS);
-        }
-    };
 
     public RV_ContentAdapter(Context context, MainActivityAdapterListeners browseAdapter_clicks,
                              ArrayList<Modal_ContentDetail> sub_content) {
@@ -66,72 +59,62 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.c_name.setText(sub_content.get(position).getNodetitle());
         Picasso.with(context).load(sub_content.get(position).getNodeserverimage()).into(holder.item_content_img);
-        holder.item_progressLayout.setMaxProgress(100);
         if (sub_content.get(position).getNodetype().equalsIgnoreCase("Resource")) {
             if (selectedIndex != -1 && selectedIndex == position) {
                 holder.c_img_download.setVisibility(View.INVISIBLE);
-                holder.item_progressbar.setVisibility(View.VISIBLE);
-                holder.item_progressLayout.setCurrentProgress(progress);
-                if (isPlaying) holder.item_progressLayout.start();
+                holder.item_progressbar2.setVisibility(View.VISIBLE);
+                holder.item_progressbar2.setProgress(progress);
             } else {
-                holder.item_progressLayout.cancel();
                 holder.c_img_download.setVisibility(View.VISIBLE);
-                holder.item_progressbar.setVisibility(View.INVISIBLE);
+                holder.item_progressbar2.setVisibility(View.INVISIBLE);
             }
             holder.item_parent.setOnClickListener(null);
         } else {
             holder.c_img_download.setVisibility(View.GONE);
-            holder.item_progressbar.setVisibility(View.GONE);
+            holder.item_progressbar2.setVisibility(View.GONE);
             holder.item_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    browseAdapter_clicks.contentButtonClicked(position);
+                    browseAdapter_clicks.contentButtonClicked(holder.getAdapterPosition());
                 }
             });
         }
-        holder.item_progressLayout.setProgressLayoutListener(new ProgressLayoutListener() {
-            @Override
-            public void onProgressCompleted() {
-                holder.item_progressLayout.stop();
-                holder.item_progressbar.setVisibility(View.INVISIBLE);
-                progress = 0;
-                browseAdapter_clicks.downloadComplete(position);
-            }
-
-            @Override
-            public void onProgressChanged(int seconds) {
-                Log.d("progress::", "is changed");
-            }
-        });
         holder.c_img_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                browseAdapter_clicks.downloadClick(position, holder);
+                browseAdapter_clicks.downloadClick(holder.getAdapterPosition(), null);
             }
         });
+        if (progress == 100) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progress = 0;
+                    browseAdapter_clicks.downloadComplete(holder.getAdapterPosition());
+                }
+            }, 500);
+        }
     }
 
     public void setSelectedIndex(int position, ViewHolder holder) {
-//        selectedIndex = ind;
         if (selectedIndex != position) {
             selectedIndex = position;
-//            mHandler.removeCallbacks(mRunnable);
             progress = 0;
-        }
-        if (!holder.item_progressLayout.isPlaying()) {
-            isPlaying = true;
-            holder.item_progressLayout.start();
-//            mHandler.postDelayed(mRunnable, 0);
-        } else {
-            isPlaying = false;
-            holder.item_progressLayout.stop();
-//            mHandler.removeCallbacks(mRunnable);
         }
         notifyDataSetChanged();
     }
 
     public void setProgress(int pro) {
         progress = pro;
+        Log.d("selectedIndex::", selectedIndex + "");
+        notifyItemChanged(selectedIndex);
+    }
+
+    public void updateData(ArrayList<Modal_ContentDetail> arrayList_content) {
+        this.sub_content = arrayList_content;
+        selectedIndex = -1;
+        progress = 0;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -144,10 +127,8 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
         ImageView c_img_download;
         @BindView(R.id.c_name)
         TextView c_name;
-        @BindView(R.id.item_progressbar)
-        ProgressBar item_progressbar;
-        @BindView(R.id.item_progressLayout)
-        ProgressLayout item_progressLayout;
+        @BindView(R.id.item_progressbar2)
+        CircleProgressView item_progressbar2;
         @BindView(R.id.item_content_img)
         ImageView item_content_img;
         @BindView(R.id.item_parent)
@@ -156,6 +137,7 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            item_progressbar2.setInterpolator(new AccelerateDecelerateInterpolator());
         }
     }
 }

@@ -223,9 +223,7 @@ public class PD_Utility {
      * @param mContext
      */
     public static void initializeTTS(Context mContext) {
-
         ttspeech = new TextToSp(mContext);
-
     }
 
 

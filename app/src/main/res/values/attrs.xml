@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!--<declare-styleable name="DiagonalLayout">-->
-        <!--<attr name="diagonal_angle" format="integer" />-->
-        <!--<attr name="diagonal_handleMargins" format="boolean" />-->
-        <!--<attr name="diagonal_gravity">-->
-            <!--<flag name="left" value="1" />-->
-            <!--<flag name="right" value="2" />-->
-            <!--<flag name="bottom" value="4" />-->
-            <!--<flag name="top" value="8" />-->
-        <!--</attr>-->
+    <!--<attr name="diagonal_angle" format="integer" />-->
+    <!--<attr name="diagonal_handleMargins" format="boolean" />-->
+    <!--<attr name="diagonal_gravity">-->
+    <!--<flag name="left" value="1" />-->
+    <!--<flag name="right" value="2" />-->
+    <!--<flag name="bottom" value="4" />-->
+    <!--<flag name="top" value="8" />-->
+    <!--</attr>-->
     <!--</declare-styleable>-->
 
     <!--<declare-styleable name="CustomFont">-->
-        <!--<attr name="font" format="string" />-->
+    <!--<attr name="font" format="string" />-->
     <!--</declare-styleable>-->
 
     <declare-styleable name="FoldingCell">
@@ -51,51 +51,55 @@
         <attr name="typeface" format="string" />
         <attr name="allCaps" format="boolean" />
         <attr name="textSize" format="dimension" />
-        <attr name="labels" format="reference"/>
+        <attr name="labels" format="reference" />
         <attr name="minHorizontalSpacing" format="dimension" />
         <attr name="verticalSpacing" format="dimension" />
     </declare-styleable>
     <declare-styleable name="SunBabyLoadingView">
-        <attr name="exampleString" format="string"/>
-        <attr name="exampleDimension" format="dimension"/>
-        <attr name="exampleColor" format="color"/>
-        <attr name="exampleDrawable" format="color|reference"/>
-    </declare-styleable>
-    <declare-styleable name="ColorfulRingProgressView">
-        <attr name="bgColor" format="color"/>
-        <attr name="fgColorStart" format="color" />
-        <attr name="fgColorEnd" format="color" />
-        <attr name="strokeWidth" format="dimension" />
-        <attr name="percent" format="float"/>
-        <attr name="startAngle" format="float"/>
+        <attr name="exampleString" format="string" />
+        <attr name="exampleDimension" format="dimension" />
+        <attr name="exampleColor" format="color" />
+        <attr name="exampleDrawable" format="color|reference" />
     </declare-styleable>
     <declare-styleable name="progressLayout">
         <attr name="emptyColor" format="color" />
         <attr name="loadedColor" format="color" />
         <attr name="maxProgress" format="integer" />
-        <attr name="autoProgress" format="boolean"/>
+        <attr name="autoProgress" format="boolean" />
     </declare-styleable>
+    <declare-styleable name="CircularProgressView">
+        <attr name="cpv_text_prefix" format="string" />
+        <attr name="cpv_text_suffix" format="string" />
+        <attr name="cpv_progress" format="integer" />
+        <attr name="cpv_circle_color" format="color" />
+        <attr name="cpv_background_circle_color" format="color" />
+        <attr name="cpv_text_color" format="color" />
+        <attr name="cpv_text_size" format="integer" />
+        <attr name="cpv_circle_width" format="dimension" />
+        <attr name="cpv_background_circle_width" format="dimension" />
+    </declare-styleable>
+
     <!--<declare-styleable name="StepperIndicator" tools:ignore="ResourceName">-->
-        <!--<attr name="stpi_stepCount" format="integer" />-->
-        <!--<attr name="stpi_animDuration" format="integer" />-->
-        <!--<attr name="stpi_circleColor" format="color" />-->
-        <!--<attr name="stpi_circleRadius" format="dimension" />-->
-        <!--<attr name="stpi_circleStrokeWidth" format="dimension" />-->
-        <!--<attr name="stpi_indicatorColor" format="color" />-->
-        <!--<attr name="stpi_indicatorRadius" format="dimension" />-->
-        <!--<attr name="stpi_lineColor" format="color" />-->
-        <!--<attr name="stpi_lineDoneColor" format="color" />-->
-        <!--<attr name="stpi_lineStrokeWidth" format="dimension" />-->
-        <!--<attr name="stpi_lineMargin" format="dimension" />-->
-        <!--<attr name="stpi_showDoneIcon" format="boolean" />-->
-        <!--<attr name="stpi_showStepNumberInstead" format="boolean" />-->
-        <!--<attr name="stpi_useBottomIndicator" format="boolean" />-->
-        <!--<attr name="stpi_useBottomIndicatorWithStepColors" format="boolean" />-->
-        <!--<attr name="stpi_bottomIndicatorHeight" format="dimension" />-->
-        <!--<attr name="stpi_bottomIndicatorWidth" format="dimension" />-->
-        <!--<attr name="stpi_bottomIndicatorMarginTop" format="dimension" />-->
-        <!--<attr name="stpi_stepsCircleColors" format="reference" />-->
-        <!--<attr name="stpi_stepsIndicatorColors" format="reference" />-->
+    <!--<attr name="stpi_stepCount" format="integer" />-->
+    <!--<attr name="stpi_animDuration" format="integer" />-->
+    <!--<attr name="stpi_circleColor" format="color" />-->
+    <!--<attr name="stpi_circleRadius" format="dimension" />-->
+    <!--<attr name="stpi_circleStrokeWidth" format="dimension" />-->
+    <!--<attr name="stpi_indicatorColor" format="color" />-->
+    <!--<attr name="stpi_indicatorRadius" format="dimension" />-->
+    <!--<attr name="stpi_lineColor" format="color" />-->
+    <!--<attr name="stpi_lineDoneColor" format="color" />-->
+    <!--<attr name="stpi_lineStrokeWidth" format="dimension" />-->
+    <!--<attr name="stpi_lineMargin" format="dimension" />-->
+    <!--<attr name="stpi_showDoneIcon" format="boolean" />-->
+    <!--<attr name="stpi_showStepNumberInstead" format="boolean" />-->
+    <!--<attr name="stpi_useBottomIndicator" format="boolean" />-->
+    <!--<attr name="stpi_useBottomIndicatorWithStepColors" format="boolean" />-->
+    <!--<attr name="stpi_bottomIndicatorHeight" format="dimension" />-->
+    <!--<attr name="stpi_bottomIndicatorWidth" format="dimension" />-->
+    <!--<attr name="stpi_bottomIndicatorMarginTop" format="dimension" />-->
+    <!--<attr name="stpi_stepsCircleColors" format="reference" />-->
+    <!--<attr name="stpi_stepsIndicatorColors" format="reference" />-->
     <!--</declare-styleable>-->
 
     <!--<declare-styleable name="SGStepper">-->
@@ -104,70 +108,70 @@
     <!--<attr name="highlightcolor" format="color" />-->
     <!--</declare-styleable>-->
     <!--<declare-styleable name="SGPickerView">-->
-        <!--<attr name="defaultTextColor" format="color" />-->
-        <!--<attr name="selectedTextColor" format="color" />-->
+    <!--<attr name="defaultTextColor" format="color" />-->
+    <!--<attr name="selectedTextColor" format="color" />-->
     <!--</declare-styleable>-->
 
     <!--<declare-styleable name="expandableLayout">-->
-        <!--<attr name="ael_duration" format="integer" />-->
-        <!--<attr name="ael_expanded" format="boolean" />-->
-        <!--<attr name="ael_defaultChildIndex" format="integer" />-->
-        <!--<attr name="ael_defaultPosition" format="dimension" />-->
-        <!--<attr name="ael_orientation" format="enum">-->
-            <!--<enum name="horizontal" value="0" />-->
-            <!--<enum name="vertical" value="1" />-->
-        <!--</attr>-->
-        <!--<attr name="ael_interpolator" format="enum">-->
-            <!--<enum name="accelerateDecelerate" value="0" />-->
-            <!--<enum name="accelerate" value="1" />-->
-            <!--<enum name="anticipate" value="2" />-->
-            <!--<enum name="anticipateOvershoot" value="3" />-->
-            <!--<enum name="bounce" value="4" />-->
-            <!--<enum name="decelerate" value="5" />-->
-            <!--<enum name="fastOutLinearIn" value="6" />-->
-            <!--<enum name="fastOutSlowIn" value="7" />-->
-            <!--<enum name="linear" value="8" />-->
-            <!--<enum name="linearOutSlowIn" value="9" />-->
-            <!--<enum name="overshoot" value="10" />-->
-        <!--</attr>-->
+    <!--<attr name="ael_duration" format="integer" />-->
+    <!--<attr name="ael_expanded" format="boolean" />-->
+    <!--<attr name="ael_defaultChildIndex" format="integer" />-->
+    <!--<attr name="ael_defaultPosition" format="dimension" />-->
+    <!--<attr name="ael_orientation" format="enum">-->
+    <!--<enum name="horizontal" value="0" />-->
+    <!--<enum name="vertical" value="1" />-->
+    <!--</attr>-->
+    <!--<attr name="ael_interpolator" format="enum">-->
+    <!--<enum name="accelerateDecelerate" value="0" />-->
+    <!--<enum name="accelerate" value="1" />-->
+    <!--<enum name="anticipate" value="2" />-->
+    <!--<enum name="anticipateOvershoot" value="3" />-->
+    <!--<enum name="bounce" value="4" />-->
+    <!--<enum name="decelerate" value="5" />-->
+    <!--<enum name="fastOutLinearIn" value="6" />-->
+    <!--<enum name="fastOutSlowIn" value="7" />-->
+    <!--<enum name="linear" value="8" />-->
+    <!--<enum name="linearOutSlowIn" value="9" />-->
+    <!--<enum name="overshoot" value="10" />-->
+    <!--</attr>-->
     <!--</declare-styleable>-->
     <!--<declare-styleable name="ShimmerRecyclerView">-->
-        <!--<attr name="demo_layout" format="reference"/>-->
-        <!--<attr name="demo_child_count" format="integer"/>-->
-        <!--<attr name="demo_layout_manager_type" format="enum">-->
-            <!--<enum name="linear_vertical" value="0" />-->
-            <!--<enum name="linear_horizontal" value="1" />-->
-            <!--<enum name="grid" value="2" />-->
-        <!--</attr>-->
-        <!--<attr name="demo_grid_child_count" format="integer" />-->
+    <!--<attr name="demo_layout" format="reference"/>-->
+    <!--<attr name="demo_child_count" format="integer"/>-->
+    <!--<attr name="demo_layout_manager_type" format="enum">-->
+    <!--<enum name="linear_vertical" value="0" />-->
+    <!--<enum name="linear_horizontal" value="1" />-->
+    <!--<enum name="grid" value="2" />-->
+    <!--</attr>-->
+    <!--<attr name="demo_grid_child_count" format="integer" />-->
     <!--</declare-styleable>-->
     <!--<declare-styleable name="ShimmerFrameLayout">-->
-        <!--<attr name="auto_start" format="boolean"/>-->
-        <!--<attr name="base_alpha" format="float"/>-->
-        <!--<attr name="duration" format="integer"/>-->
-        <!--<attr name="repeat_count" format="integer"/>-->
-        <!--<attr name="repeat_delay" format="integer"/>-->
-        <!--<attr name="repeat_mode" format="enum">-->
-            <!--<enum name="restart" value="1"/>-->
-            <!--<enum name="reverse" value="2"/>-->
-        <!--</attr>-->
-        <!--<attr name="angle" format="enum">-->
-            <!--<enum name="cw_0" value="0"/>-->
-            <!--<enum name="cw_90" value="90"/>-->
-            <!--<enum name="cw_180" value="180"/>-->
-            <!--<enum name="cw_270" value="270"/>-->
-        <!--</attr>-->
-        <!--<attr name="dropoff" format="float"/>-->
-        <!--<attr name="fixed_width" format="dimension"/>-->
-        <!--<attr name="fixed_height" format="dimension"/>-->
-        <!--<attr name="intensity" format="float"/>-->
-        <!--<attr name="relative_width" format="float"/>-->
-        <!--<attr name="relative_height" format="float"/>-->
-        <!--<attr name="shape" format="enum">-->
-            <!--<enum name="linear" value="0"/>-->
-            <!--<enum name="radial" value="1" />-->
-        <!--</attr>-->
-        <!--<attr name="tilt" format="float"/>-->
+    <!--<attr name="auto_start" format="boolean"/>-->
+    <!--<attr name="base_alpha" format="float"/>-->
+    <!--<attr name="duration" format="integer"/>-->
+    <!--<attr name="repeat_count" format="integer"/>-->
+    <!--<attr name="repeat_delay" format="integer"/>-->
+    <!--<attr name="repeat_mode" format="enum">-->
+    <!--<enum name="restart" value="1"/>-->
+    <!--<enum name="reverse" value="2"/>-->
+    <!--</attr>-->
+    <!--<attr name="angle" format="enum">-->
+    <!--<enum name="cw_0" value="0"/>-->
+    <!--<enum name="cw_90" value="90"/>-->
+    <!--<enum name="cw_180" value="180"/>-->
+    <!--<enum name="cw_270" value="270"/>-->
+    <!--</attr>-->
+    <!--<attr name="dropoff" format="float"/>-->
+    <!--<attr name="fixed_width" format="dimension"/>-->
+    <!--<attr name="fixed_height" format="dimension"/>-->
+    <!--<attr name="intensity" format="float"/>-->
+    <!--<attr name="relative_width" format="float"/>-->
+    <!--<attr name="relative_height" format="float"/>-->
+    <!--<attr name="shape" format="enum">-->
+    <!--<enum name="linear" value="0"/>-->
+    <!--<enum name="radial" value="1" />-->
+    <!--</attr>-->
+    <!--<attr name="tilt" format="float"/>-->
     <!--</declare-styleable>-->
 
     <!--ZoomView-->
@@ -175,63 +179,63 @@
     <!--<attr name="translation_factor" format="float" />-->
 
     <!--<declare-styleable name="MotionView">-->
-        <!--<attr name="src" />-->
-        <!--<attr name="translation_factor" />-->
+    <!--<attr name="src" />-->
+    <!--<attr name="translation_factor" />-->
     <!--</declare-styleable>-->
 
 
     <!--<declare-styleable name="ZoomView">-->
-        <!--<attr name="src" />-->
-        <!--<attr name="translation_factor" />-->
+    <!--<attr name="src" />-->
+    <!--<attr name="translation_factor" />-->
     <!--</declare-styleable>-->
 
     <!--<declare-styleable name="SearchableSpinner">-->
-        <!--<attr name="hintText" format="string"/>-->
+    <!--<attr name="hintText" format="string"/>-->
     <!--</declare-styleable>-->
 
     <!--<declare-styleable name="WaveLoadingView">-->
-        <!--<attr name="wlv_borderWidth" format="dimension"/>-->
-        <!--<attr name="wlv_borderColor" format="color"/>-->
-        <!--<attr name="wlv_progressValue" format="integer"/>-->
-        <!--<attr name="wlv_shapeType" format="enum">-->
-            <!--<enum name="triangle" value="0" />-->
-            <!--<enum name="circle" value="1" />-->
-            <!--<enum name="square" value="2" />-->
-            <!--<enum name="rectangle" value="3" />-->
-        <!--</attr>-->
-        <!--<attr name="wlv_triangle_direction" format="enum">-->
-            <!--<enum name="north" value="0" />-->
-            <!--<enum name="south" value="1" />-->
-            <!--<enum name="east" value="2" />-->
-            <!--<enum name="west" value="3" />-->
-        <!--</attr>-->
-        <!--<attr name="wlv_round_rectangle" format="boolean"/>-->
-        <!--<attr name="wlv_round_rectangle_x_and_y" format="integer"/>-->
-        <!--<attr name="wlv_waveColor" format="color"/>-->
-        <!--<attr name="wlv_wave_background_Color" format="color"/>-->
-        <!--<attr name="wlv_waveAmplitude" format="float"/>-->
-        <!--<attr name="wlv_titleTop" format="string"/>-->
-        <!--<attr name="wlv_titleCenter" format="string"/>-->
-        <!--<attr name="wlv_titleBottom" format="string"/>-->
-        <!--<attr name="wlv_titleTopSize" format="dimension"/>-->
-        <!--<attr name="wlv_titleCenterSize" format="dimension"/>-->
-        <!--<attr name="wlv_titleBottomSize" format="dimension"/>-->
-        <!--<attr name="wlv_titleTopColor" format="color"/>-->
-        <!--<attr name="wlv_titleCenterColor" format="color"/>-->
-        <!--<attr name="wlv_titleBottomColor" format="color"/>-->
-        <!--<attr name="wlv_titleTopStrokeColor" format="color"/>-->
-        <!--<attr name="wlv_titleTopStrokeWidth" format="dimension"/>-->
-        <!--<attr name="wlv_titleBottomStrokeColor" format="color"/>-->
-        <!--<attr name="wlv_titleBottomStrokeWidth" format="dimension"/>-->
-        <!--<attr name="wlv_titleCenterStrokeColor" format="color"/>-->
-        <!--<attr name="wlv_titleCenterStrokeWidth" format="dimension"/>-->
+    <!--<attr name="wlv_borderWidth" format="dimension"/>-->
+    <!--<attr name="wlv_borderColor" format="color"/>-->
+    <!--<attr name="wlv_progressValue" format="integer"/>-->
+    <!--<attr name="wlv_shapeType" format="enum">-->
+    <!--<enum name="triangle" value="0" />-->
+    <!--<enum name="circle" value="1" />-->
+    <!--<enum name="square" value="2" />-->
+    <!--<enum name="rectangle" value="3" />-->
+    <!--</attr>-->
+    <!--<attr name="wlv_triangle_direction" format="enum">-->
+    <!--<enum name="north" value="0" />-->
+    <!--<enum name="south" value="1" />-->
+    <!--<enum name="east" value="2" />-->
+    <!--<enum name="west" value="3" />-->
+    <!--</attr>-->
+    <!--<attr name="wlv_round_rectangle" format="boolean"/>-->
+    <!--<attr name="wlv_round_rectangle_x_and_y" format="integer"/>-->
+    <!--<attr name="wlv_waveColor" format="color"/>-->
+    <!--<attr name="wlv_wave_background_Color" format="color"/>-->
+    <!--<attr name="wlv_waveAmplitude" format="float"/>-->
+    <!--<attr name="wlv_titleTop" format="string"/>-->
+    <!--<attr name="wlv_titleCenter" format="string"/>-->
+    <!--<attr name="wlv_titleBottom" format="string"/>-->
+    <!--<attr name="wlv_titleTopSize" format="dimension"/>-->
+    <!--<attr name="wlv_titleCenterSize" format="dimension"/>-->
+    <!--<attr name="wlv_titleBottomSize" format="dimension"/>-->
+    <!--<attr name="wlv_titleTopColor" format="color"/>-->
+    <!--<attr name="wlv_titleCenterColor" format="color"/>-->
+    <!--<attr name="wlv_titleBottomColor" format="color"/>-->
+    <!--<attr name="wlv_titleTopStrokeColor" format="color"/>-->
+    <!--<attr name="wlv_titleTopStrokeWidth" format="dimension"/>-->
+    <!--<attr name="wlv_titleBottomStrokeColor" format="color"/>-->
+    <!--<attr name="wlv_titleBottomStrokeWidth" format="dimension"/>-->
+    <!--<attr name="wlv_titleCenterStrokeColor" format="color"/>-->
+    <!--<attr name="wlv_titleCenterStrokeWidth" format="dimension"/>-->
     <!--</declare-styleable>-->
 
     <!--<declare-styleable name="ViewPagerIndicator">-->
-        <!--<attr name="selectedColor" format="color"/>-->
-        <!--<attr name="deselectedColor" format="color"/>-->
-        <!--<attr name="selectedDrawable" format="reference" />-->
-        <!--<attr name="deselectedDrawable" format="reference"/>-->
-        <!--<attr name="indicatorSpacing" format="dimension"/>-->
+    <!--<attr name="selectedColor" format="color"/>-->
+    <!--<attr name="deselectedColor" format="color"/>-->
+    <!--<attr name="selectedDrawable" format="reference" />-->
+    <!--<attr name="deselectedDrawable" format="reference"/>-->
+    <!--<attr name="indicatorSpacing" format="dimension"/>-->
     <!--</declare-styleable>-->
 </resources>

@@ -223,6 +223,8 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
     public void downloadComplete(int position) {
         arrayList_content.remove(position);
         rv_recommendAdapter.notifyItemRemoved(position);
+        rv_recommendAdapter.notifyItemRangeChanged(position, arrayList_content.size());
+        rv_recommendAdapter.updateData(arrayList_content);
     }
 
     private void showDialog() {
@@ -248,9 +250,12 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
                 downloaded_ids = db.getDownloadContentID();
                 if (downloaded_ids.size() > 0) {
                     Log.d("contents_downloaded::", downloaded_ids.size() + "");
-                    for (int i = 0; i < arrayList_content.size(); i++) {
-                        if (downloaded_ids.contains(arrayList_content.get(i).getResourceid())) {
-                            arrayList_content.remove(i);
+                    for (int i = 0; i < downloaded_ids.size(); i++) {
+                        for (int j = 0; j < arrayList_content.size(); j++) {
+                            if (arrayList_content.get(j).getResourceid().equalsIgnoreCase(downloaded_ids.get(i))) {
+                                Log.d("contents_downloaded::", "downloaded content removed");
+                                arrayList_content.remove(j);
+                            }
                         }
                     }
                 }

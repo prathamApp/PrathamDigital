@@ -2,7 +2,6 @@ package com.pratham.prathamdigital.content_playing;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,18 +12,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.pratham.prathamdigital.R;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.pratham.prathamdigital.util.PD_Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.pratham.prathamdigital.util.PD_Utility.ttspeech;
+import static com.pratham.prathamdigital.content_playing.TextToSp.textToSpeech;
 
 
 public class Activity_WebView extends AppCompatActivity {
@@ -37,7 +30,7 @@ public class Activity_WebView extends AppCompatActivity {
     Context sessionContex;
     VideoPlayer playVideo;
     boolean timer;
-
+    private TextToSp textToSp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +41,9 @@ public class Activity_WebView extends AppCompatActivity {
         ButterKnife.bind(this);
         String index_path = getIntent().getStringExtra("index_path");
         String path = getIntent().getStringExtra("path");
+        textToSp =new TextToSp(this);
 //        webResId=getIntent().getStringExtra("resId");
         createWebView(index_path, path);
-
-
     }
 
     public void createWebView(String GamePath, String parse) {
@@ -64,7 +56,7 @@ public class Activity_WebView extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
             }
-            webView.addJavascriptInterface(new JSInterface(this, webView, "file:///" + parse), "Android");
+            webView.addJavascriptInterface(new JSInterface(this, webView, "file:///" + parse,textToSp), "Android");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
@@ -118,8 +110,8 @@ public class Activity_WebView extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(ttspeech != null) {
-            ttspeech.stopSpeaker();
+        if (textToSp != null) {
+            textToSp.stopSpeaker();
             Log.d("tts_destroyed", "TTS Destroyed");
         }
     }
