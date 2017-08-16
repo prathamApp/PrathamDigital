@@ -116,5 +116,7 @@
     <dimen name="size_420">420dp</dimen>
     <dimen name="size_430">430dp</dimen>
     <dimen name="size_410">410dp</dimen>
-
+    <item name="three_items" format="float" type="dimen">1.5</item>
+    <item name="five_items" format="float" type="dimen">1.25</item>
+    <item name="seven_items" format="float" type="dimen">1.16</item>
 </resources>

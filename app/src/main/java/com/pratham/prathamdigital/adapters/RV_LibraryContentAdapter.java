@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.fragments.Fragment_MyLibrary;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
+import com.pratham.prathamdigital.models.Modal_ContentDetail;
 import com.pratham.prathamdigital.models.Modal_DownloadContent;
 
 import java.io.File;
@@ -34,10 +35,10 @@ public class RV_LibraryContentAdapter extends RecyclerView.Adapter<RV_LibraryCon
     private Context context;
     private MainActivityAdapterListeners browseAdapter_clicks;
     private int selectedIndex;
-    private ArrayList<Modal_DownloadContent> downloadContents;
+    private ArrayList<Modal_ContentDetail> downloadContents;
 
     public RV_LibraryContentAdapter(Context context, MainActivityAdapterListeners browseAdapter_clicks,
-                                    ArrayList<Modal_DownloadContent> downloadContents) {
+                                    ArrayList<Modal_ContentDetail> downloadContents) {
         this.context = context;
         this.browseAdapter_clicks = browseAdapter_clicks;
         this.downloadContents = downloadContents;
@@ -53,12 +54,12 @@ public class RV_LibraryContentAdapter extends RecyclerView.Adapter<RV_LibraryCon
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         try {
             if (downloadContents.size() > 0) {
-                holder.c_age.setText(downloadContents.get(position).getNodelist().get(0).getNodetitle());
-                String fileName = downloadContents.get(position).getNodelist().get(0).getNodeserverimage()
-                        .substring(downloadContents.get(position).getNodelist().get(0).getNodeserverimage().lastIndexOf('/') + 1);
+                holder.c_age.setText(downloadContents.get(position).getNodetitle());
+                String fileName = downloadContents.get(position).getNodeserverimage()
+                        .substring(downloadContents.get(position).getNodeserverimage().lastIndexOf('/') + 1);
                 //path to /data/data/yourapp/app_data/dirName
                 ContextWrapper cw = new ContextWrapper(context);
                 File directory = cw.getDir("PrathamImages", Context.MODE_PRIVATE);
@@ -70,7 +71,7 @@ public class RV_LibraryContentAdapter extends RecyclerView.Adapter<RV_LibraryCon
             holder.card_age.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    browseAdapter_clicks.browserButtonClicked(position);
+                    browseAdapter_clicks.browserButtonClicked(holder.getAdapterPosition());
                 }
             });
             if (selectedIndex != -1 && selectedIndex == position) {

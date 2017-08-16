@@ -10,6 +10,13 @@
     <string name="search_and_download">Search and Download any content fromm here</string>
     <string name="no_internet">No Internet Connection</string>
     <string name="provide_storage_permission">Provide Permission for storage first</string>
+    <string name="select_language">Select your language</string>
+    <string name="okay">Okay</string>
+    <string name="cancel">Cancel</string>
+    <string name="my_library">My Library</string>
+    <string name="recommended">Recommended</string>
+    <string name="search">Search</string>
+    <string name="language">Language</string>
     <string-array name="search_tags">
         <item>English</item>
         <item>Maths</item>

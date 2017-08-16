@@ -55,7 +55,7 @@ public class Activity_WebView extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
             }
-            webView.addJavascriptInterface(new JSInterface(this, webView, "file:///" + parse, textToSp,resId), "Android");
+            webView.addJavascriptInterface(new JSInterface(this, webView, "file:///" + parse, textToSp, resId), "Android");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {

@@ -6,6 +6,10 @@ public class PD_Constant {
 
     //DATABASE TABLES
     public static final String TABLE_CONTENTS = "table_contents";
+    public static final String TABLE_PARENT = "table_parent_content";
+    public static final String TABLE_CHILD = "table_child_content";
+    public static final String TABLE_DOWNLOADED = "table_downloaded";
+
     // DATABASE KEYS
     public static final String KEY_NODEID = "nodeid";
     public static final String KEY_NODETYPE = "nodetype";

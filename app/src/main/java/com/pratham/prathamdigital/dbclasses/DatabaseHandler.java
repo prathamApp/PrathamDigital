@@ -12,9 +12,11 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.pratham.prathamdigital.models.GoogleCredentials;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
 import com.pratham.prathamdigital.models.Modal_DownloadContent;
-import com.pratham.prathamdigital.models.Score;
+import com.pratham.prathamdigital.models.Modal_Score;
+import com.pratham.prathamdigital.util.PD_Constant;
 
 /**
  * Created by HP on 12-08-2017.
@@ -30,19 +32,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "PrathamDB";
 
     // Contacts table name
-    private static final String TABLE_CONTENTS = "table_contents";
     private static final String TABLE_DOWNLOADED = "table_downloaded";
     private static final String TABLE_SCORE = "table_score";
+    private static final String TABLE_PARENT = "table_parent_content";
+    private static final String TABLE_CHILD = "table_child_content";
+    private static final String TABLE_GOOGLEDATA = "table_googleData";
 
-    // Contents Table Columns names
-    private static final String KEY_NODELIST = "nodelist";
-    private static final String KEY_FOLDER_NAME = "foldername";
-    private static final String KEY_DOWNLOADURL = "downloadUrl";
     // Downloaded Contents Table Columns names
     private static final String KEY_RESOURCEID = "resourceid";
     private static final String KEY_NODEID = "nodeid";
     private static final String KEY_NODETITLE = "nodetitle";
-    // Score Table Columns names
+    // Modal_Score Table Columns names
     private static final String RES_ID = "resourceId";
     private static final String SESSION_ID = "sessionId";
     private static final String QUESTION_ID = "questionId";
@@ -53,7 +53,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String END_TIME = "endDateTime";
     private static final String DEVICE_ID = "deviceId";
 
-    private ArrayList<Modal_DownloadContent> contents = new ArrayList<>();
+    // Contents Table Parent names
+    public static final String CONTENT_NODEDESC = "nodedesc";
+    public static final String CONTENT_NODEAGE = "nodeeage";
+    public static final String CONTENT_NODEIMAGE = "nodeimage";
+    public static final String CONTENT_NODEKEYWORD = "nodekeywords";
+    public static final String CONTENT_NODESERVERIMAGE = "nodeserverimage";
+    public static final String CONTENT_NODETITLE = "nodetitle";
+    public static final String CONTENT_NODETYPE = "nodetype";
+    public static final String CONTENT_RESOURCEID = "resourceid";
+    public static final String CONTENT_RESOURCEPATH = "resourcepath";
+    public static final String CONTENT_RESOURCETYPE = "resourcetype";
+    public static final String CONTENT_LEVEL = "level";
+    public static final String CONTENT_NODEID = "nodeid";
+    public static final String CONTENT_PARENTID = "parentid";
+
+    // Google Data names
+    public static final String GOOGLE_ID = "GoogleID";
+    public static final String GOOGLE_PHOTOURL = "PersonPhotoUrl";
+    public static final String GOOGLE_EMAIL = "Email";
+    public static final String GOOGLE_PERSONALNAME = "PersonName";
+    public static final String GOOGLE_INTROSHOWN = "IntroShown";
+    public static final String GOOGLE_LANGUAGE = "languageSelected";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -62,10 +83,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTENTS + "("
-                + KEY_FOLDER_NAME + " TEXT,"
-                + KEY_NODELIST + " TEXT,"
-                + KEY_DOWNLOADURL + " TEXT" + ")";
         String CREATE_DOWNLOADED_TABLE = "CREATE TABLE " + TABLE_DOWNLOADED + "("
                 + KEY_RESOURCEID + " TEXT,"
                 + KEY_NODEID + " TEXT,"
@@ -80,16 +97,57 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + START_TIME + " TEXT,"
                 + END_TIME + " TEXT,"
                 + DEVICE_ID + " TEXT" + ")";
-        db.execSQL(CREATE_CONTACTS_TABLE);
+        String CREATE_PARENT_TABLE = "CREATE TABLE " + TABLE_PARENT + "("
+                + CONTENT_NODEID + " TEXT,"
+                + CONTENT_NODETYPE + " TEXT,"
+                + CONTENT_NODETITLE + " TEXT,"
+                + CONTENT_NODEKEYWORD + " TEXT,"
+                + CONTENT_NODEAGE + " TEXT,"
+                + CONTENT_NODEDESC + " TEXT,"
+                + CONTENT_NODEIMAGE + " TEXT,"
+                + CONTENT_NODESERVERIMAGE + " TEXT,"
+                + CONTENT_RESOURCEID + " TEXT,"
+                + CONTENT_RESOURCETYPE + " TEXT,"
+                + CONTENT_RESOURCEPATH + " TEXT,"
+                + CONTENT_LEVEL + " TEXT,"
+                + CONTENT_PARENTID + " TEXT" + ")";
+        String CREATE_CHILD_TABLE = "CREATE TABLE " + TABLE_CHILD + "("
+                + CONTENT_NODEID + " TEXT,"
+                + CONTENT_NODETYPE + " TEXT,"
+                + CONTENT_NODETITLE + " TEXT,"
+                + CONTENT_NODEKEYWORD + " TEXT,"
+                + CONTENT_NODEAGE + " TEXT,"
+                + CONTENT_NODEDESC + " TEXT,"
+                + CONTENT_NODEIMAGE + " TEXT,"
+                + CONTENT_NODESERVERIMAGE + " TEXT,"
+                + CONTENT_RESOURCEID + " TEXT,"
+                + CONTENT_RESOURCETYPE + " TEXT,"
+                + CONTENT_RESOURCEPATH + " TEXT,"
+                + CONTENT_LEVEL + " TEXT,"
+                + CONTENT_PARENTID + " TEXT" + ")";
+        String CREATE_GOOGLEDATA_TABLE = "CREATE TABLE " + TABLE_GOOGLEDATA + "("
+                + GOOGLE_ID + " TEXT,"
+                + GOOGLE_PHOTOURL + " TEXT,"
+                + GOOGLE_EMAIL + " TEXT,"
+                + GOOGLE_PERSONALNAME + " TEXT,"
+                + GOOGLE_INTROSHOWN + " INTEGER,"
+                + GOOGLE_LANGUAGE + " TEXT" + ")";
         db.execSQL(CREATE_DOWNLOADED_TABLE);
         db.execSQL(CREATE_SCORE_TABLE);
+        db.execSQL(CREATE_PARENT_TABLE);
+        db.execSQL(CREATE_CHILD_TABLE);
+        db.execSQL(CREATE_GOOGLEDATA_TABLE);
     }
 
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTENTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOWNLOADED);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCORE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PARENT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHILD);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_GOOGLEDATA);
 
         // Create tables again
         onCreate(db);
@@ -100,17 +158,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
 
     // Adding new contact
-    public void Add_Content(Modal_DownloadContent content) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_FOLDER_NAME, content.getFoldername());
-        Gson gson = new Gson();
-        String nodeArray = gson.toJson(content.getNodelist());
-        values.put(KEY_NODELIST, nodeArray);
-        values.put(KEY_DOWNLOADURL, content.getDownloadurl());
-        // Inserting Row
-        db.insert(TABLE_CONTENTS, null, values);
-        db.close(); // Closing database connection
+    public void Add_Content(String tableName, Modal_ContentDetail contentDetail) {
+        try {
+            SQLiteDatabase database = this.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("nodeid", contentDetail.getNodeid());
+            contentValues.put("nodetype", contentDetail.getNodetype());
+            contentValues.put("nodetitle", contentDetail.getNodetitle());
+            contentValues.put("nodekeywords", contentDetail.getNodekeywords());
+            contentValues.put("nodeeage", contentDetail.getNodeeage());
+            contentValues.put("nodedesc", contentDetail.getNodedesc());
+            contentValues.put("nodeimage", contentDetail.getNodeimage());
+            contentValues.put("nodeserverimage", contentDetail.getNodeserverimage());
+            contentValues.put("resourceid", contentDetail.getResourceid());
+            contentValues.put("resourcetype", contentDetail.getResourcetype());
+            contentValues.put("resourcepath", contentDetail.getResourcepath());
+            contentValues.put("level", contentDetail.getLevel());
+            contentValues.put("parentid", contentDetail.getParentid());
+
+            database.insert(tableName, null, contentValues);
+            database.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Adding new downloaded file detail
@@ -125,20 +195,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
-    public void addScore(Score score) {
+    public void addScore(Modal_Score modalScore) {
         try {
             SQLiteDatabase database = this.getWritableDatabase();
 
             ContentValues contentValues = new ContentValues();
-            contentValues.put("resourceId", score.getResourceId());
-            contentValues.put("sessionId", score.getSessionId());
-            contentValues.put("questionId", score.getQuestionId());
-            contentValues.put("scoredMarks", score.getScoredMarks());
-            contentValues.put("totalMarks", score.getTotalMarks());
-            contentValues.put("startDateTime", score.getStartTime());
-            contentValues.put("endDateTime", score.getEndTime());
-            contentValues.put("level", score.getLevel());
-            contentValues.put("deviceId", score.getDeviceId());
+            contentValues.put("resourceId", modalScore.getResourceId());
+            contentValues.put("sessionId", modalScore.getSessionId());
+            contentValues.put("questionId", modalScore.getQuestionId());
+            contentValues.put("scoredMarks", modalScore.getScoredMarks());
+            contentValues.put("totalMarks", modalScore.getTotalMarks());
+            contentValues.put("startDateTime", modalScore.getStartTime());
+            contentValues.put("endDateTime", modalScore.getEndTime());
+            contentValues.put("level", modalScore.getLevel());
+            contentValues.put("deviceId", modalScore.getDeviceId());
 
             database.insert(TABLE_SCORE, null, contentValues);
             database.close();
@@ -147,36 +217,58 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
     }
 
-    // Getting All Contents
-    public ArrayList<Modal_DownloadContent> Get_Contents() {
+    // Insert New User
+    public void insertNewGoogleUser(GoogleCredentials obj) {
+        try {
+            SQLiteDatabase database = getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("GoogleID", obj.GoogleID);
+            contentValues.put("PersonPhotoUrl", obj.PersonPhotoUrl);
+            contentValues.put("Email", obj.Email);
+            contentValues.put("PersonName", obj.PersonName);
+            contentValues.put("IntroShown", obj.IntroShown);
+            database.insert(TABLE_GOOGLEDATA, null, contentValues);
+            database.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Getting All Parent Contents
+    public ArrayList<Modal_ContentDetail> Get_Contents(String table_name, int id) {
+        ArrayList<Modal_ContentDetail> contents = new ArrayList<>();
         try {
             contents.clear();
-
             // Select All Query
-            String selectQuery = "SELECT  * FROM " + TABLE_CONTENTS;
-
+            String selectQuery = null;
+            if (table_name.equalsIgnoreCase(PD_Constant.TABLE_PARENT)) {
+                selectQuery = "SELECT  * FROM " + TABLE_PARENT;
+            } else {
+                selectQuery = "SELECT  * FROM " + TABLE_CHILD + " WHERE parentid =" + id;
+            }
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor cursor = db.rawQuery(selectQuery, null);
-
             // looping through all rows and adding to list
             if (cursor.moveToFirst()) {
                 do {
-                    Modal_DownloadContent downloadContent = new Modal_DownloadContent();
-                    downloadContent.setFoldername(cursor.getString(0));
-                    Gson gson = new Gson();
-                    Type type = new TypeToken<ArrayList<Modal_ContentDetail>>() {
-                    }.getType();
-                    Log.d("retrieve_gson::", cursor.getString(0));
-                    Log.d("retrieve_gson::", cursor.getString(1));
-                    Log.d("retrieve_gson::", cursor.getString(2));
-                    ArrayList<Modal_ContentDetail> detailArrayList = gson.fromJson(cursor.getString(1), type);
-                    downloadContent.setNodelist(detailArrayList);
-                    downloadContent.setDownloadurl(cursor.getString(2));
+                    Modal_ContentDetail contentDetail = new Modal_ContentDetail();
+                    contentDetail.setNodeid(Integer.parseInt(cursor.getString(0)));
+                    contentDetail.setNodetype(cursor.getString(1));
+                    contentDetail.setNodetitle(cursor.getString(2));
+                    contentDetail.setNodekeywords(cursor.getString(3));
+                    contentDetail.setNodeeage(cursor.getString(4));
+                    contentDetail.setNodedesc(cursor.getString(5));
+                    contentDetail.setNodeimage(cursor.getString(6));
+                    contentDetail.setNodeserverimage(cursor.getString(7));
+                    contentDetail.setResourceid(cursor.getString(8));
+                    contentDetail.setResourcetype(cursor.getString(9));
+                    contentDetail.setResourcepath(cursor.getString(10));
+                    contentDetail.setLevel(Integer.parseInt(cursor.getString(11)));
+                    contentDetail.setParentid(Integer.parseInt(cursor.getString(12)));
                     // Adding contact to list
-                    contents.add(downloadContent);
+                    contents.add(contentDetail);
                 } while (cursor.moveToNext());
             }
-
             // return contact list
             cursor.close();
             db.close();
@@ -185,16 +277,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             // TODO: handle exception
             e.printStackTrace();
         }
-
         return contents;
     }
 
     // Getting All Downloaded Contents Resource IDS
-    public ArrayList<String> getDownloadContentID() {
+    public ArrayList<String> getDownloadContentID(String tablename) {
         ArrayList<String> ids = new ArrayList<>();
         try {
             // Select All Query
-            String selectQuery = "SELECT  * FROM " + TABLE_DOWNLOADED;
+            String selectQuery = "SELECT  * FROM " + tablename;
 
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor cursor = db.rawQuery(selectQuery, null);
@@ -219,6 +310,93 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return ids;
     }
 
+    // Login Status of User
+    public boolean CheckGoogleLogin(String id) {
+        Cursor cursor;
+        SQLiteDatabase database = this.getWritableDatabase();
+        cursor = database.rawQuery("SELECT * FROM " + TABLE_GOOGLEDATA + " WHERE GoogleID =" + id, null);
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                cursor.close();
+                database.close();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Get Intro info for User
+    public boolean CheckIntroShownStatus(String userID) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery("SELECT " + GOOGLE_INTROSHOWN + " FROM " + TABLE_GOOGLEDATA, null);
+        cursor.moveToFirst();
+        int status = Integer.parseInt(cursor.getString(0));
+        Log.d("status::", status + "");
+        if (status == 1) {
+            cursor.close();
+            database.close();
+            return true;
+        } else if (status == 0) {
+            cursor.close();
+            database.close();
+            return false;
+        }
+        return false;
+    }
+
+    // Update Intro to true after showing Intro
+    public void SetIntroFlagTrue(int i, String userID) {
+        try {
+            SQLiteDatabase database = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(GOOGLE_INTROSHOWN, i);
+            database.update(TABLE_GOOGLEDATA, values, GOOGLE_ID + " = ?",
+                    new String[]{userID});
+        } catch (Exception e) {
+        }
+    }
+    // Update Intro to true after showing Intro
+
+    public void SetUserLanguage(String userLangage) {
+        try {
+            SQLiteDatabase database = getWritableDatabase();
+            Cursor cursor = database.rawQuery("update " + TABLE_GOOGLEDATA + " set languageSelected =" + userLangage, null);
+            cursor.moveToFirst();
+            cursor.close();
+            database.close();
+        } catch (Exception e) {
+        }
+    }
+
+    public String GetUserLanguage() {
+        String selectedLang;
+        try {
+            SQLiteDatabase database = getWritableDatabase();
+            Cursor cursor = database.rawQuery("SELECT " + GOOGLE_LANGUAGE + " from " + TABLE_GOOGLEDATA, null);
+            cursor.moveToFirst();
+            selectedLang = cursor.getString(0);
+            cursor.close();
+            database.close();
+            return selectedLang;
+        } catch (Exception e) {
+            return selectedLang = "en";
+        }
+    }
+
+    public String getGoogleID() {
+        try {
+            SQLiteDatabase database = this.getWritableDatabase();
+            Cursor cursor = database.rawQuery("SELECT " + GOOGLE_ID + " from " + TABLE_GOOGLEDATA, null);
+            cursor.moveToFirst();
+            String id = cursor.getString(0);
+            cursor.close();
+            database.close();
+            return id;
+        } catch (Exception e) {
+            return "";
+        }
+    }
     // Updating single contact
 //    public int Update_Contact(Contact contact) {
 //        SQLiteDatabase db = this.getWritableDatabase();
@@ -240,16 +418,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //                new String[]{String.valueOf(id)});
 //        db.close();
 //    }
-
-    // Getting contacts Count
-    public int Get_Total_Contacts() {
-        String countQuery = "SELECT  * FROM " + TABLE_CONTENTS;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
-
-        // return count
-        return cursor.getCount();
-    }
+//
+//    // Getting contacts Count
+//    public int Get_Total_Contacts() {
+//        String countQuery = "SELECT  * FROM " + TABLE_CONTENTS;
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.rawQuery(countQuery, null);
+//        cursor.close();
+//
+//        // return count
+//        return cursor.getCount();
+//    }
 
 }

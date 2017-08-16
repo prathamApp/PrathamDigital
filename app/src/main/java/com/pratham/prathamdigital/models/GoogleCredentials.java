@@ -4,7 +4,7 @@ package com.pratham.prathamdigital.models;
 public class GoogleCredentials {
 
     public String GoogleID;
-    public String PersonPhotoUrl, Email, PersonName;
+    public String PersonPhotoUrl, Email, PersonName,languageSelected;
     public Integer IntroShown;
 
     public String getGoogleID() {
@@ -46,4 +46,8 @@ public class GoogleCredentials {
     public void setIntroShown(Integer introShown) {
         this.IntroShown = introShown;
     }
+
+    public String getLanguageSelected() { return languageSelected; }
+
+    public void setLanguageSelected(String languageSelected) { this.languageSelected = languageSelected; }
 }

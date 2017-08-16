@@ -106,6 +106,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
     private Modal_DownloadContent download_content;
     private DatabaseHandler db;
     private boolean isDownloading = false;
+    int[] age_id = {60, 61, 62, 63};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,13 +124,13 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
         NetworkChangeReceiver.getObservable().addObserver(this);
         if (!isInitialized) {
             //Initializing the adapters
+            name = getResources().getStringArray(R.array.main_contents);
             rv_browseAdapter = new RV_BrowseAdapter(this, this, name);
             rv_browse_contents.getViewTreeObserver().addOnPreDrawListener(preDrawListenerBrowse);
             //Defining the layouts for each recycler view
             LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             rv_browse_contents.setLayoutManager(layoutManager);
 
-            name = getResources().getStringArray(R.array.main_contents);
             String[] tags = getResources().getStringArray(R.array.search_tags);
             for (int i = 0; i < tags.length; i++) {
                 search_tags.add(tags[i]);
@@ -141,8 +142,16 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
     }
 
     @Override
-    public void browserButtonClicked(int position) {
+    public void browserButtonClicked(final int position) {
         rv_browseAdapter.setSelectedIndex(position);
+        showDialog();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("SEARCH",
+                        PD_Constant.URL.BROWSE_BY_ID.toString() + age_id[position]);
+            }
+        }, 2000);
     }
 
     @Override
@@ -391,9 +400,23 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
                         .substring(download_content.getNodelist().get(i).getNodeserverimage().lastIndexOf('/') + 1);
                 new ImageDownload(MainActivity.this, fileName).execute(download_content.getNodelist().get(i).getNodeserverimage());
             }
-            db.Add_Content(download_content);
-            db.Add_DOownloadedFileDetail(download_content.getNodelist().get(download_content.getNodelist().size() - 1));
         }
+        addContentToDatabase(download_content);
+    }
+
+    private void addContentToDatabase(Modal_DownloadContent download_content) {
+        ArrayList<String> p_ids = db.getDownloadContentID(PD_Constant.TABLE_PARENT);
+        ArrayList<String> c_ids = db.getDownloadContentID(PD_Constant.TABLE_CHILD);
+        for (int i = 0; i < download_content.getNodelist().size(); i++) {
+            if (i == 0) {
+                if (!p_ids.contains(String.valueOf(download_content.getNodelist().get(i).getNodeid())))
+                    db.Add_Content(PD_Constant.TABLE_PARENT, download_content.getNodelist().get(i));
+            } else {
+                if (!c_ids.contains(String.valueOf(download_content.getNodelist().get(i).getNodeid())))
+                    db.Add_Content(PD_Constant.TABLE_CHILD, download_content.getNodelist().get(i));
+            }
+        }
+        db.Add_DOownloadedFileDetail(download_content.getNodelist().get(download_content.getNodelist().size() - 1));
     }
 
     @Override
@@ -414,7 +437,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
 
                 //retrieving ids of downloaded contents from database
                 ArrayList<String> downloaded_ids = new ArrayList<>();
-                downloaded_ids = db.getDownloadContentID();
+                downloaded_ids = db.getDownloadContentID(PD_Constant.TABLE_DOWNLOADED);
                 if (downloaded_ids.size() > 0) {
                     Log.d("contents_downloaded::", downloaded_ids.size() + "");
                     for (int i = 0; i < downloaded_ids.size(); i++) {

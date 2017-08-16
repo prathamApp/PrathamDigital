@@ -4,7 +4,7 @@ package com.pratham.prathamdigital.models;
  * Created by HP on 16-08-2017.
  */
 
-public class Score {
+public class Modal_Score {
     public String SessionId;
     public String ResourceId;
     public int QuestionId;

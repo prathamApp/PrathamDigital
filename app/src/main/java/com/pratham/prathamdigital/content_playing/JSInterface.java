@@ -13,7 +13,7 @@ import android.widget.RadioGroup;
 
 import com.pratham.prathamdigital.PrathamApplication;
 import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
-import com.pratham.prathamdigital.models.Score;
+import com.pratham.prathamdigital.models.Modal_Score;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -167,7 +167,6 @@ public class JSInterface extends Activity {
             flag = 0;
             String mp3File;
 
-//              path="/storage/sdcard1/.PrathamHindi/salana baal-katai divas/";
             try {
                 if (storyName != null) {
                     mp3File = "storyGame/Raw/" + storyName + "/" + filename;
@@ -366,18 +365,18 @@ public class JSInterface extends Activity {
         try {
             DatabaseHandler scoreDBHelper = new DatabaseHandler(mContext);
 
-            Score score = new Score();
-            score.setSessionId(PrathamApplication.sessionId);
-            score.setResourceId(resId);
-            score.setQuestionId(questionId);
-            score.setScoredMarks(scorefromGame);
-            score.setTotalMarks(totalMarks);
-            score.setStartTime(startTime);
+            Modal_Score modalScore = new Modal_Score();
+            modalScore.setSessionId(PrathamApplication.sessionId);
+            modalScore.setResourceId(resId);
+            modalScore.setQuestionId(questionId);
+            modalScore.setScoredMarks(scorefromGame);
+            modalScore.setTotalMarks(totalMarks);
+            modalScore.setStartTime(startTime);
             String deviceId = Build.SERIAL;
-            score.setDeviceId(deviceId);
-            score.setEndTime(GetCurrentDateTime());
-            score.setLevel(level);
-            scoreDBHelper.addScore(score);
+            modalScore.setDeviceId(deviceId);
+            modalScore.setEndTime(GetCurrentDateTime());
+            modalScore.setLevel(level);
+            scoreDBHelper.addScore(modalScore);
 
         } catch (Exception e) {
             e.printStackTrace();

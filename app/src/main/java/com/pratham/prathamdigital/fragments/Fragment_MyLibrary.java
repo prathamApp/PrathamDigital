@@ -60,12 +60,9 @@ public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterL
     RV_SubLibraryAdapter subLibraryAdapter;
     private AlertDialog dialog = null;
     private DatabaseHandler db;
-    private ArrayList<Modal_ContentDetail> arrayList_content = new ArrayList<>();
-    private ArrayList<Modal_DownloadContent> downloadContents = new ArrayList<>();
+    private ArrayList<Modal_ContentDetail> downloadContents = new ArrayList<>();
+    private ArrayList<Modal_ContentDetail> subContents = new ArrayList<>();
     private boolean isInitialized;
-    private ArrayList<Modal_ContentDetail> sub_arrayList = new ArrayList<>();
-    private int nodepointer;
-    private int selectedContent;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,10 +87,10 @@ public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterL
     @Override
     public void onResume() {
         super.onResume();
-        downloadContents = db.Get_Contents();
+        downloadContents = db.Get_Contents(PD_Constant.TABLE_PARENT, 0);
         if (downloadContents.size() > 0) {
             PD_Utility.DEBUG_LOG(1, TAG, "db_list_size::" + downloadContents.size());
-            PD_Utility.DEBUG_LOG(1, TAG, "db_nodelist_size::" + downloadContents.get(0).getNodelist().size());
+            PD_Utility.DEBUG_LOG(1, TAG, "db_nodelist_size::" + downloadContents.size());
             if (!isInitialized) {
                 libraryContentAdapter = new RV_LibraryContentAdapter(getActivity(), this, downloadContents);
                 rv_library.getViewTreeObserver().addOnPreDrawListener(preDrawListenerBrowse);
@@ -102,6 +99,7 @@ public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterL
                 rv_library.setAdapter(libraryContentAdapter);
                 isInitialized = true;
             } else {
+                rv_library.getViewTreeObserver().addOnPreDrawListener(preDrawListenerBrowse);
                 libraryContentAdapter.notifyDataSetChanged();
             }
         }
@@ -138,40 +136,36 @@ public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterL
 
     @Override
     public void browserButtonClicked(int position) {
-        nodepointer = 0;
-        selectedContent = position;
         libraryContentAdapter.setSelectedIndex(position);
 //        fileName = downloadContents.get(position).getDownloadurl()
 //                .substring(downloadContents.get(position).getDownloadurl().lastIndexOf('/') + 1);
-        sub_arrayList = new ArrayList<>();
-        nodepointer += 1;
-        sub_arrayList.add(downloadContents.get(position).getNodelist().get(nodepointer));
+        subContents = db.Get_Contents(PD_Constant.TABLE_CHILD, downloadContents.get(position).getNodeid());
         if (subLibraryAdapter == null) {
-            subLibraryAdapter = new RV_SubLibraryAdapter(getActivity(), this, sub_arrayList);
+            subLibraryAdapter = new RV_SubLibraryAdapter(getActivity(), this, subContents);
             LinearLayoutManager layoutManager3 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-            rv_sub_library.setLayoutManager(layoutManager3);
             rv_sub_library.getViewTreeObserver().addOnPreDrawListener(preDrawListenerRecommend);
+            rv_sub_library.setLayoutManager(layoutManager3);
             rv_sub_library.setAdapter(subLibraryAdapter);
         } else {
-            subLibraryAdapter.updateData(sub_arrayList);
+            subLibraryAdapter.updateData(subContents);
         }
     }
 
     @Override
     public void contentButtonClicked(int position) {
-        if (sub_arrayList.get(position).getNodetype().equalsIgnoreCase("Resource")) {
-            if (sub_arrayList.get(position).getResourcetype().equalsIgnoreCase("Game")) {
+        if (subContents.get(position).getNodetype().equalsIgnoreCase("Resource")) {
+            if (subContents.get(position).getResourcetype().equalsIgnoreCase("Game")) {
                 Intent intent = new Intent(getActivity(), Activity_WebView.class);
                 //path to /data/data/yourapp/app_data/dirName
 //                ContextWrapper cw = new ContextWrapper(getActivity());
                 File directory = getActivity().getDir("PrathamGame", Context.MODE_PRIVATE);
 //                File filepath = new File(directory, fileName);
                 Log.d("directory_path:::", directory.getAbsolutePath());
-                Log.d("game_filepath:::", directory.getAbsolutePath() + "/" + sub_arrayList.get(position).getResourcepath());
-                Log.d("game_filepath:::", new StringTokenizer(sub_arrayList.get(position).getResourcepath(), "/").nextToken() + "/");
-                intent.putExtra("index_path", directory.getAbsolutePath() + "/" + sub_arrayList.get(position).getResourcepath());
+                Log.d("game_filepath:::", directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
+                Log.d("game_filepath:::", new StringTokenizer(subContents.get(position).getResourcepath(), "/").nextToken() + "/");
+                intent.putExtra("index_path", directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
                 intent.putExtra("path", directory.getAbsolutePath() + "/" +
-                        new StringTokenizer(sub_arrayList.get(position).getResourcepath(), "/").nextToken() + "/");
+                        new StringTokenizer(subContents.get(position).getResourcepath(), "/").nextToken() + "/");
                 Runtime rs = Runtime.getRuntime();
                 rs.freeMemory();
                 rs.gc();
@@ -179,14 +173,11 @@ public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterL
                 getActivity().startActivity(intent);
             }
         } else {
-            sub_arrayList.clear();
-            Log.d("nodepointer_before::", nodepointer + "");
-            nodepointer += 1;
-            Log.d("nodepointer_after::", nodepointer + "");
-            sub_arrayList.add(downloadContents.get(selectedContent).getNodelist().get(nodepointer));
-            Log.d("title::", sub_arrayList.get(0).getNodetitle());
-            Log.d("serverimg::", sub_arrayList.get(0).getNodeserverimage());
-            subLibraryAdapter.updateData(sub_arrayList);
+            ArrayList<Modal_ContentDetail> list = db.Get_Contents(PD_Constant.TABLE_CHILD, subContents.get(position).getNodeid());
+            subContents.clear();
+            subContents.addAll(list);
+            Log.d("sub_content_size::", subContents.size() + "");
+            subLibraryAdapter.updateData(subContents);
         }
     }
 

@@ -78,7 +78,14 @@
         <attr name="cpv_circle_width" format="dimension" />
         <attr name="cpv_background_circle_width" format="dimension" />
     </declare-styleable>
-
+    <declare-styleable name="CarouselPicker">
+        <attr name="items_visible" />
+    </declare-styleable>
+    <attr name="items_visible" format="enum">
+        <enum name="three" value="3" />
+        <enum name="five" value="5" />
+        <enum name="seven" value="7" />
+    </attr>
     <!--<declare-styleable name="StepperIndicator" tools:ignore="ResourceName">-->
     <!--<attr name="stpi_stepCount" format="integer" />-->
     <!--<attr name="stpi_animDuration" format="integer" />-->

@@ -249,7 +249,7 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
                 PD_Utility.DEBUG_LOG(1, TAG, "content_length:::" + arrayList_content.size());
                 //retrieving ids of downloaded contents from database
                 ArrayList<String> downloaded_ids = new ArrayList<>();
-                downloaded_ids = db.getDownloadContentID();
+                downloaded_ids = db.getDownloadContentID(PD_Constant.TABLE_DOWNLOADED);
                 if (downloaded_ids.size() > 0) {
                     Log.d("contents_downloaded::", downloaded_ids.size() + "");
                     for (int i = 0; i < downloaded_ids.size(); i++) {
@@ -321,9 +321,23 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
                         .substring(download_content.getNodelist().get(i).getNodeserverimage().lastIndexOf('/') + 1);
                 new ImageDownload(getActivity(), fileName).execute(download_content.getNodelist().get(i).getNodeserverimage());
             }
-            db.Add_Content(download_content);
-            db.Add_DOownloadedFileDetail(download_content.getNodelist().get(download_content.getNodelist().size() - 1));
+            addContentToDatabase(download_content);
         }
+    }
+
+    private void addContentToDatabase(Modal_DownloadContent download_content) {
+        ArrayList<String> p_ids = db.getDownloadContentID(PD_Constant.TABLE_PARENT);
+        ArrayList<String> c_ids = db.getDownloadContentID(PD_Constant.TABLE_CHILD);
+        for (int i = 0; i < download_content.getNodelist().size(); i++) {
+            if (i == 0) {
+                if (!p_ids.contains(String.valueOf(download_content.getNodelist().get(i).getNodeid())))
+                    db.Add_Content(PD_Constant.TABLE_PARENT, download_content.getNodelist().get(i));
+            } else {
+                if (!c_ids.contains(String.valueOf(download_content.getNodelist().get(i).getNodeid())))
+                    db.Add_Content(PD_Constant.TABLE_CHILD, download_content.getNodelist().get(i));
+            }
+        }
+        db.Add_DOownloadedFileDetail(download_content.getNodelist().get(download_content.getNodelist().size() - 1));
     }
 
     @Override

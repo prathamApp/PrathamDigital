@@ -9,63 +9,139 @@
 
     <RelativeLayout
         android:id="@+id/rl_mylibrary"
-        android:layout_width="@dimen/size_120"
-        android:layout_height="@dimen/size_120"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size_90"
         android:layout_marginTop="@dimen/size_8"
         android:background="@drawable/library_bkgd_selector"
         android:clickable="true"
+        android:paddingLeft="@dimen/size_15"
+        android:paddingRight="@dimen/size_15"
         app:layout_constraintHorizontal_bias="0.42"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/size_3"
+            android:contentDescription="@string/my_library"
             android:scaleType="center"
             app:srcCompat="@drawable/library_img_selector"
             tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/size_3"
+            android:text="@string/my_library"
+            android:textColor="@color/ghost_white"
+            android:textSize="@dimen/size_15sp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_recommended"
-        android:layout_width="@dimen/size_120"
-        android:layout_height="@dimen/size_120"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size_90"
         android:layout_marginLeft="@dimen/size_32"
         android:layout_marginStart="@dimen/size_32"
         android:layout_marginTop="@dimen/size_8"
         android:background="@drawable/library_bkgd_selector"
         android:clickable="true"
+        android:paddingLeft="@dimen/size_15"
+        android:paddingRight="@dimen/size_15"
         app:layout_constraintLeft_toRightOf="@+id/rl_mylibrary"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/size_2"
             android:scaleType="center"
             app:srcCompat="@drawable/recommend_img_selector"
             tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/size_2"
+            android:text="@string/recommended"
+            android:textColor="@color/ghost_white"
+            android:textSize="@dimen/size_15sp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_dash_search"
-        android:layout_width="@dimen/size_120"
-        android:layout_height="@dimen/size_120"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size_90"
         android:layout_marginEnd="@dimen/size_8"
         android:layout_marginRight="@dimen/size_8"
         android:layout_marginTop="@dimen/size_8"
         android:background="@drawable/library_bkgd_selector"
         android:clickable="true"
+        android:paddingLeft="@dimen/size_25"
+        android:paddingRight="@dimen/size_25"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/size_3"
             android:scaleType="center"
             app:srcCompat="@drawable/search_50px_selector"
             tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/size_2"
+            android:text="@string/search"
+            android:textColor="@color/ghost_white"
+            android:textSize="@dimen/size_15sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_language"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/size_90"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="@dimen/size_8"
+        android:layout_marginTop="@dimen/size_8"
+        android:background="@drawable/library_bkgd_selector"
+        android:clickable="true"
+        android:paddingLeft="@dimen/size_15"
+        android:paddingRight="@dimen/size_15"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/size_3"
+            android:scaleType="center"
+            app:srcCompat="@drawable/ic_language"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/size_2"
+            android:text="@string/language"
+            android:textColor="@color/ghost_white"
+            android:textSize="@dimen/size_15sp" />
     </RelativeLayout>
 
     <FrameLayout

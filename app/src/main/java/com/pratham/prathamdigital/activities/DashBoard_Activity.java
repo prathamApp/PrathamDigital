@@ -4,13 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.pratham.prathamdigital.R;
-import com.pratham.prathamdigital.dbclasses.GoogleDBHelper;
+import com.pratham.prathamdigital.content_playing.TextToSp;
+import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
 import com.pratham.prathamdigital.fragments.Fragment_MyLibrary;
 import com.pratham.prathamdigital.fragments.Fragment_Recommended;
 import com.pratham.prathamdigital.util.PD_Utility;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,27 +28,32 @@ public class DashBoard_Activity extends AppCompatActivity {
     @BindView(R.id.rl_recommended)
     RelativeLayout rl_recommended;
 
+    Locale myLocale;
+    String defaultLang;
     private String TAG = DashBoard_Activity.class.getSimpleName();
-    GoogleDBHelper gdb;
+    DatabaseHandler gdb;
     String googleId;
+    private TextToSp textToSp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board_);
         ButterKnife.bind(this);
-        gdb = new GoogleDBHelper(this);
+        gdb = new DatabaseHandler(this);
+        googleId = gdb.getGoogleID();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Bundle bundle = getIntent().getExtras();
-        googleId = bundle.getString("GoogleID");
+        textToSp = new TextToSp(DashBoard_Activity.this);
         Boolean IntroStatus = gdb.CheckIntroShownStatus(googleId);
+        Log.d("IntroStatus:", IntroStatus + "");
         if (!IntroStatus) {
             // Show Intro & then set flag as shown
-            gdb.SetFlagTrue(1, googleId);
+            gdb.SetIntroFlagTrue(1, googleId);
+            Log.d("IntroStatus:", gdb.CheckIntroShownStatus(googleId) + "");
             ShowIntro();
         }
         if (!rl_mylibrary.isSelected() && !rl_recommended.isSelected()) {
@@ -130,3 +139,13 @@ public class DashBoard_Activity extends AppCompatActivity {
     public void onBackPressed() {
     }
 }
+
+
+
+
+/*
+show download complete dialog using toast
+show language dialog
+set different drawable resources for dashboard vectors
+test the apk
+ */
