@@ -61,6 +61,15 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
                 holder.recom_img_download.setVisibility(View.INVISIBLE);
                 holder.recom_progressbar2.setVisibility(View.VISIBLE);
                 holder.recom_progressbar2.setProgress(progress);
+                if (progress == 100) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progress = 0;
+                            browseAdapter_clicks.downloadComplete(holder.getAdapterPosition());
+                        }
+                    }, 500);
+                }
             } else {
                 holder.recom_img_download.setVisibility(View.VISIBLE);
                 holder.recom_progressbar2.setVisibility(View.INVISIBLE);
@@ -82,15 +91,6 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
                 browseAdapter_clicks.downloadClick(holder.getAdapterPosition(), null);
             }
         });
-        if (progress == 100) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    progress = 0;
-                    browseAdapter_clicks.downloadComplete(holder.getAdapterPosition());
-                }
-            }, 500);
-        }
     }
 
     public void setSelectedIndex(int position, ViewHolder holder) {

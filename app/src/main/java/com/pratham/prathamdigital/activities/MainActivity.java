@@ -93,13 +93,11 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
     RV_BrowseAdapter rv_browseAdapter;
     RV_ContentAdapter rv_contentAdapter;
     RV_LevelAdapter rv_levelAdapter;
-    String[] name = {"khelbadi", "goodmorning", "hello", "games", "maths", "english"};
-    String[] sub_content = {"khelbadi1", "goodmorning1", "hello1", "games1", "maths1", "english1",
-            "khelbadi2", "goodmorning2", "hello2", "game2", "maths2", "english2"};
     private ArrayList<String> search_tags = new ArrayList<>();
     private ArrayList<Modal_Level> arrayList_level = new ArrayList<>();
     private ArrayList<Modal_ContentDetail> arrayList_content = new ArrayList<>();
     //    private ItemDecorator itemDecorator;
+    private String[] name;
     private boolean isInitialized;
     private int progress = 0;
     private AlertDialog dialog = null;
@@ -131,6 +129,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
             LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             rv_browse_contents.setLayoutManager(layoutManager);
 
+            name = getResources().getStringArray(R.array.main_contents);
             String[] tags = getResources().getStringArray(R.array.search_tags);
             for (int i = 0; i < tags.length; i++) {
                 search_tags.add(tags[i]);
@@ -197,10 +196,10 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
                             new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("DOWNLOAD",
                                     PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + arrayList_content.get(position).getNodeid());
                         } else {
-                            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(getApplicationContext(), "Let the Downloading Complete First", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -210,7 +209,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
 
                 @Override
                 public void permissionForeverDenied() {
-                    Toast.makeText(MainActivity.this, "Provide Permission for storage first", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, R.string.provide_storage_permission, Toast.LENGTH_LONG).show();
                 }
             });
         } else {
@@ -219,7 +218,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
                 new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("DOWNLOAD",
                         PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + arrayList_content.get(position).getNodeid());
             } else {
-                Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -2,42 +2,20 @@ package com.pratham.prathamdigital.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
-import com.android.volley.VolleyError;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.pratham.prathamdigital.R;
-import com.pratham.prathamdigital.adapters.RV_AgeFilterAdapter;
-import com.pratham.prathamdigital.adapters.RV_ContentAdapter;
-import com.pratham.prathamdigital.adapters.RV_LevelAdapter;
-import com.pratham.prathamdigital.adapters.RV_RecommendAdapter;
-import com.pratham.prathamdigital.async.PD_ApiRequest;
-import com.pratham.prathamdigital.content_playing.TextToSp;
+import com.pratham.prathamdigital.dbclasses.GoogleDBHelper;
 import com.pratham.prathamdigital.fragments.Fragment_MyLibrary;
 import com.pratham.prathamdigital.fragments.Fragment_Recommended;
-import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
-import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
-import com.pratham.prathamdigital.models.Modal_ContentDetail;
-import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.pratham.prathamdigital.R.id.rv_level;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class DashBoard_Activity extends AppCompatActivity {
 
@@ -47,20 +25,82 @@ public class DashBoard_Activity extends AppCompatActivity {
     RelativeLayout rl_recommended;
 
     private String TAG = DashBoard_Activity.class.getSimpleName();
+    GoogleDBHelper gdb;
+    String googleId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board_);
         ButterKnife.bind(this);
+        gdb = new GoogleDBHelper(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Bundle bundle = getIntent().getExtras();
+        googleId = bundle.getString("GoogleID");
+        Boolean IntroStatus = gdb.CheckIntroShownStatus(googleId);
+        if (!IntroStatus) {
+            // Show Intro & then set flag as shown
+            gdb.SetFlagTrue(1, googleId);
+            ShowIntro();
+        }
         if (!rl_mylibrary.isSelected() && !rl_recommended.isSelected()) {
             rl_mylibrary.performClick();
         }
+    }
+
+    private void ShowIntro() {
+        new MaterialTapTargetPrompt.Builder(DashBoard_Activity.this)
+                .setTarget(findViewById(R.id.rl_mylibrary))
+                .setPrimaryText(R.string.view_library)
+                .setSecondaryText(R.string.view_contents)
+                .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                .setBackButtonDismissEnabled(false)
+                .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
+                    @Override
+                    public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
+                        if (state == MaterialTapTargetPrompt.STATE_DISMISSED) {
+                            nextshowcase();// User has pressed the prompt target
+                        }
+                    }
+                })
+                .show();
+    }
+
+    private void nextshowcase() {
+        new MaterialTapTargetPrompt.Builder(DashBoard_Activity.this)
+                .setTarget(findViewById(R.id.rl_recommended))
+                .setPrimaryText(R.string.view_recommended)
+                .setSecondaryText(R.string.download_recommended)
+                .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
+                    @Override
+                    public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
+                        if (state == MaterialTapTargetPrompt.STATE_DISMISSED) {
+                            nextshowcase2();// User has pressed the prompt target
+                        }
+                    }
+                })
+                .show();
+    }
+
+    private void nextshowcase2() {
+        new MaterialTapTargetPrompt.Builder(DashBoard_Activity.this)
+                .setTarget(findViewById(R.id.rl_dash_search))
+                .setPrimaryText(R.string.search_contents_from_here)
+                .setSecondaryText(R.string.search_and_download)
+                .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
+                    @Override
+                    public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
+                        if (state == MaterialTapTargetPrompt.STATE_DISMISSED) {
+                        }
+                    }
+                })
+                .show();
     }
 
     @OnClick(R.id.rl_mylibrary)

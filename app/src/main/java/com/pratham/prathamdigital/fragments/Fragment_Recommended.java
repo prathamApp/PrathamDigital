@@ -75,14 +75,14 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
 
     RV_AgeFilterAdapter ageFilterAdapter;
     RV_RecommendAdapter rv_recommendAdapter;
-    String[] age = {"Age\n3-6", "Age\n6-10", "Age\n8-14", "Age\n14+"};
-    int[] age_id = {4, 5, 1, 2};
+    int[] age_id = {60, 61, 62, 63};
     int[] childs = {R.drawable.ic_baby_wrapped, R.drawable.ic_boy_wrapped, R.drawable.ic_10year_boy_wrapped, R.drawable.ic_adult_boy_wrapped};
     private AlertDialog dialog;
     private ArrayList<Modal_ContentDetail> arrayList_content = new ArrayList<>();
     private boolean isInitialized;
     private Modal_DownloadContent download_content;
     private DatabaseHandler db;
+    private String[] age;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,6 +109,7 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
         super.onResume();
         NetworkChangeReceiver.getObservable().addObserver(this);
         if (!isInitialized) {
+            age = getResources().getStringArray(R.array.main_contents);
             ageFilterAdapter = new RV_AgeFilterAdapter(getActivity(), this, age, childs);
             rv_ages_filter.getViewTreeObserver().addOnPreDrawListener(preDrawListenerBrowse);
             isInitialized = true;
@@ -224,6 +225,7 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
         arrayList_content.remove(position);
         rv_recommendAdapter.notifyItemRemoved(position);
         rv_recommendAdapter.notifyItemRangeChanged(position, arrayList_content.size());
+        rv_recommendAdapter.setSelectedIndex(-1, null);
         rv_recommendAdapter.updateData(arrayList_content);
     }
 
@@ -269,6 +271,7 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
                 } else {
                     rv_recommend_content.getViewTreeObserver().addOnPreDrawListener(preDrawListenerRecommend);
                     rv_recommendAdapter.updateData(arrayList_content);
+                    Log.d("content_size::", arrayList_content.size() + "");
                 }
             } else if (requestType.equalsIgnoreCase("DOWNLOAD")) {
                 JSONObject jsonObject = new JSONObject(response);

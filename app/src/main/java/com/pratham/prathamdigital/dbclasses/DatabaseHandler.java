@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
 import com.pratham.prathamdigital.models.Modal_DownloadContent;
+import com.pratham.prathamdigital.models.Score;
 
 /**
  * Created by HP on 12-08-2017.
@@ -31,14 +32,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Contacts table name
     private static final String TABLE_CONTENTS = "table_contents";
     private static final String TABLE_DOWNLOADED = "table_downloaded";
+    private static final String TABLE_SCORE = "table_score";
 
-    // Contacts Table Columns names
+    // Contents Table Columns names
     private static final String KEY_NODELIST = "nodelist";
     private static final String KEY_FOLDER_NAME = "foldername";
     private static final String KEY_DOWNLOADURL = "downloadUrl";
+    // Downloaded Contents Table Columns names
     private static final String KEY_RESOURCEID = "resourceid";
     private static final String KEY_NODEID = "nodeid";
     private static final String KEY_NODETITLE = "nodetitle";
+    // Score Table Columns names
+    private static final String RES_ID = "resourceId";
+    private static final String SESSION_ID = "sessionId";
+    private static final String QUESTION_ID = "questionId";
+    private static final String SCORED_MARKS = "scoredMarks";
+    private static final String TOTAL_MARKS = "totalMarks";
+    private static final String LEVEL = "level";
+    private static final String START_TIME = "startDateTime";
+    private static final String END_TIME = "endDateTime";
+    private static final String DEVICE_ID = "deviceId";
 
     private ArrayList<Modal_DownloadContent> contents = new ArrayList<>();
 
@@ -57,8 +70,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_RESOURCEID + " TEXT,"
                 + KEY_NODEID + " TEXT,"
                 + KEY_NODETITLE + " TEXT" + ")";
+        String CREATE_SCORE_TABLE = "CREATE TABLE " + TABLE_SCORE + "("
+                + RES_ID + " TEXT,"
+                + SESSION_ID + " TEXT,"
+                + QUESTION_ID + " INTEGER,"
+                + SCORED_MARKS + " INTEGER,"
+                + TOTAL_MARKS + " INTEGER,"
+                + LEVEL + " INTEGER,"
+                + START_TIME + " TEXT,"
+                + END_TIME + " TEXT,"
+                + DEVICE_ID + " TEXT" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
         db.execSQL(CREATE_DOWNLOADED_TABLE);
+        db.execSQL(CREATE_SCORE_TABLE);
     }
 
     // Upgrading database
@@ -99,6 +123,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // Inserting Row
         db.insert(TABLE_DOWNLOADED, null, values);
         db.close(); // Closing database connection
+    }
+
+    public void addScore(Score score) {
+        try {
+            SQLiteDatabase database = this.getWritableDatabase();
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("resourceId", score.getResourceId());
+            contentValues.put("sessionId", score.getSessionId());
+            contentValues.put("questionId", score.getQuestionId());
+            contentValues.put("scoredMarks", score.getScoredMarks());
+            contentValues.put("totalMarks", score.getTotalMarks());
+            contentValues.put("startDateTime", score.getStartTime());
+            contentValues.put("endDateTime", score.getEndTime());
+            contentValues.put("level", score.getLevel());
+            contentValues.put("deviceId", score.getDeviceId());
+
+            database.insert(TABLE_SCORE, null, contentValues);
+            database.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Getting All Contents
@@ -145,7 +191,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // Getting All Downloaded Contents Resource IDS
     public ArrayList<String> getDownloadContentID() {
-        ArrayList<String> ids=new ArrayList<>();
+        ArrayList<String> ids = new ArrayList<>();
         try {
             // Select All Query
             String selectQuery = "SELECT  * FROM " + TABLE_DOWNLOADED;

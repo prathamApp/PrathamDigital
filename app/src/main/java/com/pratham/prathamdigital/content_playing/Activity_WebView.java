@@ -41,22 +41,21 @@ public class Activity_WebView extends AppCompatActivity {
         ButterKnife.bind(this);
         String index_path = getIntent().getStringExtra("index_path");
         String path = getIntent().getStringExtra("path");
-        textToSp =new TextToSp(this);
-//        webResId=getIntent().getStringExtra("resId");
-        createWebView(index_path, path);
+        String resId = getIntent().getStringExtra("resId");
+        textToSp = new TextToSp(this);
+        createWebView(index_path, path, resId);
     }
 
-    public void createWebView(String GamePath, String parse) {
+    public void createWebView(String GamePath, String parse, String resId) {
 
         try {
             webView.loadUrl("file:///" + GamePath);
-//            webView.loadDataWithBaseURL("blarg://ignored", webview_path, "text/html", "utf-8", null);
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
             }
-            webView.addJavascriptInterface(new JSInterface(this, webView, "file:///" + parse,textToSp), "Android");
+            webView.addJavascriptInterface(new JSInterface(this, webView, "file:///" + parse, textToSp,resId), "Android");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {

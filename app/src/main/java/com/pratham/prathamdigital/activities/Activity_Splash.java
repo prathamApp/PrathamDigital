@@ -43,7 +43,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
     private static final int RC_SIGN_IN = 46;
     private Animation animeWobble;
     String personPhotoUrl = "", email = "", personName = "", googleId = "";
-    Bundle bundle;
+    private boolean isInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,42 +53,35 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
         // Database Initialization
         c = this;
         gdb = new GoogleDBHelper(c);
-        animeWobble = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.wobble);
-        img_logo.startAnimation(animeWobble);
-
-        new Handler().postDelayed(new Runnable() {
-            /*
-             * Showing splash screen with a timer. This will be useful when you
-             * want to show case your app logo / company
-             */
-            @Override
-            public void run() {
-                img_logo.clearAnimation();
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                startActivityForResult(signInIntent, RC_SIGN_IN);
-            }
-        }, 2000);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Animation expandIn = AnimationUtils.loadAnimation(Activity_Splash.this, R.anim.pop_in);
-                btn_google_login.startAnimation(expandIn);
-                btn_google_login.setVisibility(View.VISIBLE);
-            }
-        }, 2000);
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-                .build();
+        isInitialized = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        if (!isInitialized) {
+            animeWobble = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.wobble);
+            img_logo.startAnimation(animeWobble);
+            new Handler().postDelayed(new Runnable() {
+                /*
+                 * Showing splash screen with a timer. This will be useful when you
+                 * want to show case your app logo / company
+                 */
+                @Override
+                public void run() {
+                    img_logo.clearAnimation();
+                    Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+                    startActivityForResult(signInIntent, RC_SIGN_IN);
+                }
+            }, 2000);
+            GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .enableAutoManage(this, this)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+                    .build();
+        }
     }
 
     @OnClick(R.id.btn_google_login)
@@ -99,7 +92,6 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     @Override
@@ -109,14 +101,17 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-//            handleSignInResult(result);
-            updateUI(true, null);
+            handleSignInResult(result);
+        }else {
+            Animation expandIn = AnimationUtils.loadAnimation(Activity_Splash.this, R.anim.pop_in);
+            btn_google_login.startAnimation(expandIn);
+            btn_google_login.setVisibility(View.VISIBLE);
         }
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        Log.d("result::",result.toString());
-        Log.d("result::",result.isSuccess()+"");
+        Log.d("result::", result.toString());
+        Log.d("result::", result.isSuccess() + "");
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount account = result.getSignInAccount();
@@ -145,45 +140,44 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
                     // New Entry
                     GoogleCredentials gObj = new GoogleCredentials();
                     gObj.GoogleID = googleId;
-                    gObj.PersonPhotoUrl = "no_photo";
+//                    gObj.PersonPhotoUrl = "no_photo";
                     gObj.Email = email;
                     gObj.PersonName = personName;
                     gObj.IntroShown = 0;
                     gdb.insertNewUser(gObj);
                     Toast.makeText(Activity_Splash.this, "Welcome " + personName, Toast.LENGTH_SHORT).show();
-                    BackupDatabase.backup(c);
+//                    BackupDatabase.backup(c);
                 }
             } else {
                 Toast.makeText(this, "Please fill all the fields !!!", Toast.LENGTH_SHORT).show();
             }
+            Bundle bundle = new Bundle();
             bundle.putString("GoogleID", googleId);
             bundle.putString("emailId", email);
             bundle.putString("PersonName", personName);
-            bundle.putString("PersonPhotoUrl", personPhotoUrl);
+//            bundle.putString("PersonPhotoUrl", personPhotoUrl);
             updateUI(true, bundle);
         } else {
             // Signed out, show unauthenticated UI.
-/*            updateUI(false, null);*/
+            updateUI(false, null);
         }
     }
 
-    private void updateUI(boolean isSignedIn, Bundle bundle) {
+    private void updateUI(boolean isSignedIn, final Bundle bundle) {
         if (isSignedIn) {
-//            bundle.putString("GoogleID", googleId);
-//            bundle.putString("emailId", email);
-//            bundle.putString("PersonName", personName);
-//            bundle.putString("PersonPhotoUrl", personPhotoUrl);
             PD_Utility.showLoader(Activity_Splash.this);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Intent activityChangeIntent = new Intent(Activity_Splash.this, DashBoard_Activity.class);
-//            activityChangeIntent.putExtras(bundle);
+                    activityChangeIntent.putExtras(bundle);
                     startActivity(activityChangeIntent);
                     overridePendingTransition(R.anim.enter_from_right, R.anim.nothing);
                     finish();
                 }
             }, 3000);
+        } else {
+            btn_google_login.setVisibility(View.VISIBLE);
         }
     }
 

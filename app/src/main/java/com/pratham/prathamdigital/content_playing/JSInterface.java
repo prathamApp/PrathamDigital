@@ -6,12 +6,20 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.RadioGroup;
 
-import java.io.File;
+import com.pratham.prathamdigital.PrathamApplication;
+import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
+import com.pratham.prathamdigital.models.Score;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 
 public class JSInterface extends Activity {
@@ -32,18 +40,17 @@ public class JSInterface extends Activity {
     static Boolean completeFlag = false;
     public String gamePath;
     private TextToSp textToSp;
+    private String resId;
+    private String audio_directory_path = "";
 
 
-    JSInterface(Context c, WebView w, String gamePath, TextToSp textToSp) {
+    JSInterface(Context c, WebView w, String gamePath, TextToSp textToSp, String resId) {
         mContext = c;
         this.textToSp = textToSp;
+        this.resId = resId;
         textToSp.ttsFunction("Welcome kids", "eng");
         this.gamePath = gamePath;
         createRecordingFolder();
-/*
-        this.presentStudents = presentStudents;
-        this.SessionId = SessionId;
-*/
         mp = new MediaPlayer();
         this.w = w;
         VideoFlag = 0;
@@ -54,6 +61,7 @@ public class JSInterface extends Activity {
         if (!file.exists()) {
             file.mkdirs();
         }
+        audio_directory_path = file.getAbsolutePath();
     }
 
     @JavascriptInterface
@@ -83,7 +91,7 @@ public class JSInterface extends Activity {
     @JavascriptInterface
     public void startRecording(String recName) {
         try {
-            recordAudio = new Audio(recName);
+            recordAudio = new Audio(recName, audio_directory_path);
             recordAudio.start();
         } catch (Exception e) {
         }
@@ -353,41 +361,32 @@ public class JSInterface extends Activity {
     }
 
     @JavascriptInterface
-    public void addScore(String resId, int questionId, int scorefromGame, int totalMarks, int level, String startTime) {
-        boolean _wasSuccessful = false;
-        resId = "";
-//put try catch block for error handling
+    public void addScore(String tempResId, int questionId, int scorefromGame, int totalMarks, int level, String startTime) {
+        tempResId = "";
         try {
-//            StatusDBHelper statusDBHelper = new StatusDBHelper(mContext);
-//            ScoreDBHelper scoreDBHelper = new ScoreDBHelper(mContext);
-//            AssessmentScoreDBHelper assessmentDBHelper = new AssessmentScoreDBHelper(mContext);
-//            AssessmentScore assessment = new AssessmentScore();
+            DatabaseHandler scoreDBHelper = new DatabaseHandler(mContext);
 
-//            Score score = new Score();
-// score.SessionID = SessionId;
+            Score score = new Score();
+            score.setSessionId(PrathamApplication.sessionId);
+            score.setResourceId(resId);
+            score.setQuestionId(questionId);
+            score.setScoredMarks(scorefromGame);
+            score.setTotalMarks(totalMarks);
+            score.setStartTime(startTime);
+            String deviceId = Build.SERIAL;
+            score.setDeviceId(deviceId);
+            score.setEndTime(GetCurrentDateTime());
+            score.setLevel(level);
+            scoreDBHelper.addScore(score);
 
-//            score.SessionID = MultiPhotoSelectActivity.sessionId;
-//            if (assessmentLogin.assessmentFlg)
-//                score.ResourceID = WebViewActivity.webResId;
-//            else
-//                score.ResourceID = CardAdapter.resId;
-//            score.QuestionId = questionId;
-//            score.ScoredMarks = scorefromGame;
-//            score.TotalMarks = totalMarks;
-//            score.StartTime = startTime;
-// String deviceId = statusDBHelper.getValue("deviceId");
-//            score.GroupID = MultiPhotoSelectActivity.selectedGroupsScore;//ketan 17/6/17
-// if (deviceId.equals("") || deviceId.contains("111111111111111")) {
-//            String deviceId = Build.SERIAL;
-// }
-//            score.DeviceID = deviceId;
-//            score.EndTime = Util.GetCurrentDateTime();
-//            score.Level = level;
-//            _wasSuccessful = scoreDBHelper.Add(score);
-//            BackupDatabase.backup(mContext);
-//
         } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
+    public String GetCurrentDateTime() {
+        Calendar cal = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH);
+        return dateFormat.format(cal.getTime());
     }
 }

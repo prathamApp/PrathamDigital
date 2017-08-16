@@ -21,116 +21,32 @@ import android.view.animation.LinearInterpolator;
 public class SunBabyLoadingView extends View {
 
     private static final String TAG = "SunBaby";
-
-    /**
-     * 默认宽高
-     */
     private static final int DEFAULT_DIAMETER_SIZE = 120;
-
-    /**
-     * 直线起始位置的比率，以View的宽为参照
-     */
     private static final float RATIO_LINE_START_X = 5 / 6.f;
-
-    /**
-     * 直线起始位置的比率，以View的高为参照
-     */
     private static final float RATIO_LINE_START_Y = 3 / 4.f;
-
-    /**
-     * 太阳圆弧起始位置的比率，以地平线的宽为参照
-     */
     private static final float RATIO_ARC_START_X = 2 / 5.f;
-
-    /**
-     * 太阳光芒之间间隔的角度
-     */
     private static final float SUNSHINE_SEPARATIO_ANGLE = 45;
-
-    /**
-     * 画笔的颜色
-     */
     private static final String PAINT_COLOR = "#3F51B5";
-
-    /**
-     * 背景色
-     */
     private static final String BG_COLOR = "#F4C042";
-
-    /**
-     * 太阳圆弧与光芒的空隙间距
-     */
     private static final float SPACE_SUNSHINE = 10;
-
-    /**
-     * 太阳光芒的长度
-     */
     private static final float SUNSHINE_LINE_LENGTH = 15;
-
-    /**
-     * 太阳升起高度基准值
-     */
     private static final float SUNSHINE_RISE_HEIGHT = 12;
-
-    /**
-     * 太阳眼睛的半径
-     */
     private static final float SUN_EYES_RADIUS = 6;
-
-    /**
-     * 默认偏移量
-     */
     private static final int DEFAULT_OFFSET_Y = 20;
-
-    /**
-     * 地平线起点坐标(lineStartX, lineStartY)，地平线长度lineLength
-     */
     private float lineStartX, lineStartY, lineLength;
-
-    /**
-     * 文字坐标点x,y值
-     */
     private float textX, textY;
-
-    /**
-     * 太阳圆圈的半径
-     */
     private float sunRadius;
-
-    /**
-     * 阳光的起始坐标x,y值
-     */
     private double sunshineStartX, sunshineStartY, sunshineStopX, sunshineStopY;
-
-    /**
-     * 眼睛转动的最大距离
-     */
     private float maxEyesTurn;
-
-    /**
-     * 眼睛转动的偏移值
-     */
     private float turnOffsetX;
-
-    /**
-     * 用于缓存太阳圆弧的外轮廓矩形区域顶点坐标值
-     */
     private float orectLeft, orectTop, orectRight, orectBottom;
-
     private boolean once = true;
-
     private boolean isDrawEyes = true;
-
     private float offsetY = DEFAULT_OFFSET_Y, offsetSpin, offsetAngle;
-
     private float tempOffsetY = offsetY;
-
     private Paint mPaint, sunPaint, eyePaint, bgPaint;
-
     private TextPaint mTextPaint;
-
     private RectF rectF;
-
 
     public SunBabyLoadingView(Context context) {
         this(context, null);
@@ -214,21 +130,16 @@ public class SunBabyLoadingView extends View {
         final int width = getWidth();
         final int height = getHeight();
 
-        // 初始化地平线长度
         lineLength = width * RATIO_LINE_START_X;
 
-        // 初始化地平线起始坐标X,Y值
         lineStartX = (width - lineLength) * .5f;
         lineStartY = height * RATIO_LINE_START_Y;
 
-        // 计算文字的坐标X,Y值
         textX = width * .5f;
         textY = lineStartY + (height - lineStartY) * .5f + Math.abs(mTextPaint.descent() + mTextPaint.ascent()) * .5f;
 
-        // 计算太阳圆圈的半径
         sunRadius = (lineLength - lineLength * RATIO_ARC_START_X) * .5f;
 
-        // 计算两眼之间的距离，也是眼睛平移的最大距离
         maxEyesTurn = (sunRadius + sunPaint.getStrokeWidth() * .5f) * .5f;
 
         calcAndSetRectPoint();
@@ -236,16 +147,10 @@ public class SunBabyLoadingView extends View {
         initAnimaDriver();
     }
 
-    /**
-     * 计算由于太阳升起或者落下偏移Y值所对应对的角度
-     */
     private void calcOffsetAngle() {
         offsetAngle = (float) (Math.asin(offsetY / sunRadius) * 180 / Math.PI);
     }
 
-    /**
-     * 计算太阳圆弧的外轮廓矩形区域顶点坐标值, 并设置给rectF
-     */
     private void calcAndSetRectPoint() {
         float rectLeft = lineStartX + lineLength * .5f - sunRadius;
         float rectTop = lineStartY - sunRadius + offsetY;
@@ -255,9 +160,6 @@ public class SunBabyLoadingView extends View {
         rectF.set(rectLeft, rectTop, rectRight, rectBottom);
     }
 
-    /**
-     * 初始化动画驱动
-     */
     private void initAnimaDriver() {
         startSpinAnima();
 
@@ -282,10 +184,6 @@ public class SunBabyLoadingView extends View {
         rise1SlowAnima.start();
     }
 
-    /**
-     * 当太阳快速升起完毕后启动第二次缓慢升起动画
-     * @param rise1SlowAnima
-     */
     private void playRisedCyclingAnimator(final ValueAnimator rise1SlowAnima) {
         final ValueAnimator rise2SlowAnima = initRise2SlowAnimator();
         rise2SlowAnima.start();
@@ -307,9 +205,6 @@ public class SunBabyLoadingView extends View {
         });
     }
 
-    /**
-     * 当太阳快速升起完毕后启动眨动眼睛两次动画
-     */
     private void playRisedEyesAnimator() {
         final ValueAnimator blink2Anima = initBlink2Animator();
         blink2Anima.start();
@@ -340,10 +235,6 @@ public class SunBabyLoadingView extends View {
         });
     }
 
-    /**
-     * 初始化太阳迅速落下的动画
-     * @return
-     */
     @NonNull
     private ValueAnimator initSinkAnimator() {
         final float endValue = DEFAULT_OFFSET_Y - tempOffsetY;
@@ -393,10 +284,6 @@ public class SunBabyLoadingView extends View {
         return sinkAnima;
     }
 
-    /**
-     * 初始化第二次缓慢升起的动画
-     * @return
-     */
     @NonNull
     private ValueAnimator initRise2SlowAnimator() {
         ValueAnimator rise2SlowAnima = ValueAnimator.ofFloat(0, SUNSHINE_RISE_HEIGHT * 1.5f);
@@ -421,10 +308,6 @@ public class SunBabyLoadingView extends View {
         return rise2SlowAnima;
     }
 
-    /**
-     * 初始化眼睛向左边转动的动画
-     * @return
-     */
     @NonNull
     private ValueAnimator initTurnEyesLeftAnimator() {
         ValueAnimator turnEyesLeftAnima = ValueAnimator.ofFloat(maxEyesTurn, 0);
@@ -440,10 +323,6 @@ public class SunBabyLoadingView extends View {
         return turnEyesLeftAnima;
     }
 
-    /**
-     * 初始化眨动一次眼睛动画
-     * @return
-     */
     @NonNull
     private ValueAnimator initBlink1Animator() {
         ValueAnimator blink1Anima = ValueAnimator.ofInt(0, 1);
@@ -465,10 +344,6 @@ public class SunBabyLoadingView extends View {
         return blink1Anima;
     }
 
-    /**
-     * 初始化眼睛向右转动的动画
-     * @return
-     */
     @NonNull
     private ValueAnimator initTurnEyesRightAnimator() {
         ValueAnimator turnEyesRightAnima = ValueAnimator.ofFloat(0, maxEyesTurn);
@@ -484,10 +359,6 @@ public class SunBabyLoadingView extends View {
         return turnEyesRightAnima;
     }
 
-    /**
-     * 初始化眨动两次眼睛动画
-     * @return
-     */
     @NonNull
     private ValueAnimator initBlink2Animator() {
         ValueAnimator blink2Anima = ValueAnimator.ofInt(0, 1, 0, 1);
@@ -509,10 +380,6 @@ public class SunBabyLoadingView extends View {
         return blink2Anima;
     }
 
-    /**
-     * 初始化太阳快速升起动画
-     * @return
-     */
     @NonNull
     private ValueAnimator initRiseFastAnimator() {
 
@@ -558,10 +425,6 @@ public class SunBabyLoadingView extends View {
         return riseFastAnima;
     }
 
-    /**
-     * 初始化太阳第一次缓慢升起动画
-     * @return
-     */
     @NonNull
     private ValueAnimator initRise1Animator() {
         final ValueAnimator rise1SlowAnima = ValueAnimator.ofFloat(0, SUNSHINE_RISE_HEIGHT);
@@ -586,9 +449,6 @@ public class SunBabyLoadingView extends View {
         return rise1SlowAnima;
     }
 
-    /**
-     * 启动阳光旋转动画
-     */
     private void startSpinAnima() {
         ValueAnimator spinAnima = ValueAnimator.ofFloat(0, 360);
         spinAnima.setRepeatCount(-1);
@@ -643,7 +503,7 @@ public class SunBabyLoadingView extends View {
         float lcx = getWidth() * .5f - (sunRadius + sunPaint.getStrokeWidth() * .5f) * .5f + turnOffsetX;
         float lcy = lineStartY + offsetY - SUN_EYES_RADIUS;
 
-        if (lcy + SUN_EYES_RADIUS >= lineStartY) return ;
+        if (lcy + SUN_EYES_RADIUS >= lineStartY) return;
 
         float rcx = getWidth() * .5f + turnOffsetX;
         float rcy = lcy;
@@ -651,5 +511,4 @@ public class SunBabyLoadingView extends View {
         canvas.drawCircle(lcx, lcy, SUN_EYES_RADIUS, eyePaint);
         canvas.drawCircle(rcx, rcy, SUN_EYES_RADIUS, eyePaint);
     }
-
 }

@@ -24,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.DashBoard_Activity"
+            android:name=".activities.Activity_Splash"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -41,13 +41,15 @@
             android:name=".content_playing.VideoPlayer"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <!--<activity-->
-        <!--android:name=".activities.DashBoard_Activity"-->
-        <!--android:screenOrientation="sensorLandscape" />-->
+        <activity
+            android:name=".activities.DashBoard_Activity"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustPan" />
+
         <receiver android:name=".util.NetworkChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

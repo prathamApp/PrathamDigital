@@ -64,13 +64,13 @@ public class ZipDownloader {
             super.onPreExecute();
 //            Intent intent = new Intent(this, MainActivity.class);
 //            final PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            builder = new NotificationCompat.Builder(context);
-            builder.setSmallIcon(R.drawable.ic_download_icon);
-//            builder.setContentIntent(pendingIntent);
-            builder.setContentTitle("Downloading your file");
-            builder.setProgress(0, 0, true);
-            builder.setAutoCancel(false);
+//            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//            builder = new NotificationCompat.Builder(context);
+//            builder.setSmallIcon(R.drawable.ic_download_icon);
+////            builder.setContentIntent(pendingIntent);
+//            builder.setContentTitle("Downloading your file");
+//            builder.setProgress(0, 0, true);
+//            builder.setAutoCancel(false);
         }
 
         @Override
@@ -111,17 +111,17 @@ public class ZipDownloader {
         protected void onProgressUpdate(String... progress) {
             Log.d("ANDRO_ASYNC", progress[0]);
             progressUpdate.onProgressUpdate(Integer.parseInt(progress[0]));
-            builder.setProgress(100, Integer.parseInt(progress[0]), false);
-            notificationManager.notify(1000, builder.build());
+//            builder.setProgress(100, Integer.parseInt(progress[0]), false);
+//            notificationManager.notify(1000, builder.build());
         }
 
         @Override
         protected void onPostExecute(String unused) {
             if (result.equalsIgnoreCase("true")) {
                 try {
-                    builder.setContentText("Download complete");
-                    builder.setProgress(0, 0, false);
-                    notificationManager.notify(1000, builder.build());
+//                    builder.setContentText("Download complete");
+//                    builder.setProgress(0, 0, false);
+//                    notificationManager.notify(1000, builder.build());
                     progressUpdate.onZipDownloaded(true);
                     System.out.println("lucy download unzip");
                     unzip();

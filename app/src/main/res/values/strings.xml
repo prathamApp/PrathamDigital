@@ -2,4 +2,25 @@
     <string name="app_name">Pratham Digital</string>
     <string name="search_content">Search Content</string>
     <string name="Sign_In">Sign In</string>
+    <string name="view_library">View Your Library Here</string>
+    <string name="view_contents">All your contents can be accessed from here.</string>
+    <string name="view_recommended">View the recommended contents here</string>
+    <string name="download_recommended">Download the recommended contents from here.</string>
+    <string name="search_contents_from_here">Search any content from here</string>
+    <string name="search_and_download">Search and Download any content fromm here</string>
+    <string name="no_internet">No Internet Connection</string>
+    <string name="provide_storage_permission">Provide Permission for storage first</string>
+    <string-array name="search_tags">
+        <item>English</item>
+        <item>Maths</item>
+        <item>Games</item>
+        <item>Science</item>
+        <item>Dekho or Seekho</item>
+    </string-array>
+    <string-array name="main_contents">
+        <item>Age 3–6\nKhelbadi</item>
+        <item>Age 6–10\nKhelpuri</item>
+        <item>Age 8–14\nDekho Aur Sikho</item>
+        <item>Age\n14+</item>
+    </string-array>
 </resources>
