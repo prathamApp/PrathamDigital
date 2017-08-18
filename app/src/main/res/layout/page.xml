@@ -9,11 +9,16 @@
     <ImageView
         android:id="@+id/iv"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="@dimen/size_90"
+        android:layout_height="@dimen/size_90"
+        android:layout_gravity="center"
+        android:background="@drawable/carousal_picker_rounded_corners"
+        android:gravity="center"
+        android:textColor="@color/ghost_white" />
 
 </LinearLayout>

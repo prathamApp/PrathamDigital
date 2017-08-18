@@ -49,6 +49,30 @@
             android:name=".activities.MainActivity"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activities.Activity_Main"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activities.Activity_Search"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activities.Activity_LanguagDialog"
+            android:parentActivityName=".activities.DashBoard_Activity"
+            android:theme="@style/AppTheme.Dialog">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DashBoard_Activity" />
+        </activity>
+        <activity
+            android:name=".activities.Activity_DownloadDialog"
+            android:parentActivityName=".activities.Activity_Main"
+            android:theme="@style/AppTheme.Dialog">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.Activity_Main" />
+        </activity>
 
         <receiver android:name=".util.NetworkChangeReceiver">
             <intent-filter>

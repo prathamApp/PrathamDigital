@@ -157,8 +157,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent activityChangeIntent = new Intent(Activity_Splash.this, DashBoard_Activity.class);
-//                    activityChangeIntent.putExtras(bundle);
+                    Intent activityChangeIntent = new Intent(Activity_Splash.this, Activity_Main.class);
                     startActivity(activityChangeIntent);
                     overridePendingTransition(R.anim.enter_from_right, R.anim.nothing);
                     finish();

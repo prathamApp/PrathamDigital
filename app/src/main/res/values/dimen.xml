@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -116,6 +115,9 @@
     <dimen name="size_420">420dp</dimen>
     <dimen name="size_430">430dp</dimen>
     <dimen name="size_410">410dp</dimen>
+    <dimen name="fab_size_normal">56dp</dimen>
+    <dimen name="fab_size_mini">36dp</dimen>
+    <dimen name="labels_text_size">14sp</dimen>
     <item name="three_items" format="float" type="dimen">1.5</item>
     <item name="five_items" format="float" type="dimen">1.25</item>
     <item name="seven_items" format="float" type="dimen">1.16</item>

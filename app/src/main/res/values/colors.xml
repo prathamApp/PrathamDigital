@@ -44,4 +44,8 @@
     <color name="selected_font_color">#999933</color>
     <color name="deselected_color">#aaffaa</color>
     <color name="deselected_font_color">#339933</color>
+    <color name="mustord_yellow">#FFE066</color>
+
+    <color name="dialog_background_color">#fafafa</color>
+    <color name="dialog_background_scrim">#99323232</color>
 </resources>

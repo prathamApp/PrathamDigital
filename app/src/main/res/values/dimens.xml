@@ -6,4 +6,6 @@
     <dimen name="size_500">500dp</dimen>
     <dimen name="size_24sp">24sp</dimen>
     <dimen name="size_18sp">18sp</dimen>
+    <dimen name="size_25sp">25sp</dimen>
+    <dimen name="size_50sp">50sp</dimen>
 </resources>

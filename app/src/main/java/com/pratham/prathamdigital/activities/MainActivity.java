@@ -192,7 +192,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
     }
 
     @Override
-    public void downloadClick(final int position, final RecyclerView.ViewHolder holder) {
+    public void downloadClick(final int position, final View holder) {
         if (!isPermissionsGranted(MainActivity.this, new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
                 PermissionUtils.Manifest_READ_EXTERNAL_STORAGE})) {
             askCompactPermissions(new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
@@ -200,7 +200,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
                 @Override
                 public void permissionGranted() {
                     if (!isDownloading) {
-                        rv_contentAdapter.setSelectedIndex(position, (RV_ContentAdapter.ViewHolder) holder);
+                        rv_contentAdapter.setSelectedIndex(position, null);
                         if (PD_Utility.isInternetAvailable(getApplicationContext())) {
                             new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("DOWNLOAD",
                                     PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + arrayList_content.get(position).getNodeid());
@@ -222,7 +222,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
                 }
             });
         } else {
-            rv_contentAdapter.setSelectedIndex(position, (RV_ContentAdapter.ViewHolder) holder);
+            rv_contentAdapter.setSelectedIndex(position, null);
             if (PD_Utility.isInternetAvailable(getApplicationContext())) {
                 new PD_ApiRequest(MainActivity.this, MainActivity.this).getDataVolley("DOWNLOAD",
                         PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + arrayList_content.get(position).getNodeid());
@@ -542,7 +542,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
                         getDrawable(R.drawable.avd_no_connection);
                 img_main_no_connection.setImageDrawable(avd);
             } else {
-                img_main_no_connection.setImageResource(R.drawable.ic_no_connection_fix_wrapped);
+//                img_main_no_connection.setImageResource(R.drawable.ic_no_connection_fix_wrapped);
             }
             Drawable animation = img_main_no_connection.getDrawable();
             if (animation instanceof Animatable) {

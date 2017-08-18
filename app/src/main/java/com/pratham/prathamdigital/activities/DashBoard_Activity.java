@@ -1,17 +1,29 @@
 package com.pratham.prathamdigital.activities;
 
+import android.animation.Animator;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
 
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.content_playing.TextToSp;
+import com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton;
+import com.pratham.prathamdigital.custom.reveal.ViewAnimationUtils;
 import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
 import com.pratham.prathamdigital.fragments.Fragment_MyLibrary;
 import com.pratham.prathamdigital.fragments.Fragment_Recommended;
+import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
 
 import java.util.Locale;
@@ -23,10 +35,12 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class DashBoard_Activity extends AppCompatActivity {
 
-    @BindView(R.id.rl_mylibrary)
-    RelativeLayout rl_mylibrary;
-    @BindView(R.id.rl_recommended)
-    RelativeLayout rl_recommended;
+    @BindView(R.id.fab_library)
+    FloatingActionButton fab_library;
+    @BindView(R.id.fab_recommend)
+    FloatingActionButton fab_recommend;
+    @BindView(R.id.fab_language)
+    FloatingActionButton fab_language;
 
     Locale myLocale;
     String defaultLang;
@@ -34,6 +48,7 @@ public class DashBoard_Activity extends AppCompatActivity {
     DatabaseHandler gdb;
     String googleId;
     private TextToSp textToSp;
+    private boolean isInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +57,12 @@ public class DashBoard_Activity extends AppCompatActivity {
         ButterKnife.bind(this);
         gdb = new DatabaseHandler(this);
         googleId = gdb.getGoogleID();
+        isInitialized = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        textToSp = new TextToSp(DashBoard_Activity.this);
         Boolean IntroStatus = gdb.CheckIntroShownStatus(googleId);
         Log.d("IntroStatus:", IntroStatus + "");
         if (!IntroStatus) {
@@ -56,8 +71,10 @@ public class DashBoard_Activity extends AppCompatActivity {
             Log.d("IntroStatus:", gdb.CheckIntroShownStatus(googleId) + "");
             ShowIntro();
         }
-        if (!rl_mylibrary.isSelected() && !rl_recommended.isSelected()) {
-            rl_mylibrary.performClick();
+        if (!isInitialized) {
+            fab_library.performClick();
+            textToSp = new TextToSp(DashBoard_Activity.this);
+            isInitialized = true;
         }
     }
 
@@ -112,31 +129,46 @@ public class DashBoard_Activity extends AppCompatActivity {
                 .show();
     }
 
-    @OnClick(R.id.rl_mylibrary)
-    public void setRl_mylibrary() {
-        rl_mylibrary.setSelected(true);
-        rl_recommended.setSelected(false);
+    @OnClick(R.id.fab_library)
+    public void setLibrary() {
         PD_Utility.showFragment(this, new Fragment_MyLibrary(), R.id.frame_container, null,
                 Fragment_MyLibrary.class.getSimpleName());
     }
 
-    @OnClick(R.id.rl_recommended)
-    public void setRl_recommended() {
-        rl_mylibrary.setSelected(false);
-        rl_recommended.setSelected(true);
+    @OnClick(R.id.fab_recommend)
+    public void setRecommended() {
         PD_Utility.showFragment(this, new Fragment_Recommended(), R.id.frame_container, null,
                 Fragment_Recommended.class.getSimpleName());
     }
 
-    @OnClick(R.id.rl_dash_search)
-    public void setRlDashSearch() {
+    @OnClick(R.id.fab_search)
+    public void setSearch() {
         Intent intent = new Intent(DashBoard_Activity.this, MainActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.enter_from_right, R.anim.nothing);
     }
 
+    @OnClick(R.id.fab_language)
+    public void setLanguage() {
+        Intent intent = new Intent(DashBoard_Activity.this, Activity_Main.class);
+//        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(DashBoard_Activity.this,
+//                fab_language, "transition_dialog");
+//        startActivityForResult(intent, 1, options.toBundle());
+        startActivity(intent);
+    }
+
     @Override
     public void onBackPressed() {
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                String language = data.getStringExtra(PD_Constant.LANGUAGE);
+            }
+        }
     }
 }
 
@@ -145,7 +177,6 @@ public class DashBoard_Activity extends AppCompatActivity {
 
 /*
 show download complete dialog using toast
-show language dialog
 set different drawable resources for dashboard vectors
 test the apk
  */

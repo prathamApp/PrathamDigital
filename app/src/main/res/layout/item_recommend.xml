@@ -7,10 +7,11 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="200dp"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/size_200"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/size_5"
         android:clickable="true"
+        android:transitionName="transition_recommend"
         app:cardCornerRadius="@dimen/size_5"
         app:cardElevation="@dimen/size_5"
         app:cardUseCompatPadding="true">
@@ -30,43 +31,41 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/size_55"
-                android:layout_alignParentBottom="true">
+                android:layout_alignParentBottom="true"
+                android:background="@color/trans_charcoal">
 
-                <ImageView
-                    android:id="@+id/recom_img_download"
-                    android:layout_width="@dimen/size_50"
-                    android:layout_height="match_parent"
+                <!--<ImageView-->
+                <!--android:id="@+id/recom_img_download"-->
+                <!--android:layout_width="@dimen/size_50"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:padding="@dimen/size_5"-->
+                <!--android:visibility="visible"-->
+                <!--app:srcCompat="@drawable/ic_download_wrapped" />-->
+
+                <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
+                    android:id="@+id/fab_download"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:padding="@dimen/size_5"
-                    android:visibility="visible"
+                    android:contentDescription="@string/search"
+                    app:fab_colorNormal="@color/ghost_white"
+                    app:fab_colorPressed="@color/black_20"
+                    app:fab_colorRipple="@color/charcoal"
+                    app:fab_shadowColor="@color/black_20"
+                    app:fab_shadowRadius="@dimen/size_4"
+                    app:fab_showShadow="true"
+                    app:fab_size="mini"
                     app:srcCompat="@drawable/ic_download_wrapped" />
-
-                <com.pratham.prathamdigital.custom.progress_indicators.CircleProgressView
-                    android:id="@+id/recom_progressbar2"
-                    android:layout_width="@dimen/size_50"
-                    android:layout_height="@dimen/size_50"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/size_5"
-                    android:layout_marginRight="@dimen/size_5"
-                    android:visibility="invisible"
-                    app:cpv_background_circle_color="@color/ghost_white"
-                    app:cpv_background_circle_width="@dimen/size_3"
-                    app:cpv_circle_color="@color/golden"
-                    app:cpv_text_suffix="%"
-                    app:cpv_text_size="15"
-                    app:cpv_text_color="@color/ghost_white"
-                    app:cpv_circle_width="@dimen/size_3" />
 
                 <TextView
                     android:id="@+id/recom_name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_toLeftOf="@+id/recom_img_download"
-                    android:layout_toStartOf="@+id/recom_img_download"
+                    android:layout_toStartOf="@+id/fab_download"
                     android:gravity="center"
                     android:maxLines="2"
                     android:padding="@dimen/size_3"

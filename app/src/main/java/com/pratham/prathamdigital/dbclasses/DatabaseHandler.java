@@ -378,9 +378,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             selectedLang = cursor.getString(0);
             cursor.close();
             database.close();
-            return selectedLang;
+            if (selectedLang != null) {
+                return selectedLang;
+            } else {
+                return "Hindi";
+            }
         } catch (Exception e) {
-            return selectedLang = "en";
+            return "Hindi";
         }
     }
 

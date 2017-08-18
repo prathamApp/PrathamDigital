@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,10 +22,7 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pratham.prathamdigital.R;
-import com.pratham.prathamdigital.activities.DashBoard_Activity;
-import com.pratham.prathamdigital.activities.MainActivity;
 import com.pratham.prathamdigital.adapters.RV_AgeFilterAdapter;
-import com.pratham.prathamdigital.adapters.RV_ContentAdapter;
 import com.pratham.prathamdigital.adapters.RV_RecommendAdapter;
 import com.pratham.prathamdigital.async.ImageDownload;
 import com.pratham.prathamdigital.async.PD_ApiRequest;
@@ -183,14 +179,14 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
     }
 
     @Override
-    public void downloadClick(final int position, final RecyclerView.ViewHolder holder) {
+    public void downloadClick(final int position, final View holder) {
         if (!isPermissionsGranted(getActivity(), new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
                 PermissionUtils.Manifest_READ_EXTERNAL_STORAGE})) {
             askCompactPermissions(new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
                     PermissionUtils.Manifest_READ_EXTERNAL_STORAGE}, new PermissionResult() {
                 @Override
                 public void permissionGranted() {
-                    rv_recommendAdapter.setSelectedIndex(position, (RV_RecommendAdapter.ViewHolder) holder);
+                    rv_recommendAdapter.setSelectedIndex(position, null);
                     if (PD_Utility.isInternetAvailable(getActivity())) {
                         new PD_ApiRequest(getActivity(), Fragment_Recommended.this).getDataVolley("DOWNLOAD",
                                 PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + arrayList_content.get(position).getNodeid());
@@ -210,7 +206,7 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
                 }
             });
         } else {
-            rv_recommendAdapter.setSelectedIndex(position, (RV_RecommendAdapter.ViewHolder) holder);
+            rv_recommendAdapter.setSelectedIndex(position, null);
             if (PD_Utility.isInternetAvailable(getActivity())) {
                 new PD_ApiRequest(getActivity(), Fragment_Recommended.this).getDataVolley("DOWNLOAD",
                         PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + arrayList_content.get(position).getNodeid());
@@ -356,7 +352,7 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
                         getActivity().getDrawable(R.drawable.avd_no_connection);
                 img_no_connection.setImageDrawable(avd);
             } else {
-                img_no_connection.setImageResource(R.drawable.ic_no_connection_fix_wrapped);
+//                img_no_connection.setImageResource(R.drawable.ic_no_connection_fix_wrapped);
             }
             Drawable animation = img_no_connection.getDrawable();
             if (animation instanceof Animatable) {

@@ -1,10 +1,7 @@
 package com.pratham.prathamdigital.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
-import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,29 +13,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.pratham.prathamdigital.R;
-import com.pratham.prathamdigital.adapters.RV_AgeFilterAdapter;
 import com.pratham.prathamdigital.adapters.RV_LibraryContentAdapter;
-import com.pratham.prathamdigital.adapters.RV_RecommendAdapter;
 import com.pratham.prathamdigital.adapters.RV_SubLibraryAdapter;
 import com.pratham.prathamdigital.content_playing.Activity_WebView;
-import com.pratham.prathamdigital.content_playing.TextToSp;
 import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
-import com.pratham.prathamdigital.models.Modal_DownloadContent;
-import com.pratham.prathamdigital.util.NetworkChangeReceiver;
 import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
 
 import java.io.File;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.StringTokenizer;
 
 import butterknife.BindView;
@@ -137,8 +124,6 @@ public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterL
     @Override
     public void browserButtonClicked(int position) {
         libraryContentAdapter.setSelectedIndex(position);
-//        fileName = downloadContents.get(position).getDownloadurl()
-//                .substring(downloadContents.get(position).getDownloadurl().lastIndexOf('/') + 1);
         subContents = db.Get_Contents(PD_Constant.TABLE_CHILD, downloadContents.get(position).getNodeid());
         if (subLibraryAdapter == null) {
             subLibraryAdapter = new RV_SubLibraryAdapter(getActivity(), this, subContents);
@@ -187,7 +172,7 @@ public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterL
     }
 
     @Override
-    public void downloadClick(int position, RecyclerView.ViewHolder holder) {
+    public void downloadClick(int position, View holder) {
 
     }
 

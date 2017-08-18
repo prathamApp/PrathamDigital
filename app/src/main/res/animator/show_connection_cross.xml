@@ -19,10 +19,10 @@
 
     <objectAnimator
         android:duration="@android:integer/config_shortAnimTime"
+        android:interpolator="@android:interpolator/linear"
         android:propertyName="scaleX"
         android:startOffset="500"
         android:valueFrom="0f"
-        android:interpolator="@android:interpolator/linear"
         android:valueTo="1f"
         android:valueType="floatType" />
 

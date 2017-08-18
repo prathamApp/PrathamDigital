@@ -1,19 +1,11 @@
 package com.pratham.prathamdigital.async;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.os.Handler;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.widget.ProgressBar;
 
-import com.pratham.prathamdigital.R;
-import com.pratham.prathamdigital.activities.MainActivity;
-import com.pratham.prathamdigital.custom.progress_indicators.ProgressLayout;
 import com.pratham.prathamdigital.interfaces.ProgressUpdate;
 import com.pratham.prathamdigital.util.PD_Utility;
 import com.pratham.prathamdigital.util.UnzipUtil;

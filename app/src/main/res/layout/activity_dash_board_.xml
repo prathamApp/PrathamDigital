@@ -10,33 +10,29 @@
     <RelativeLayout
         android:id="@+id/rl_mylibrary"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/size_60"
-        android:layout_marginTop="@dimen/size_8"
-        android:background="@drawable/library_bkgd_selector"
+        android:layout_height="wrap_content"
         android:clickable="true"
-        android:paddingLeft="@dimen/size_8"
-        android:paddingRight="@dimen/size_8"
         app:layout_constraintHorizontal_bias="0.42"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
+            android:id="@+id/fab_library"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/size_3"
-            android:contentDescription="@string/my_library"
-            android:scaleType="center"
-            app:srcCompat="@drawable/library_img_selector"
-            tools:ignore="ContentDescription" />
+            app:fab_colorNormal="@color/mustord_yellow"
+            app:fab_colorPressed="@color/black_20"
+            app:fab_colorRipple="@color/charcoal"
+            app:fab_shadowColor="@color/black_20"
+            app:srcCompat="@drawable/ic_library_selected_wrapped" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/fab_library"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/size_3"
             android:text="@string/my_library"
             android:textColor="@color/ghost_white"
             android:textSize="@dimen/size_15sp" />
@@ -45,32 +41,30 @@
     <RelativeLayout
         android:id="@+id/rl_recommended"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/size_60"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/size_32"
         android:layout_marginStart="@dimen/size_32"
-        android:layout_marginTop="@dimen/size_8"
-        android:background="@drawable/library_bkgd_selector"
         android:clickable="true"
-        android:paddingLeft="@dimen/size_8"
-        android:paddingRight="@dimen/size_8"
         app:layout_constraintLeft_toRightOf="@+id/rl_mylibrary"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlHardcoded">
 
-        <ImageView
+        <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
+            android:id="@+id/fab_recommend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/size_2"
-            android:scaleType="center"
-            app:srcCompat="@drawable/recommend_img_selector"
-            tools:ignore="ContentDescription" />
+            app:fab_colorNormal="@color/mustord_yellow"
+            app:fab_colorPressed="@color/black_20"
+            app:fab_colorRipple="@color/charcoal"
+            app:fab_shadowColor="@color/black_20"
+            app:srcCompat="@drawable/ic_recomm_selected_wrapped" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/fab_recommend"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/size_2"
             android:text="@string/recommended"
             android:textColor="@color/ghost_white"
             android:textSize="@dimen/size_15sp" />
@@ -79,32 +73,29 @@
     <RelativeLayout
         android:id="@+id/rl_dash_search"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/size_60"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/size_8"
         android:layout_marginRight="@dimen/size_8"
-        android:layout_marginTop="@dimen/size_8"
-        android:background="@drawable/library_bkgd_selector"
         android:clickable="true"
-        android:paddingLeft="@dimen/size_8"
-        android:paddingRight="@dimen/size_8"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
+            android:id="@+id/fab_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/size_3"
-            android:scaleType="center"
-            app:srcCompat="@drawable/search_50px_selector"
-            tools:ignore="ContentDescription" />
+            app:fab_colorNormal="@color/mustord_yellow"
+            app:fab_colorPressed="@color/black_20"
+            app:fab_colorRipple="@color/charcoal"
+            app:fab_shadowColor="@color/black_20"
+            app:srcCompat="@drawable/ic_search_50px_sel_wrapped" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/fab_search"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/size_2"
             android:text="@string/search"
             android:textColor="@color/ghost_white"
             android:textSize="@dimen/size_15sp" />
@@ -113,35 +104,35 @@
     <RelativeLayout
         android:id="@+id/rl_language"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/size_60"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="@dimen/size_8"
-        android:layout_marginTop="@dimen/size_8"
-        android:background="@drawable/library_bkgd_selector"
         android:clickable="true"
-        android:paddingLeft="@dimen/size_8"
-        android:paddingRight="@dimen/size_8"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlHardcoded">
 
-        <ImageView
+        <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
+            android:id="@+id/fab_language"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/size_3"
-            android:scaleType="center"
-            app:srcCompat="@drawable/ic_language"
-            tools:ignore="ContentDescription" />
+            android:transitionName="transition_dialog"
+            app:fab_colorNormal="@color/mustord_yellow"
+            app:fab_colorPressed="@color/black_20"
+            app:fab_colorRipple="@color/charcoal"
+            app:fab_shadowColor="@color/black_20"
+            app:srcCompat="@drawable/ic_language_wrapped" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/fab_language"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/size_2"
             android:text="@string/language"
             android:textColor="@color/ghost_white"
             android:textSize="@dimen/size_15sp" />
+
     </RelativeLayout>
 
     <FrameLayout

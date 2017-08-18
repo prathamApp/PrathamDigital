@@ -18,8 +18,9 @@ import com.pratham.prathamdigital.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
- * Created by HP on 16-08-2017.
+ * Created by pavan on 25/04/17.
  */
 
 public class CarouselPicker extends ViewPager {

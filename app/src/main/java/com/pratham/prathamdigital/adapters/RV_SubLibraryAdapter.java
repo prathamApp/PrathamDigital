@@ -10,16 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pratham.prathamdigital.R;
-import com.pratham.prathamdigital.custom.progress_indicators.ProgressLayout;
-import com.pratham.prathamdigital.custom.progress_indicators.ProgressLayoutListener;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:id="@+id/view_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/ghost_white"
+        android:transitionName="transition_search">
+
+        <RelativeLayout
+            android:id="@+id/v_search"
+            android:layout_width="@dimen/size_270"
+            android:layout_height="@dimen/size_50"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/size_5">
+
+            <ImageView
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:src="@drawable/search_bar" />
+
+            <EditText
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:alpha="0"
+                android:background="@null"
+                android:gravity="start"
+                android:hint="@string/search_content"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:padding="@dimen/size_15"
+                android:textColor="@color/charcoal"
+                android:textColorHint="@color/trans_charcoal"
+                android:textSize="@dimen/size_17sp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/img_cross"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size_50"
+            android:layout_marginStart="@dimen/size_20"
+            android:layout_marginTop="@dimen/size_5"
+            android:layout_toEndOf="@+id/v_search"
+            android:alpha="0"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_cancel_wrapped" />
+
+        <com.pratham.prathamdigital.custom.chips.ChipCloud
+            android:id="@+id/search_chipcloud"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/v_search"
+            android:layout_marginTop="@dimen/size_15"
+            app:allCaps="false"
+            app:deselectTransitionMS="500"
+            app:deselectedColor="@color/ghost_white"
+            app:deselectedFontColor="@color/charcoal"
+            app:gravity="staggered"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:minHorizontalSpacing="32dp"
+            app:selectMode="required"
+            app:selectTransitionMS="750"
+            app:selectedColor="@color/blue"
+            app:selectedFontColor="@color/charcoal"
+            app:textSize="@dimen/size_14sp"
+            app:verticalSpacing="16dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/search_chipcloud"
+            android:layout_margin="@dimen/size_8">
+
+            <RelativeLayout
+                android:id="@+id/rl_search_no_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/i2"
+                    android:layout_width="@dimen/size_100"
+                    android:layout_height="@dimen/size_100"
+                    android:layout_centerInParent="true"
+                    android:scaleType="center"
+                    app:srcCompat="@drawable/ic_cloiud_wrapped" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/i2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/size_5"
+                    android:gravity="center"
+                    android:padding="@dimen/size_10"
+                    android:text="@string/no_content"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/size_17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_search_no_internet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img_search_no_net"
+                    android:layout_width="@dimen/size_100"
+                    android:layout_height="@dimen/size_180"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/ic_no_connection_wrapped" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/img_search_no_net"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/size_5"
+                    android:gravity="center"
+                    android:padding="@dimen/size_10"
+                    android:text="@string/no_internet"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/size_17sp" />
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+    </RelativeLayout>
+</FrameLayout>

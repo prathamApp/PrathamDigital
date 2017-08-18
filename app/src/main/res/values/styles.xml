@@ -37,6 +37,16 @@
         <!--<item_menu name="android:buttonStyle">@style/CustomButton</item_menu>-->
     </style>
 
+    <style name="AppTheme.Dialog" parent="AppTheme.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/dialog_background_scrim</item>
+        <!--<item name="android:windowAnimationStyle">@null</item>-->
+        <!--<item name="android:windowContentTransitions">true</item>-->
+    </style>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
     <!--<style name="button" parent="@android:style/Widget.Button">-->
     <!--<item name="com.firsteat.firsteat:font">fonts/Lato_Regular.ttf</item>-->
     <!--</style>-->

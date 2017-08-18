@@ -3,19 +3,16 @@ package com.pratham.prathamdigital.adapters;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pratham.prathamdigital.R;
+import com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton;
 import com.pratham.prathamdigital.custom.progress_indicators.CircleProgressView;
-import com.pratham.prathamdigital.custom.progress_indicators.ProgressLayout;
-import com.pratham.prathamdigital.custom.progress_indicators.ProgressLayoutListener;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
 import com.squareup.picasso.Picasso;
@@ -58,26 +55,13 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
         Picasso.with(context).load(sub_content.get(position).getNodeserverimage()).into(holder.recommend_content_img);
         if (sub_content.get(position).getNodetype().equalsIgnoreCase("Resource")) {
             if (selectedIndex != -1 && selectedIndex == position) {
-                holder.recom_img_download.setVisibility(View.INVISIBLE);
-                holder.recom_progressbar2.setVisibility(View.VISIBLE);
-                holder.recom_progressbar2.setProgress(progress);
-                if (progress == 100) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            progress = 0;
-                            browseAdapter_clicks.downloadComplete(holder.getAdapterPosition());
-                        }
-                    }, 500);
-                }
+                //Do nothing right now
             } else {
-                holder.recom_img_download.setVisibility(View.VISIBLE);
-                holder.recom_progressbar2.setVisibility(View.INVISIBLE);
+                holder.fab_download.setVisibility(View.VISIBLE);
             }
             holder.card_recom.setOnClickListener(null);
         } else {
-            holder.recom_img_download.setVisibility(View.GONE);
-            holder.recom_progressbar2.setVisibility(View.GONE);
+            holder.fab_download.setVisibility(View.GONE);
             holder.card_recom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -85,10 +69,10 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
                 }
             });
         }
-        holder.recom_img_download.setOnClickListener(new View.OnClickListener() {
+        holder.fab_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                browseAdapter_clicks.downloadClick(holder.getAdapterPosition(), null);
+                browseAdapter_clicks.downloadClick(holder.getAdapterPosition(), holder.itemView);
             }
         });
     }
@@ -118,16 +102,18 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.recom_img_download)
-        ImageView recom_img_download;
+        //        @BindView(R.id.recom_img_download)
+//        ImageView recom_img_download;
         @BindView(R.id.recom_name)
         TextView recom_name;
-        @BindView(R.id.recom_progressbar2)
-        CircleProgressView recom_progressbar2;
+        //        @BindView(R.id.recom_progressbar2)
+//        CircleProgressView recom_progressbar2;
         @BindView(R.id.recommend_content_img)
         ImageView recommend_content_img;
         @BindView(R.id.card_recom)
         RelativeLayout card_recom;
+        @BindView(R.id.fab_download)
+        FloatingActionButton fab_download;
 
         public ViewHolder(View itemView) {
             super(itemView);

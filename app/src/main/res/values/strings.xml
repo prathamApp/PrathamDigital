@@ -13,10 +13,12 @@
     <string name="select_language">Select your language</string>
     <string name="okay">Okay</string>
     <string name="cancel">Cancel</string>
-    <string name="my_library">My Library</string>
+    <string name="my_library">Library</string>
     <string name="recommended">Recommended</string>
     <string name="search">Search</string>
     <string name="language">Language</string>
+    <string name="no_data_downloaded">Please download the contents.</string>
+    <string name="no_content">Seems no content is available right now!</string>
     <string-array name="search_tags">
         <item>English</item>
         <item>Maths</item>
@@ -29,5 +31,29 @@
         <item>Age 6–10\nKhelpuri</item>
         <item>Age 8–14\nDekho Aur Sikho</item>
         <item>Age\n14+</item>
+    </string-array>
+    <string-array name="languages">
+        <item>English</item>
+        <item>हिंदी</item>
+        <item>ગુજરાતી</item>
+        <item>मराठी</item>
+        <item>தமிழ்</item>
+        <item>ਪੰਜਾਬੀ</item>
+        <item>മലയാളം</item>
+        <item>বাংলা</item>
+        <item>ಕನ್ನಡ</item>
+        <item>తెలుగు</item>
+    </string-array>
+    <string-array name="main_languages">
+        <item>English</item>
+        <item>Hindi</item>
+        <item>Gujarati</item>
+        <item>Marathi</item>
+        <item>Tamil</item>
+        <item>Punjabi</item>
+        <item>Malayalam</item>
+        <item>Bangla</item>
+        <item>Kannada</item>
+        <item>Telugu</item>
     </string-array>
 </resources>
