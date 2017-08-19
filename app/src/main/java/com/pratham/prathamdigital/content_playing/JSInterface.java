@@ -296,22 +296,15 @@ public class JSInterface extends Activity {
 
     @JavascriptInterface
     public void showVideo(String filename, String resId) {
-
         try {
-            File file = new File(gamePath);//ContentScreen.fpath + filename
-
-            if (file.exists()) {
-                Uri path = Uri.fromFile(file);
-                Intent intent = new Intent(mContext, VideoPlayer.class);
-                intent.putExtra("path", path.toString());
-                MediaFlag = true;
-                ((Activity) mContext).startActivityForResult(intent, 1);
-            } else {
-            }
+            String vidPath = gamePath + filename;
+            Intent intent = new Intent(mContext, VideoPlayer.class);
+            intent.putExtra("path", vidPath);
+            MediaFlag = true;
+            ((Activity) mContext).startActivityForResult(intent, 1);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
-
     }
 
 

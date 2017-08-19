@@ -28,8 +28,8 @@ public class VideoPlayer extends Activity implements MediaPlayer.OnCompletionLis
             setContentView(R.layout.activity_video_player);
             myVideoView = (VideoView) findViewById(R.id.videoView);
             JSInterface.MediaFlag = true;
-            String groupId = getIntent().getStringExtra("path");
-            Play(Uri.parse(groupId));
+            String videoPath = getIntent().getStringExtra("path");
+            Play(videoPath);
             myVideoView.setOnPreparedListener(this);
             myVideoView.setOnCompletionListener(this);
 
@@ -38,14 +38,15 @@ public class VideoPlayer extends Activity implements MediaPlayer.OnCompletionLis
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void Play(Uri path) {
+    public void Play(String path) {
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(myVideoView);
         try {
-            myVideoView.setVideoURI(path);
+            myVideoView.setVideoURI(Uri.parse(path));
         } catch (Exception e) {
         }
         myVideoView.setMediaController(mediaController);

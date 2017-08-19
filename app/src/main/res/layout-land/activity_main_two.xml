@@ -10,7 +10,8 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:weightSum="1"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints,UselessParent"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -25,7 +26,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight=".25">
+                android:layout_weight=".25"
+                tools:ignore="NestedWeights">
 
                 <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
                     android:id="@+id/c_fab_search"
@@ -115,7 +117,9 @@
                     android:layout_height="@dimen/size_100"
                     android:layout_centerInParent="true"
                     android:scaleType="center"
-                    app:srcCompat="@drawable/ic_sad_wrapped" />
+                    app:srcCompat="@drawable/ic_sad_wrapped"
+                    android:contentDescription=""
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -169,7 +173,8 @@
                     android:layout_height="@dimen/size_100"
                     android:layout_centerInParent="true"
                     android:scaleType="center"
-                    app:srcCompat="@drawable/ic_cloiud_wrapped" />
+                    app:srcCompat="@drawable/ic_cloiud_wrapped"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -196,7 +201,8 @@
                     android:layout_height="@dimen/size_180"
                     android:layout_centerInParent="true"
                     android:scaleType="centerInside"
-                    app:srcCompat="@drawable/ic_no_connection_wrapped" />
+                    app:srcCompat="@drawable/ic_no_connection_wrapped"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:layout_width="match_parent"
