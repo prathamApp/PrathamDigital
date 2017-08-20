@@ -155,7 +155,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
     }
 
     @Override
-    public void contentButtonClicked(final int position) {
+    public void contentButtonClicked(final int position, View holder) {
         showDialog();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -499,7 +499,7 @@ public class MainActivity extends ActivityManagePermission implements MainActivi
                 PD_Utility.DEBUG_LOG(1, TAG, "filename:::" + fileName);
                 if (download_content.getDownloadurl().length() > 0) {
                     new ZipDownloader(MainActivity.this, MainActivity.this, download_content.getDownloadurl(),
-                            download_content.getFoldername(), fileName);
+                            download_content.getFoldername(), fileName, null);
                 }
             }
         } catch (Exception e) {

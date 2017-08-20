@@ -9,8 +9,12 @@ import android.view.View;
 
 public interface MainActivityAdapterListeners {
     public void browserButtonClicked(int position);
-    public void contentButtonClicked(int position);
+
+    public void contentButtonClicked(int position, View holder);
+
     public void levelButtonClicked(int position);
+
     public void downloadClick(int position, View holder);
+
     public void downloadComplete(int position);
 }

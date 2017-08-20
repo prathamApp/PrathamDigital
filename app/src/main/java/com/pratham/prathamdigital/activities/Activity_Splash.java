@@ -3,6 +3,7 @@ package com.pratham.prathamdigital.activities;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -20,15 +22,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.pratham.prathamdigital.R;
+import com.pratham.prathamdigital.async.PD_ApiRequest;
 import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
+import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
 import com.pratham.prathamdigital.models.GoogleCredentials;
+import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class Activity_Splash extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class Activity_Splash extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, VolleyResult_JSON {
 
     @BindView(R.id.btn_google_login)
     Button btn_google_login;
@@ -41,6 +51,8 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
     private Animation animeWobble;
     String personPhotoUrl = "", email = "", personName = "", googleId = "";
     private boolean isInitialized = false;
+    private AlertDialog dialog;
+    private GoogleCredentials gObj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +60,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
         setContentView(R.layout.activity__splash);
         ButterKnife.bind(this);
         // Database Initialization
+        dialog = PD_Utility.showLoader(this);
         gdb = new DatabaseHandler(this);
         isInitialized = false;
     }
@@ -86,7 +99,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
                         updateUI(true, null);
                     }
                 }
-            }, 2000);
+            }, 1000);
             isInitialized = true;
         }
     }
@@ -138,17 +151,40 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
             if ((personName.length() > 0) && (email.length() > 0) && (googleId.length() > 0)) {
                 boolean userExists = gdb.CheckGoogleLogin(googleId);
                 if (!userExists) {
-                    GoogleCredentials gObj = new GoogleCredentials();
+                    gObj = new GoogleCredentials();
                     gObj.GoogleID = googleId;
                     gObj.Email = email;
                     gObj.PersonName = personName;
                     gObj.IntroShown = 0;
-                    gdb.insertNewGoogleUser(gObj);
-                    Toast.makeText(Activity_Splash.this, "Welcome " + personName, Toast.LENGTH_SHORT).show();
+                    gObj.languageSelected = "Hindi";
+                    Map<String, Object> params = new HashMap<>();
+                    params.put(PD_Constant.GOOGLE_ID, googleId);
+                    params.put(PD_Constant.EMAIL, email);
+                    params.put(PD_Constant.PERSON_NAME, personName);
+                    params.put(PD_Constant.LANG, gObj.languageSelected);
+                    final JSONObject jsonObject = new JSONObject(params);
+                    Log.d("google_data::",jsonObject.toString());
+                    if (PD_Utility.isInternetAvailable(Activity_Splash.this)) {
+                        showDialog();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                new PD_ApiRequest(Activity_Splash.this, Activity_Splash.this).postDataVolley(Activity_Splash.this,
+                                        "POST", PD_Constant.URL.POST_GOOGLE_DATA.toString(), jsonObject);
+                            }
+                        }, 2000);
+                    } else {
+                        Toast.makeText(Activity_Splash.this, "Check Internet Connectivity", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-            updateUI(true, null);
         }
+    }
+
+    private void showDialog() {
+        if (dialog == null)
+            dialog = PD_Utility.showLoader(Activity_Splash.this);
+        dialog.show();
     }
 
     private void updateUI(boolean isSignedIn, final Bundle bundle) {
@@ -168,4 +204,34 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
         }
     }
 
+    @Override
+    public void notifySuccess(String requestType, String response) {
+        try {
+            Log.d("response:::", response);
+            Log.d("response:::", "requestType:: " + requestType);
+            gdb.insertNewGoogleUser(gObj);
+            Toast.makeText(Activity_Splash.this, "Welcome " + personName, Toast.LENGTH_SHORT).show();
+            updateUI(true, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (dialog != null) {
+                dialog.dismiss();
+            }
+        }
+    }
+
+    @Override
+    public void notifyError(String requestType, VolleyError error) {
+        try {
+            Log.d("response:::", "requestType:: " + requestType);
+            Log.d("error:::", error.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (dialog != null) {
+                dialog.dismiss();
+            }
+        }
+    }
 }

@@ -75,7 +75,7 @@ public class RV_SubLibraryAdapter extends RecyclerView.Adapter<RV_SubLibraryAdap
         holder.card_sub_lib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                browseAdapter_clicks.contentButtonClicked(position);
+                browseAdapter_clicks.contentButtonClicked(position, holder.itemView);
             }
         });
     }

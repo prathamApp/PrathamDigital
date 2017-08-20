@@ -161,7 +161,7 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
     }
 
     @Override
-    public void contentButtonClicked(final int position) {
+    public void contentButtonClicked(final int position, View holder) {
         showDialog();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -278,7 +278,7 @@ public class Fragment_Recommended extends FragmentManagePermission implements Ma
                 PD_Utility.DEBUG_LOG(1, TAG, "filename:::" + fileName);
                 if (download_content.getDownloadurl().length() > 0) {
                     new ZipDownloader(getActivity(), Fragment_Recommended.this, download_content.getDownloadurl(),
-                            download_content.getFoldername(), fileName);
+                            download_content.getFoldername(), fileName, null);
                 }
             }
         } catch (Exception e) {

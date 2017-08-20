@@ -7,6 +7,7 @@ import android.util.Log;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -17,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
+import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
 
 import org.json.JSONException;
@@ -140,7 +142,7 @@ public class PD_ApiRequest {
     public void postDataVolley(Context context, final String requestType, String url, JSONObject object) {
         try {
             RequestQueue queue = Volley.newRequestQueue(context);
-            JsonObjectRequest jsonObj = new JsonObjectRequest(url, object, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObj = new JsonObjectRequest(Request.Method.POST, url, object, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     if (volleyResult != null)
@@ -170,14 +172,26 @@ public class PD_ApiRequest {
                         }
                     }
                 }
-            }) /*{
-                @Override
+            }) {
+                /*@Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     HashMap<String, String> headers = new HashMap<String, String>();
                     headers.put("Content-Type", "application/json; charset=utf-8");
                     return headers;
                 }
-            }*/;
+
+                @Override
+                protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                    int statusCode = response.statusCode;
+                    if (response.statusCode == 200) {
+                        Map<String, Object> params = new HashMap<>();
+                        params.put(PD_Constant.GOOGLE_ID, "123");
+                        return Response.success(new JSONObject(params),HttpHeaderParser.parseCacheHeaders(response));
+                    }else {
+                        return super.parseNetworkResponse(response);
+                    }
+                }*/
+            };
             jsonObj.setShouldCache(false);
             jsonObj.setRetryPolicy(new DefaultRetryPolicy(
                     6000,  /*timeout*/

@@ -121,4 +121,13 @@
     <item name="three_items" format="float" type="dimen">1.5</item>
     <item name="five_items" format="float" type="dimen">1.25</item>
     <item name="seven_items" format="float" type="dimen">1.16</item>
+    <dimen name="evp_content_inset">16dp</dimen>
+    <dimen name="evp_content_inset_half">8dp</dimen>
+    <dimen name="evp_content_inset_less">1dp</dimen>
+    <dimen name="evp_content_inset_iconbuttons">2dp</dimen>
+    <dimen name="evp_text_size_small">10sp</dimen>
+    <dimen name="evp_button_size">48dp</dimen>
+    <dimen name="evp_text_size_medium">14sp</dimen>
+    <dimen name="evp_negative_inset_large">-8dp</dimen>
+    <dimen name="evp_negative_inset_small">-2dp</dimen>
 </resources>

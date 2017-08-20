@@ -220,7 +220,8 @@ public class Activity_Search extends ActivityManagePermission implements VolleyR
                             @Override
                             public void run() {
                                 new PD_ApiRequest(Activity_Search.this, Activity_Search.this).getDataVolley("SEARCH",
-                                        PD_Constant.URL.SEARCH_BY_KEYWORD.toString() + "lang=" + db.GetUserLanguage() + "&keyw=" + textView.getText().toString());
+                                        PD_Constant.URL.SEARCH_BY_KEYWORD.toString() + "lang=" + db.GetUserLanguage()
+                                                + "&keyw=" + textView.getText().toString().replaceAll("\\s+", ""));
                             }
                         }, 2000);
                     } else {
@@ -332,7 +333,7 @@ public class Activity_Search extends ActivityManagePermission implements VolleyR
     }
 
     @Override
-    public void contentButtonClicked(final int position) {
+    public void contentButtonClicked(final int position, View holder) {
         showDialog();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -386,7 +387,7 @@ public class Activity_Search extends ActivityManagePermission implements VolleyR
             intent.putExtra("position", position);
             intent.putExtra("transition_name", "transition_search");
             ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Search.this,
-                    holder, "transition_recommend");
+                    holder, "transition_search");
             startActivityForResult(intent, 1, options.toBundle());
         }
     }

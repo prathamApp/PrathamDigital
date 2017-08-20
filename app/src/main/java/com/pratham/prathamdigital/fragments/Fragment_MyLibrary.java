@@ -137,7 +137,7 @@ public class Fragment_MyLibrary extends Fragment implements MainActivityAdapterL
     }
 
     @Override
-    public void contentButtonClicked(int position) {
+    public void contentButtonClicked(int position, View holder) {
         if (subContents.get(position).getNodetype().equalsIgnoreCase("Resource")) {
             if (subContents.get(position).getResourcetype().equalsIgnoreCase("Game")) {
                 Intent intent = new Intent(getActivity(), Activity_WebView.class);

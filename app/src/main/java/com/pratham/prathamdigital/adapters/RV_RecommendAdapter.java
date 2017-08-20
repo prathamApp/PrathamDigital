@@ -65,7 +65,7 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
             holder.card_recom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    browseAdapter_clicks.contentButtonClicked(holder.getAdapterPosition());
+                    browseAdapter_clicks.contentButtonClicked(holder.getAdapterPosition(), null);
                 }
             });
         }

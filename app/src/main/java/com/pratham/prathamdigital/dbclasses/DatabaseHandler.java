@@ -70,7 +70,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // Google Data names
     public static final String GOOGLE_ID = "GoogleID";
-    public static final String GOOGLE_PHOTOURL = "PersonPhotoUrl";
     public static final String GOOGLE_EMAIL = "Email";
     public static final String GOOGLE_PERSONALNAME = "PersonName";
     public static final String GOOGLE_INTROSHOWN = "IntroShown";
@@ -94,8 +93,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + SCORED_MARKS + " INTEGER,"
                 + TOTAL_MARKS + " INTEGER,"
                 + LEVEL + " INTEGER,"
-                + START_TIME + " TEXT,"
-                + END_TIME + " TEXT,"
+                + START_TIME + " DATETIME,"
+                + END_TIME + " DATETIME,"
                 + DEVICE_ID + " TEXT" + ")";
         String CREATE_PARENT_TABLE = "CREATE TABLE " + TABLE_PARENT + "("
                 + CONTENT_NODEID + " TEXT,"
@@ -127,7 +126,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + CONTENT_PARENTID + " TEXT" + ")";
         String CREATE_GOOGLEDATA_TABLE = "CREATE TABLE " + TABLE_GOOGLEDATA + "("
                 + GOOGLE_ID + " TEXT,"
-                + GOOGLE_PHOTOURL + " TEXT,"
                 + GOOGLE_EMAIL + " TEXT,"
                 + GOOGLE_PERSONALNAME + " TEXT,"
                 + GOOGLE_INTROSHOWN + " INTEGER,"
@@ -222,11 +220,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         try {
             SQLiteDatabase database = getWritableDatabase();
             ContentValues contentValues = new ContentValues();
-            contentValues.put("GoogleID", obj.GoogleID);
-            contentValues.put("PersonPhotoUrl", obj.PersonPhotoUrl);
-            contentValues.put("Email", obj.Email);
-            contentValues.put("PersonName", obj.PersonName);
-            contentValues.put("IntroShown", obj.IntroShown);
+            contentValues.put(GOOGLE_ID, obj.GoogleID);
+            contentValues.put(GOOGLE_EMAIL, obj.Email);
+            contentValues.put(GOOGLE_PERSONALNAME, obj.PersonName);
+            contentValues.put(GOOGLE_INTROSHOWN, obj.IntroShown);
+            contentValues.put(GOOGLE_LANGUAGE, obj.languageSelected);
             database.insert(TABLE_GOOGLEDATA, null, contentValues);
             database.close();
         } catch (Exception e) {
@@ -354,18 +352,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             database.update(TABLE_GOOGLEDATA, values, GOOGLE_ID + " = ?",
                     new String[]{userID});
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     // Update Intro to true after showing Intro
 
-    public void SetUserLanguage(String userLangage) {
+    public void SetUserLanguage(String userLangage, String id) {
         try {
-            SQLiteDatabase database = getWritableDatabase();
-            Cursor cursor = database.rawQuery("update " + TABLE_GOOGLEDATA + " set languageSelected =" + userLangage, null);
-            cursor.moveToFirst();
-            cursor.close();
-            database.close();
+            SQLiteDatabase database = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(GOOGLE_LANGUAGE, userLangage);
+            database.update(TABLE_GOOGLEDATA, values, GOOGLE_ID + " = ?",
+                    new String[]{id});
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

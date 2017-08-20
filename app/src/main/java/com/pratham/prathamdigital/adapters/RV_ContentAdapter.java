@@ -66,7 +66,7 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
             holder.item_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    browseAdapter_clicks.contentButtonClicked(holder.getAdapterPosition());
+                    browseAdapter_clicks.contentButtonClicked(holder.getAdapterPosition(),null);
                 }
             });
         }

@@ -1,8 +1,10 @@
 package com.pratham.prathamdigital.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.ArcMotion;
@@ -116,9 +118,11 @@ public class Activity_DownloadDialog extends AppCompatActivity implements Volley
                 PD_Utility.DEBUG_LOG(1, TAG, "foldername:::" + download_content.getFoldername());
                 String fileName = download_content.getDownloadurl().substring(download_content.getDownloadurl().lastIndexOf('/') + 1);
                 PD_Utility.DEBUG_LOG(1, TAG, "filename:::" + fileName);
+                PowerManager pm = (PowerManager) Activity_DownloadDialog.this.getSystemService(Context.POWER_SERVICE);
+                PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock");
                 if (download_content.getDownloadurl().length() > 0) {
                     new ZipDownloader(Activity_DownloadDialog.this, Activity_DownloadDialog.this, download_content.getDownloadurl(),
-                            download_content.getFoldername(), fileName);
+                            download_content.getFoldername(), fileName, wl);
                 }
             }
         } catch (JSONException e) {

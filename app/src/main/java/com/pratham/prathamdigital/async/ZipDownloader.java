@@ -3,6 +3,7 @@ package com.pratham.prathamdigital.async;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.PowerManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
@@ -35,12 +36,15 @@ public class ZipDownloader {
     ProgressUpdate progressUpdate;
     Context context;
     private File fileWithinMyDir;
+    public PowerManager.WakeLock wakeLock;
 
-    public ZipDownloader(Context context, ProgressUpdate progressUpdate, String url, String foldername, String filename) {
+    public ZipDownloader(Context context, ProgressUpdate progressUpdate, String url, String foldername,
+                         String filename, PowerManager.WakeLock wl) {
         this.context = context;
         PD_Utility.DEBUG_LOG(1, "url:::", url);
         this.filename = filename;
         this.progressUpdate = progressUpdate;
+        this.wakeLock = wl;
         mydir = context.getDir("Pratham" + foldername, Context.MODE_PRIVATE); //Creating an internal dir;
         if (!mydir.exists()) mydir.mkdirs();
         Log.d("internal_file", mydir.getAbsolutePath());
@@ -54,6 +58,7 @@ public class ZipDownloader {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            wakeLock.acquire();
 //            Intent intent = new Intent(this, MainActivity.class);
 //            final PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
 //            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -164,6 +169,7 @@ public class ZipDownloader {
                 File file = new File(fileWithinMyDir.getAbsolutePath());
                 boolean deleted = file.delete();
                 if (deleted) Log.d("file:::", "deleted");
+                wakeLock.release();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -95,12 +95,17 @@ public class PD_Constant {
     public static final int NOTIFICATION_ID_BIG_IMAGE = 101;
     public static final int WEBVIEW = 1;
     public static final String LANGUAGE = "language";
+    public static final String GOOGLE_ID = "google_id";
+    public static final String EMAIL = "email";
+    public static final String PERSON_NAME = "person_name";
+    public static final String LANG = "lang";
 //    public static final String SHARED_PREF = "ah_firebase";
 
     public static enum URL {
 
         BROWSE_BY_ID(BASE_URL + "get?id="),
         SEARCH_BY_KEYWORD(BASE_URL + "GetSearchList?"),
+        POST_GOOGLE_DATA(BASE_URL + "PostGoogleSignIn"),
         DOWNLOAD_RESOURCE(BASE_URL + "DownloadResource?resid=");
 
         private final String name;

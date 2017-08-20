@@ -20,6 +20,7 @@ import com.pratham.prathamdigital.custom.carousel.CarouselPicker;
 import com.pratham.prathamdigital.custom.morphing.MorphDialogToFab;
 import com.pratham.prathamdigital.custom.morphing.MorphFabToDialog;
 import com.pratham.prathamdigital.custom.morphing.MorphTransition;
+import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
 import com.pratham.prathamdigital.util.PD_Constant;
 
 import java.util.ArrayList;
@@ -49,17 +50,19 @@ public class Activity_LanguagDialog extends AppCompatActivity {
     List<CarouselPicker.PickerItem> languages = new ArrayList<>();
     String[] main_lang;
     int selected_lang = 0;
+    private DatabaseHandler db;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.language_dialog);
         ButterKnife.bind(this);
+        db = new DatabaseHandler(this);
         setupEnterTransitions();
         String[] str = getResources().getStringArray(R.array.languages);
         main_lang = getResources().getStringArray(R.array.main_languages);
         for (int i = 0; i < str.length; i++) {
-            languages.add(new CarouselPicker.TextItem(str[i], 22));
+            languages.add(new CarouselPicker.TextItem(str[i], 20));
         }
         CarouselPicker.CarouselViewAdapter mixAdapter = new CarouselPicker.CarouselViewAdapter(this, languages, 0);
         lang_picker.setAdapter(mixAdapter);
@@ -80,6 +83,14 @@ public class Activity_LanguagDialog extends AppCompatActivity {
 
             }
         });
+
+        String lang = db.GetUserLanguage();
+        for (int i = 0; i < main_lang.length; i++) {
+            if (main_lang[i].equalsIgnoreCase(lang)) {
+                lang_picker.setCurrentItem(i, true);
+                return;
+            }
+        }
     }
 
     private void setupEnterTransitions() {
@@ -129,11 +140,17 @@ public class Activity_LanguagDialog extends AppCompatActivity {
         getWindow().setSharedElementReturnTransition(sharedReturn);
     }
 
-    @OnClick({R.id.lang_okay, R.id.lang_cancel})
+    @OnClick(R.id.lang_okay)
     public void setLang_okay() {
         Intent intent = new Intent();
         intent.putExtra(PD_Constant.LANGUAGE, main_lang[selected_lang]);
         setResult(Activity.RESULT_OK, intent);
+        finishAfterTransition();
+    }
+
+    @OnClick(R.id.lang_cancel)
+    public void setLang_Cancel() {
+        setResult(Activity.RESULT_CANCELED);
         finishAfterTransition();
     }
 }

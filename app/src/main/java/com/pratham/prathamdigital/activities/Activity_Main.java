@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -73,6 +74,10 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     private static final int MY_LIBRARY = 2;
     private static final int RECOMMEND = 3;
     private static final int LANGUAGE = 4;
+    private static final int ACTIVITY_LANGUAGE = 1;
+    private static final int ACTIVITY_DOWNLOAD = 2;
+    private static final int ACTIVITY_SEARCH = 3;
+    private static final int ACTIVITY_PDF = 4;
     @BindView(R.id.content_rv)
     RecyclerView content_rv;
     @BindView(R.id.gallery_rv)
@@ -96,7 +101,16 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     @BindView(R.id.img_no_net)
     ImageView img_no_net;
 
-    int[] age_id = {20, 21, 22, 23};
+    int[] hindi_age_id = {20, 21, 22, 23};
+    int[] marathi_age_id = {25, 26, 27, 28};
+    int[] kannada_age_id = {30, 31, 32, 33};
+    int[] telugu_age_id = {35, 36, 37, 38};
+    int[] bengali_age_id = {40, 41, 42, 43};
+    int[] gujarati_age_id = {45, 46, 47, 48};
+    int[] assamese_age_id = {50, 51, 52, 53};
+    int[] punjabi_age_id = {55, 56, 57, 58};
+    int[] odiya_age_id = {60, 61, 62, 63};
+    int[] tamil_age_id = {65, 66, 67, 68};
     int[] childs = {R.drawable.ic_baby_wrapped, R.drawable.ic_boy_wrapped, R.drawable.ic_10year_boy_wrapped, R.drawable.ic_adult_boy_wrapped};
     private String[] age;
     private boolean isInitialized;
@@ -115,6 +129,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     private GalleryLayoutManager layoutManager;
     String googleId;
     private TextToSp textToSp;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,6 +222,8 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 gallery_rv.setVisibility(View.VISIBLE);
                 rl_no_internet.setVisibility(View.GONE);
                 rl_no_data.setVisibility(View.GONE);
+                rl_no_content.setVisibility(View.GONE);
+                content_rv.setVisibility(View.VISIBLE);
                 PD_Utility.DEBUG_LOG(1, TAG, "db_list_size::" + downloadContents.size());
                 PD_Utility.DEBUG_LOG(1, TAG, "db_nodelist_size::" + downloadContents.size());
                 libraryContentAdapter = new RV_LibraryContentAdapter(Activity_Main.this, this, downloadContents);
@@ -239,12 +256,28 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                     }
                 } else {
                     if (PD_Utility.isInternetAvailable(Activity_Main.this)) {
+                        url = PD_Constant.URL.BROWSE_BY_ID.toString();
+                        if (db.GetUserLanguage().equalsIgnoreCase("hindi"))
+                            url += hindi_age_id[position];
+                        if (db.GetUserLanguage().equalsIgnoreCase("Marathi"))
+                            url += marathi_age_id[position];
+                        if (db.GetUserLanguage().equalsIgnoreCase("Kannada"))
+                            url += kannada_age_id[position];
+                        if (db.GetUserLanguage().equalsIgnoreCase("Telugu"))
+                            url += telugu_age_id[position];
+                        if (db.GetUserLanguage().equalsIgnoreCase("Bengali"))
+                            url += bengali_age_id[position];
+                        if (db.GetUserLanguage().equalsIgnoreCase("Gujarati"))
+                            url += gujarati_age_id[position];
+                        if (db.GetUserLanguage().equalsIgnoreCase("Punjabi"))
+                            url += punjabi_age_id[position];
+                        if (db.GetUserLanguage().equalsIgnoreCase("Tamil"))
+                            url += tamil_age_id[position];
                         showDialog();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                new PD_ApiRequest(Activity_Main.this, Activity_Main.this).getDataVolley("BROWSE",
-                                        PD_Constant.URL.BROWSE_BY_ID.toString() + age_id[position]);
+                                new PD_ApiRequest(Activity_Main.this, Activity_Main.this).getDataVolley("BROWSE", url);
                             }
                         }, 2000);
                     } else {
@@ -303,7 +336,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         Intent intent = new Intent(Activity_Main.this, Activity_LanguagDialog.class);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Main.this,
                 fab_language, "transition_dialog");
-        startActivityForResult(intent, 1, options.toBundle());
+        startActivityForResult(intent, ACTIVITY_LANGUAGE, options.toBundle());
     }
 
     @OnClick(R.id.c_fab_search)
@@ -311,7 +344,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         Intent intent = new Intent(Activity_Main.this, Activity_Search.class);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Main.this,
                 fab_search, "transition_search");
-        startActivityForResult(intent, 3, options.toBundle());
+        startActivityForResult(intent, ACTIVITY_SEARCH, options.toBundle());
     }
 
     @OnClick(R.id.fab_my_library)
@@ -335,11 +368,16 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
+        if (requestCode == ACTIVITY_LANGUAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 String language = data.getStringExtra(PD_Constant.LANGUAGE);
+                Log.d("language_before_insert:", language);
+                db.SetUserLanguage(language, db.getGoogleID());
+                Log.d("language_after_insert::", db.GetUserLanguage());
+                if (!isLibrary)
+                    fab_recom.performClick();
             }
-        } else if (requestCode == 2) {
+        } else if (requestCode == ACTIVITY_DOWNLOAD) {
             if (resultCode == Activity.RESULT_OK) {
                 selected_content = data.getIntExtra("position", selected_content);
                 arrayList_content.remove(data.getIntExtra("position", selected_content));
@@ -348,7 +386,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 rv_recommendAdapter.setSelectedIndex(-1, null);
                 rv_recommendAdapter.updateData(arrayList_content);
             }
-        } else if (requestCode == 3) {
+        } else if (requestCode == ACTIVITY_SEARCH) {
             fab_my_library.performClick();
         }
     }
@@ -359,27 +397,47 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     }
 
     @Override
-    public void contentButtonClicked(final int position) {
+    public void contentButtonClicked(final int position, View holder) {
         if (isLibrary) {
             if (subContents.get(position).getNodetype().equalsIgnoreCase("Resource")) {
                 if (subContents.get(position).getResourcetype().equalsIgnoreCase("Game")) {
                     Intent intent = new Intent(Activity_Main.this, Activity_WebView.class);
-                    //path to /data/data/yourapp/app_data/dirName
-//                ContextWrapper cw = new ContextWrapper(getActivity());
                     File directory = Activity_Main.this.getDir("PrathamGame", Context.MODE_PRIVATE);
-//                File filepath = new File(directory, fileName);
-                    Log.d("directory_path:::", directory.getAbsolutePath());
-                    Log.d("game_filepath:::", directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
-                    Log.d("game_filepath:::", new StringTokenizer(subContents.get(position).getResourcepath(), "/").nextToken() + "/");
                     intent.putExtra("index_path", directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
                     intent.putExtra("path", directory.getAbsolutePath() + "/" +
                             new StringTokenizer(subContents.get(position).getResourcepath(), "/").nextToken() + "/");
+                    intent.putExtra("resId", subContents.get(position).getResourceid());
                     Runtime rs = Runtime.getRuntime();
                     rs.freeMemory();
                     rs.gc();
                     rs.freeMemory();
                     startActivity(intent);
-                }
+                } else if (subContents.get(position).getResourcetype().equalsIgnoreCase("pdf")) {
+                    Intent intent = new Intent(Activity_Main.this, Activity_PdfViewer.class);
+                    File directory = Activity_Main.this.getDir("PrathamPdf", Context.MODE_PRIVATE);
+                    Log.d("game_filepath:::", directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
+                    intent.putExtra("pdfPath", "file:///" + directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
+                    intent.putExtra("pdfTitle", subContents.get(position).getNodetitle());
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Main.this,
+                            holder, "transition_pdf");
+                    Runtime rs = Runtime.getRuntime();
+                    rs.freeMemory();
+                    rs.gc();
+                    rs.freeMemory();
+                    startActivityForResult(intent, ACTIVITY_PDF, options.toBundle());
+                }/* else if (subContents.get(position).getResourcetype().equalsIgnoreCase("video")) {
+                    Intent intent = new Intent(Activity_Main.this, Activity_VPlayer.class);
+                    File directory = Activity_Main.this.getDir("PrathamVideo", Context.MODE_PRIVATE);
+                    Log.d("game_filepath:::", directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
+                    intent.putExtra("videoPath", "file:///" + directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Main.this,
+                            holder, "transition_pdf");
+                    Runtime rs = Runtime.getRuntime();
+                    rs.freeMemory();
+                    rs.gc();
+                    rs.freeMemory();
+                    startActivityForResult(intent, 5, options.toBundle());
+                }*/
             } else {
                 ArrayList<Modal_ContentDetail> list = db.Get_Contents(PD_Constant.TABLE_CHILD, subContents.get(position).getNodeid());
                 subContents.clear();
@@ -426,7 +484,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                     intent.putExtra("transition_name", "transition_recommend");
                     ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Main.this,
                             holder, "transition_recommend");
-                    startActivityForResult(intent, 2, options.toBundle());
+                    startActivityForResult(intent, ACTIVITY_DOWNLOAD, options.toBundle());
                 }
 
                 @Override
@@ -517,6 +575,10 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         try {
             Log.d("response:::", "requestType:: " + requestType);
             Log.d("error:::", error.toString());
+            if (requestType.equalsIgnoreCase("BROWSE")) {
+                content_rv.setVisibility(View.GONE);
+                rl_no_content.setVisibility(View.VISIBLE);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

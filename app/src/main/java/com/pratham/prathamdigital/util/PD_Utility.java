@@ -130,13 +130,13 @@ public class PD_Utility {
         if (mBundle != null)
             mFragment.setArguments(mBundle);
 
-        if (mActivity instanceof DashBoard_Activity) {
-            ((DashBoard_Activity) mActivity).getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(frame, mFragment, TAG)
-                    .addToBackStack(TAG)
-                    .commit();
-        }
+//        if (mActivity instanceof DashBoard_Activity) {
+//            ((DashBoard_Activity) mActivity).getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .replace(frame, mFragment, TAG)
+//                    .addToBackStack(TAG)
+//                    .commit();
+//        }
 //        else if (mActivity instanceof Activity_DietForm) {
 //            ((Activity_DietForm) mActivity).getSupportFragmentManager()
 //                    .beginTransaction()

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        tools:ignore="MissingConstraints,UselessParent"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".12"
+            android:background="@color/charcoal"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/size_3"
+            android:paddingRight="@dimen/size_3"
+            android:weightSum="1">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".25"
+                tools:ignore="NestedWeights">
+
+                <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
+                    android:id="@+id/c_fab_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/search"
+                    android:transitionName="transition_search"
+                    app:fab_colorNormal="@color/mustord_yellow"
+                    app:fab_colorPressed="@color/black_20"
+                    app:fab_colorRipple="@color/charcoal"
+                    app:fab_shadowColor="@color/black_20"
+                    app:srcCompat="@drawable/ic_search_50px_sel_wrapped" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".25">
+
+                <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
+                    android:id="@+id/fab_my_library"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/my_library"
+                    app:fab_colorNormal="@color/mustord_yellow"
+                    app:fab_colorPressed="@color/black_20"
+                    app:fab_colorRipple="@color/charcoal"
+                    app:fab_shadowColor="@color/black_20"
+                    app:srcCompat="@drawable/ic_library_selected_wrapped" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".25">
+
+                <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
+                    android:id="@+id/fab_recom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/recommended"
+                    app:fab_colorNormal="@color/mustord_yellow"
+                    app:fab_colorPressed="@color/black_20"
+                    app:fab_colorRipple="@color/charcoal"
+                    app:fab_shadowColor="@color/black_20"
+                    app:srcCompat="@drawable/ic_recomm_selected_wrapped" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".25">
+
+                <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
+                    android:id="@+id/c_fab_language"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/select_language"
+                    android:transitionName="transition_dialog"
+                    app:fab_colorNormal="@color/mustord_yellow"
+                    app:fab_colorPressed="@color/black_20"
+                    app:fab_colorRipple="@color/charcoal"
+                    app:fab_shadowColor="@color/black_20"
+                    app:srcCompat="@drawable/ic_language_wrapped" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_gallery"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".25">
+
+            <RelativeLayout
+                android:id="@+id/rl_no_data"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/i1"
+                    android:layout_width="@dimen/size_100"
+                    android:layout_height="@dimen/size_100"
+                    android:layout_centerInParent="true"
+                    android:scaleType="center"
+                    app:srcCompat="@drawable/ic_sad_wrapped"
+                    android:contentDescription=""
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/i1"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:padding="@dimen/size_8"
+                    android:text="@string/no_data_downloaded"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/size_17sp" />
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/gallery_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent" />
+
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_40"
+                android:layout_marginLeft="@dimen/size_8"
+                android:layout_marginRight="@dimen/size_8"
+                android:alpha="0"
+                android:background="@drawable/title_rounded_corners"
+                android:elevation="@dimen/size_8"
+                android:gravity="center"
+                android:textColor="@color/charcoal"
+                android:textSize="@dimen/size_17sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_main_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".63"
+            android:background="@color/lavender">
+
+            <RelativeLayout
+                android:id="@+id/rl_no_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/i2"
+                    android:layout_width="@dimen/size_100"
+                    android:layout_height="@dimen/size_100"
+                    android:layout_centerInParent="true"
+                    android:scaleType="center"
+                    app:srcCompat="@drawable/ic_cloiud_wrapped"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/i2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/size_5"
+                    android:gravity="center"
+                    android:padding="@dimen/size_10"
+                    android:text="@string/no_content"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/size_17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_no_internet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/img_no_net"
+                    android:layout_width="@dimen/size_100"
+                    android:layout_height="@dimen/size_180"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/ic_no_connection_wrapped"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/img_no_net"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/size_5"
+                    android:gravity="center"
+                    android:padding="@dimen/size_10"
+                    android:text="@string/no_internet"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/size_17sp" />
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/content_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent" />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>
