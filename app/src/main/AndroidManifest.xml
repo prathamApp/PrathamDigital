@@ -25,6 +25,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.Activity_Splash"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -35,38 +36,37 @@
         </activity>
         <activity
             android:name=".content_playing.Activity_WebView"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".content_playing.VideoPlayer"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".activities.DashBoard_Activity"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".activities.MainActivity"
-            android:screenOrientation="sensorLandscape"
-            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.Activity_Main"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.Activity_Search"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.Activity_PdfViewer"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.Activity_VPlayer"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.Activity_LanguagDialog"
+            android:configChanges="orientation|screenSize"
             android:parentActivityName=".activities.Activity_Main"
             android:theme="@style/AppTheme.Dialog">
             <meta-data
@@ -75,6 +75,7 @@
         </activity>
         <activity
             android:name=".activities.Activity_DownloadDialog"
+            android:configChanges="orientation|screenSize"
             android:parentActivityName=".activities.Activity_Main"
             android:theme="@style/AppTheme.Dialog">
             <meta-data

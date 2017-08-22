@@ -1,5 +1,6 @@
 package com.pratham.prathamdigital.content_playing;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
+import android.speech.tts.TextToSpeech;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.RadioGroup;
@@ -14,6 +16,7 @@ import android.widget.RadioGroup;
 import com.pratham.prathamdigital.PrathamApplication;
 import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
 import com.pratham.prathamdigital.models.Modal_Score;
+import com.pratham.prathamdigital.util.PD_Utility;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -39,16 +42,16 @@ public class JSInterface extends Activity {
     static Boolean trailerFlag = false;
     static Boolean completeFlag = false;
     public String gamePath;
-    private TextToSp textToSp;
+    private TextToSpeech textToSp;
     private String resId;
     private String audio_directory_path = "";
 
 
-    JSInterface(Context c, WebView w, String gamePath, TextToSp textToSp, String resId) {
+    JSInterface(Context c, WebView w, String gamePath, TextToSpeech textToSp, String resId) {
         mContext = c;
         this.textToSp = textToSp;
         this.resId = resId;
-        textToSp.ttsFunction("Welcome kids", "eng");
+        ttsGreater21("Welcome kids", "eng");
         this.gamePath = gamePath;
         createRecordingFolder();
         mp = new MediaPlayer();
@@ -159,8 +162,8 @@ public class JSInterface extends Activity {
         try {
             mp.stop();
             mp.reset();
-            if (textToSp.textToSpeech.isSpeaking()) {
-                textToSp.stopSpeakerDuringJS();
+            if (textToSp.isSpeaking()) {
+                stopSpeakerDuringJS();
             }
             String path = "";
             audioFlag = true;
@@ -210,6 +213,11 @@ public class JSInterface extends Activity {
             e.printStackTrace();
 /*            log.error("Exception occurred at : " + e.getMessage());*/
         }
+    }
+
+    public void stopSpeakerDuringJS() {
+        textToSp.stop();
+        textToSp.shutdown();
     }
 
 
@@ -322,25 +330,25 @@ public class JSInterface extends Activity {
     public void playTts(String theWordWasAndYouSaid, String ttsLanguage) {
         mp.stop();
         mp.reset();
-        if (textToSp.textToSpeech.isSpeaking()) {
-            textToSp.stopSpeakerDuringJS();
+        if (textToSp.isSpeaking()) {
+            stopSpeakerDuringJS();
         }
         if (ttsLanguage == null) {
-            textToSp.ttsFunction(theWordWasAndYouSaid, "eng");
+            ttsGreater21(theWordWasAndYouSaid, "eng");
         }
         if (ttsLanguage.equals("eng") || ttsLanguage.equals("hin")) {
-            textToSp.ttsFunction(theWordWasAndYouSaid, ttsLanguage);
+            ttsGreater21(theWordWasAndYouSaid, ttsLanguage);
         }
     }
 
     @JavascriptInterface
     public void stopTts() {
-        textToSp.stopSpeakerDuringJS();
+        stopSpeakerDuringJS();
     }
 
     @JavascriptInterface
     public void playTts(final String toSpeak) {
-        textToSp.ttsFunction(toSpeak, "eng");
+        ttsGreater21(toSpeak, "eng");
     }
 
     @JavascriptInterface
@@ -349,7 +357,7 @@ public class JSInterface extends Activity {
     }
 
     public void stopTtsBackground() {
-        textToSp.stopSpeakerDuringJS();
+        stopSpeakerDuringJS();
     }
 
     @JavascriptInterface
@@ -367,7 +375,7 @@ public class JSInterface extends Activity {
             modalScore.setStartTime(startTime);
             String deviceId = Build.SERIAL;
             modalScore.setDeviceId(deviceId);
-            modalScore.setEndTime(GetCurrentDateTime());
+            modalScore.setEndTime(PD_Utility.GetCurrentDateTime());
             modalScore.setLevel(level);
             scoreDBHelper.addScore(modalScore);
 
@@ -376,9 +384,15 @@ public class JSInterface extends Activity {
         }
     }
 
-    public String GetCurrentDateTime() {
-        Calendar cal = Calendar.getInstance();
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH);
-        return dateFormat.format(cal.getTime());
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void ttsGreater21(String text, String lang) {
+        String utteranceId = this.hashCode() + "";
+
+        if (lang.equals("hin"))
+            textToSp.setLanguage(new Locale("hi", "IN"));
+        else
+            textToSp.setLanguage(new Locale("en", "IN"));
+
+        textToSp.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
 }

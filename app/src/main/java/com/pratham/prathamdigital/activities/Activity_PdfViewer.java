@@ -1,6 +1,7 @@
 package com.pratham.prathamdigital.activities;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.ArcMotion;
@@ -10,9 +11,13 @@ import android.view.animation.Interpolator;
 import android.widget.TextView;
 
 import com.github.barteksc.pdfviewer.PDFView;
+import com.pratham.prathamdigital.PrathamApplication;
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.custom.morphing.MorphDialogToFab;
 import com.pratham.prathamdigital.custom.morphing.MorphFabToDialog;
+import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
+import com.pratham.prathamdigital.models.Modal_Score;
+import com.pratham.prathamdigital.util.PD_Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +30,10 @@ public class Activity_PdfViewer extends AppCompatActivity {
     ViewGroup rl_title;
     @BindView(R.id.pdf_title)
     TextView pdf_title;
+
     private String myPdf;
+    private String StartTime;
+    private String resId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +43,8 @@ public class Activity_PdfViewer extends AppCompatActivity {
         myPdf = getIntent().getStringExtra("pdfPath");
         setupEnterTransitions();
         pdf_title.setText(getIntent().getStringExtra("pdfTitle"));
+        StartTime = getIntent().getStringExtra("StartTime");
+        resId = getIntent().getStringExtra("resId");
         pdfView.fromUri(Uri.parse(myPdf))
                 .enableSwipe(true)
                 .swipeHorizontal(true)
@@ -72,6 +82,20 @@ public class Activity_PdfViewer extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        DatabaseHandler scoreDBHelper = new DatabaseHandler(Activity_PdfViewer.this);
+        Modal_Score modalScore = new Modal_Score();
+        modalScore.setSessionId(PrathamApplication.sessionId);
+        modalScore.setResourceId(resId);
+        modalScore.setQuestionId(0);
+        modalScore.setScoredMarks(0);
+        modalScore.setTotalMarks(0);
+        modalScore.setStartTime(StartTime);
+        String deviceId = Build.SERIAL;
+        modalScore.setDeviceId(deviceId);
+        modalScore.setEndTime(PD_Utility.GetCurrentDateTime());
+        modalScore.setLevel(0);
+        scoreDBHelper.addScore(modalScore);
+
         setResult(RESULT_CANCELED);
         finishAfterTransition();
     }

@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">ప్రథమ్ డిజిటల్</string>
+    <string name="search_content">విషయ శోధన</string>
+    <string name="Sign_In">Sign In</string> <!--సైన్ ఇన్-->
+    <string name="view_library">మీ గ్రంధాలయాన్ని ఇక్కడ చూడండి</string>
+    <string name="view_contents">మీకు కావలసిన అన్ని విషయాలని ఇక్కడి నుండి పొందవచ్చు</string>
+    <string name="view_recommended"> సిఫారసు చేయబడిన విషయాలను ఇక్కడ చూడండి</string>
+    <string name="download_recommended">సిఫారసు చేయబడిన విషయాలను ఇక్కడ నుండి డౌన్లోడ్ చేసుకోండి</string>
+    <string name="search_contents_from_here">ఏదైనా విషయాన్ని ఇక్కడ శోధించండి.</string>
+    <string name="search_and_download">ఏదైనా విషయాన్ని ఇక్కడ శోధించండి మరియు డౌన్లోడ్ చేయండి</string>
+    <string name="no_internet">అంతర్జాల అనుసంధానం లేదు.</string>
+    <string name="provide_storage_permission">మొదట; నిల్వ చేయడానికి అనుమతి ఇవ్వండి.</string>
+    <string name="select_language">మీ భాషను ఎంచుకోండి</string>
+    <string name="okay">సరే</string>
+    <string name="cancel">రద్దు</string>
+    <string name="my_library">గ్రంథాలయం</string>
+    <string name="recommended"> సిఫారసు</string>
+    <string name="search">శోధన</string>
+    <string name="language">భాష</string>
+    <string name="no_data_downloaded">దయచేసి విషయాలను డౌన్లోడ్ చేసుకోండి.</string>
+    <string name="no_content">ప్రస్తుతానికి ఏ విషయమూ అందుబాటులో లేదు</string>
+    <string-array name="search_tags">
+        <item>ఆంగ్లము</item>
+        <item>గణితము</item>
+        <item>ఆటలు</item>
+        <item>సామాన్య శాస్త్రము</item>
+        <item>చూడండి మరియు నేర్చుకోండి</item>
+    </string-array>
+    <string-array name="main_contents">
+        <item>3-6 వయస్సు,\nఖేల్ బడి</item>
+        <item>6-10 వయస్సు,\nఖేల్ పురి</item>
+        <item>8-14 వయస్సు,\nచూడండి మరియు నేర్చుకోండి</item>
+        <item>14+ వయస్సు</item>
+    </string-array>
+    <string-array name="languages">
+        <!--<item>English</item>-->
+        <item>हिंदी</item>
+        <item>मराठी</item>
+        <item>ಕನ್ನಡ</item>
+        <item>తెలుగు</item>
+        <item>বাংলা</item>
+        <item>ગુજરાતી</item>
+        <item>ਪੰਜਾਬੀ</item>
+        <item>தமிழ்</item>
+        <item>অসমীয়</item>
+        <item>ଓଡ଼ିଆ</item>
+        <!--<item>മലയാളം</item>-->
+    </string-array>
+    <string-array name="main_languages">
+        <!--<item>English</item>-->
+        <item>Hindi</item>
+        <item>Marathi</item>
+        <item>Kannada</item>
+        <item>Telugu</item>
+        <item>Bengali</item>
+        <item>Gujarati</item>
+        <item>Punjabi</item>
+        <item>Tamil</item>
+        <item>Assamese</item>
+        <item>Odiya</item>
+        <!--<item>Malayalam</item>-->
+    </string-array>
+    <string name="evp_submit">నివేదించు</string>
+    <string name="evp_retry">మరల ప్రయత్నించు</string>
+</resources>

@@ -6,12 +6,11 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,8 +26,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.IntRange;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -38,10 +35,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -53,12 +48,9 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.pratham.prathamdigital.R;
-import com.pratham.prathamdigital.activities.DashBoard_Activity;
-import com.pratham.prathamdigital.content_playing.TextToSp;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -77,6 +69,7 @@ import java.net.URLConnection;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -97,7 +90,6 @@ public class PD_Utility {
     static Dialog mDateTimeDialog = null;
 
     public static final Pattern otp_pattern = Pattern.compile("(|^)\\d{4}");
-    public static TextToSp ttspeech;
 
     /**
      * Method to Hide Soft Input Keyboard
@@ -172,6 +164,42 @@ public class PD_Utility {
 //
     }
 
+    public static void setLocale(Context context, String lang) {
+
+        if(lang.equalsIgnoreCase("Hindi"))
+            lang="hi";
+        if(lang.equalsIgnoreCase("Marathi"))
+            lang="mr";
+        if(lang.equalsIgnoreCase("Kannada"))
+            lang="kn";
+        if(lang.equalsIgnoreCase("Telugu"))
+            lang="te";
+        if(lang.equalsIgnoreCase("Bengali"))
+            lang="bn-rIN";
+        if(lang.equalsIgnoreCase("Gujarati"))
+            lang="gu";
+        if(lang.equalsIgnoreCase("Punjabi"))
+            lang="pa-rIN";
+        if(lang.equalsIgnoreCase("Tamil"))
+            lang="ta";
+        if(lang.equalsIgnoreCase("Odiya"))
+            lang="or";
+        if(lang.equalsIgnoreCase("Malayalam"))
+            lang="ml";
+        if(lang.equalsIgnoreCase("Assamese"))
+            lang="as";
+
+        Locale myLocale = new Locale(lang);
+        Locale.setDefault(myLocale);
+/*
+        Resources res = context.getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+*/
+        Configuration conf = context.getResources().getConfiguration();
+        conf.setLocale(myLocale);
+        context.createConfigurationContext(conf);
+        context.getResources().updateConfiguration(conf,context.getResources().getDisplayMetrics());
+    }
 
     /**
      * Method to Show Log
@@ -217,13 +245,10 @@ public class PD_Utility {
 
     }
 
-    /**
-     * Function to initialize tts
-     *
-     * @param mContext
-     */
-    public static void initializeTTS(Context mContext) {
-        ttspeech = new TextToSp(mContext);
+    public static String GetCurrentDateTime() {
+        Calendar cal = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH);
+        return dateFormat.format(cal.getTime());
     }
 
 

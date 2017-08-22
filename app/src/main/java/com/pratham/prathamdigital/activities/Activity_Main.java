@@ -16,7 +16,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -34,7 +33,6 @@ import com.pratham.prathamdigital.adapters.RV_RecommendAdapter;
 import com.pratham.prathamdigital.adapters.RV_SubLibraryAdapter;
 import com.pratham.prathamdigital.async.PD_ApiRequest;
 import com.pratham.prathamdigital.content_playing.Activity_WebView;
-import com.pratham.prathamdigital.content_playing.TextToSp;
 import com.pratham.prathamdigital.custom.GalleryLayoutManager;
 import com.pratham.prathamdigital.custom.ScaleTransformer;
 import com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton;
@@ -128,7 +126,6 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     private boolean isLibrary;
     private GalleryLayoutManager layoutManager;
     String googleId;
-    private TextToSp textToSp;
     private String url;
 
     @Override
@@ -136,7 +133,6 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_two);
         ButterKnife.bind(this);
-        textToSp = new TextToSp(this);
         dialog = PD_Utility.showLoader(Activity_Main.this);
         db = new DatabaseHandler(Activity_Main.this);
         googleId = db.getGoogleID();
@@ -273,6 +269,14 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                             url += punjabi_age_id[position];
                         if (db.GetUserLanguage().equalsIgnoreCase("Tamil"))
                             url += tamil_age_id[position];
+                        /*
+                        if (db.GetUserLanguage().equalsIgnoreCase("Odiya"))
+                            url += tamil_age_id[position];
+                        if (db.GetUserLanguage().equalsIgnoreCase("Malayalam"))
+                            url += tamil_age_id[position];
+                        if (db.GetUserLanguage().equalsIgnoreCase("Assamese"))
+                            url += tamil_age_id[position];
+                            */
                         showDialog();
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -374,8 +378,11 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 Log.d("language_before_insert:", language);
                 db.SetUserLanguage(language, db.getGoogleID());
                 Log.d("language_after_insert::", db.GetUserLanguage());
+                PD_Utility.setLocale(this, db.GetUserLanguage());
                 if (!isLibrary)
                     fab_recom.performClick();
+                else
+                    fab_my_library.performClick();
             }
         } else if (requestCode == ACTIVITY_DOWNLOAD) {
             if (resultCode == Activity.RESULT_OK) {
@@ -418,6 +425,8 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                     Log.d("game_filepath:::", directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
                     intent.putExtra("pdfPath", "file:///" + directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
                     intent.putExtra("pdfTitle", subContents.get(position).getNodetitle());
+                    intent.putExtra("StartTime", PD_Utility.GetCurrentDateTime());
+                    intent.putExtra("resId", subContents.get(position).getResourceid());
                     ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Main.this,
                             holder, "transition_pdf");
                     Runtime rs = Runtime.getRuntime();

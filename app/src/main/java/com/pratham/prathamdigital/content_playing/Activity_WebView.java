@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,15 +13,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.pratham.prathamdigital.R;
-import com.pratham.prathamdigital.util.PD_Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.pratham.prathamdigital.content_playing.TextToSp.textToSpeech;
 
-
-public class Activity_WebView extends AppCompatActivity {
+public class Activity_WebView extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     @BindView(R.id.loadPage)
     WebView webView;
@@ -30,7 +28,7 @@ public class Activity_WebView extends AppCompatActivity {
     Context sessionContex;
     VideoPlayer playVideo;
     boolean timer;
-    private TextToSp textToSp;
+    private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +37,7 @@ public class Activity_WebView extends AppCompatActivity {
         playVideo = new VideoPlayer();
         setContentView(R.layout.activity_web_view);
         ButterKnife.bind(this);
-        String index_path = getIntent().getStringExtra("index_path");
-        String path = getIntent().getStringExtra("path");
-        String resId = getIntent().getStringExtra("resId");
-        textToSp = new TextToSp(this);
-        createWebView(index_path, path, resId);
+        tts = new TextToSpeech(this, this);
     }
 
     public void createWebView(String GamePath, String parse, String resId) {
@@ -55,7 +49,7 @@ public class Activity_WebView extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
             }
-            webView.addJavascriptInterface(new JSInterface(this, webView, "file://" + parse, textToSp, resId), "Android");
+            webView.addJavascriptInterface(new JSInterface(this, webView, "file://" + parse, tts, resId), "Android");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
@@ -108,10 +102,22 @@ public class Activity_WebView extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        if (textToSp != null) {
-            textToSp.stopSpeaker();
+        if (tts != null) {
+            tts.shutdown();
             Log.d("tts_destroyed", "TTS Destroyed");
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            String index_path = getIntent().getStringExtra("index_path");
+            String path = getIntent().getStringExtra("path");
+            String resId = getIntent().getStringExtra("resId");
+            createWebView(index_path, path, resId);
+        } else {
+            Log.d("tts_not:::", "initialized");
         }
     }
 }

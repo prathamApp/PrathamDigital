@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">प्रथम डिजिटल</string>
+    <string name="search_content">सामग्री खोजें</string>
+    <string name="Sign_In">साइन इन</string>
+    <string name="view_library">यहाँ अपनी लाइब्रेरी देखें।</string>
+    <string name="view_contents">अपनी सभी सामग्रियों को यहाँ देख सकते हैं।</string>
+    <string name="view_recommended">सुझाई गई सामग्रियाँ यहाँ देखें।</string>
+    <string name="download_recommended">सुझाई गई सामग्रियाँ यहाँ से डाउनलोड करें।</string>
+    <string name="search_contents_from_here">यहाँ से कोई भी सामग्री खोजें।</string>
+    <string name="search_and_download">यहाँ से कोई भी सामग्री खोजें और डाउनलोड करें।</string>
+    <string name="no_internet">इन्टरनेट के संपर्क में नहीं है।</string>
+    <string name="provide_storage_permission">पहले संग्रहित करने के लिए अनुमति दें।</string>
+    <string name="select_language">अपनी भाषा चुनें।</string>
+    <string name="okay">ठीक है</string>
+    <string name="cancel">निरस्त करें</string>
+    <string name="my_library">लाइब्रेरी</string>
+    <string name="recommended">सुझाए गए</string>
+    <string name="search">खोजें</string>
+    <string name="language">भाषा</string>
+    <string name="no_data_downloaded">कृपया सामग्रियाँ डाउनलोड करें</string>
+    <string name="no_content">अभी कोई सामग्री उपलब्ध नहीं है!</string>
+    <string-array name="search_tags">
+        <item>इंग्रजी</item>
+        <item>गणित</item>
+        <item>खेल</item>
+        <item>विज्ञान</item>
+        <item>देखो और सीखो</item>
+    </string-array>
+    <string-array name="main_contents">
+        <item>आयु 3-6\nखेलबाड़ी</item>
+        <item>आयु 6-10\nखेलपुरी</item>
+        <item>आयु 8-14\nदेखो और सीखो</item>
+        <item>आयु 14+</item>
+    </string-array>
+    <string-array name="languages">
+        <!--<item>English</item>-->
+        <item>हिंदी</item>
+        <item>मराठी</item>
+        <item>ಕನ್ನಡ</item>
+        <item>తెలుగు</item>
+        <item>বাংলা</item>
+        <item>ગુજરાતી</item>
+        <item>ਪੰਜਾਬੀ</item>
+        <item>தமிழ்</item>
+        <item>অসমীয়</item>
+        <item>ଓଡ଼ିଆ</item>
+        <!--<item>മലയാളം</item>-->
+    </string-array>
+    <string-array name="main_languages">
+        <!--<item>English</item>-->
+        <item>Hindi</item>
+        <item>Marathi</item>
+        <item>Kannada</item>
+        <item>Telugu</item>
+        <item>Bengali</item>
+        <item>Gujarati</item>
+        <item>Punjabi</item>
+        <item>Tamil</item>
+        <item>Assamese</item>
+        <item>Odiya</item>
+        <!--<item>Malayalam</item>-->
+    </string-array>
+    <string name="evp_submit">जमा करें</string>
+    <string name="evp_retry">पुनःप्रयास करें</string>
+</resources>

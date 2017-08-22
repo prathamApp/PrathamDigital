@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">பிரதம் டிஜிட்டல்</string>
+    <string name="search_content">பொருளடக்கத்தை தேடுக</string>
+    <string name="Sign_In">Sign In</string> <!--உள்ளே நுழைக-->
+    <string name="view_library">இங்கே உங்கள் நூலகத்தை பாருங்கள்</string>
+    <string name="view_contents">உங்களுக்கு தேவையான எல்லா பொருளடகங்களுக்கும் இங்கே அணுகவும்.</string>
+    <string name="view_recommended">உங்களுக்குகாக பரிந்துரைக்கப்பட்டபொருளடக்கத்தை இங்கே பாருங்கள்</string>
+    <string name="download_recommended">இங்கே பரிந்துரைக்கப்பட்ட பொருளடக்கத்தை பதிவிறக்கம் செய்க</string>
+    <string name="search_contents_from_here">இங்கே எந்தவொரு பொருளடக்கத்தையும் தேடலாம்</string>
+    <string name="search_and_download">இங்கே எந்தவொரு பொருளடக்கத்தையும் தேடலாம் மற்றும் பதிவிறக்கம் செய்யலாம்</string>
+    <string name="no_internet">இணையதள இணைப்பு இல்லை</string>
+    <string name="provide_storage_permission">முதலில் சேமிப்புக்கான அனுமதி வழங்கவேண்டும்</string>
+    <string name="select_language">உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="okay">சரி</string>
+    <string name="cancel">நீக்குக</string>
+    <string name="my_library">நூலகம்</string>
+    <string name="recommended">பரிந்துரைக்கப்படுகிறது</string>
+    <string name="search">தேடல்</string>
+    <string name="language">மொழி</string>
+    <string name="no_data_downloaded">தயவு செய்து  பொருளடக்கத்தை பதிவிறக்கம் செய்யவும்</string>
+    <string name="no_content">தற்போது  எந்த பொருளடக்கமும் கிடைக்கவில்லை!</string>
+    <string-array name="search_tags">
+        <item>ஆங்கிலம்</item>
+        <item>கணிதம்</item>
+        <item>விளையாட்டுகள்</item>
+        <item>அறிவியல்</item>
+        <item>பார்த்து கற்றுக்கொள்ளுங்கள்</item>
+    </string-array>
+    <string-array name="main_contents">
+        <item>3-6 வயதுக்கான\nவிளையாட்டுகள்</item>
+        <item>6-10 வயதுக்கான\nவிளையாட்டுகள்</item>
+        <item>8-14 வயதுக்கான\nவிளையாட்டுகள்</item>
+        <item> 14 வயதுக்கு மேல்</item>
+    </string-array>
+    <string-array name="languages">
+        <!--<item>English</item>-->
+        <item>हिंदी</item>
+        <item>मराठी</item>
+        <item>ಕನ್ನಡ</item>
+        <item>తెలుగు</item>
+        <item>বাংলা</item>
+        <item>ગુજરાતી</item>
+        <item>ਪੰਜਾਬੀ</item>
+        <item>தமிழ்</item>
+        <item>অসমীয়</item>
+        <item>ଓଡ଼ିଆ</item>
+        <!--<item>മലയാളം</item>-->
+    </string-array>
+    <string-array name="main_languages">
+        <!--<item>English</item>-->
+        <item>Hindi</item>
+        <item>Marathi</item>
+        <item>Kannada</item>
+        <item>Telugu</item>
+        <item>Bengali</item>
+        <item>Gujarati</item>
+        <item>Punjabi</item>
+        <item>Tamil</item>
+        <item>Assamese</item>
+        <item>Odiya</item>
+        <!--<item>Malayalam</item>-->
+    </string-array>
+    <string name="evp_submit"> சமர்ப்பிக்கவும்</string>
+    <string name="evp_retry"> மறுபடியும் முயற்சி செய்க</string>
+</resources>
