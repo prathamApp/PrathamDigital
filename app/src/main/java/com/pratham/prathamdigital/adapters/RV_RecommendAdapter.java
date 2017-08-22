@@ -54,12 +54,18 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
         holder.recom_name.setText(sub_content.get(position).getNodetitle());
         Picasso.with(context).load(sub_content.get(position).getNodeserverimage()).into(holder.recommend_content_img);
         if (sub_content.get(position).getNodetype().equalsIgnoreCase("Resource")) {
-            if (selectedIndex != -1 && selectedIndex == position) {
-                //Do nothing right now
+            if (sub_content.get(position).getResourcetype().equalsIgnoreCase("Video")) {         //selectedIndex != -1 && selectedIndex == position
+                holder.fab_download.setVisibility(View.GONE);
+                holder.card_recom.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        browseAdapter_clicks.contentButtonClicked(holder.getAdapterPosition(), holder.itemView);
+                    }
+                });
             } else {
                 holder.fab_download.setVisibility(View.VISIBLE);
+                holder.card_recom.setOnClickListener(null);
             }
-            holder.card_recom.setOnClickListener(null);
         } else {
             holder.fab_download.setVisibility(View.GONE);
             holder.card_recom.setOnClickListener(new View.OnClickListener() {

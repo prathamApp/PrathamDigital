@@ -43,7 +43,7 @@ public class Activity_PdfViewer extends AppCompatActivity {
         myPdf = getIntent().getStringExtra("pdfPath");
         setupEnterTransitions();
         pdf_title.setText(getIntent().getStringExtra("pdfTitle"));
-        StartTime = getIntent().getStringExtra("StartTime");
+        StartTime = PD_Utility.GetCurrentDateTime();
         resId = getIntent().getStringExtra("resId");
         pdfView.fromUri(Uri.parse(myPdf))
                 .enableSwipe(true)
@@ -86,14 +86,12 @@ public class Activity_PdfViewer extends AppCompatActivity {
         Modal_Score modalScore = new Modal_Score();
         modalScore.setSessionId(PrathamApplication.sessionId);
         modalScore.setResourceId(resId);
-        modalScore.setQuestionId(0);
         modalScore.setScoredMarks(0);
         modalScore.setTotalMarks(0);
         modalScore.setStartTime(StartTime);
         String deviceId = Build.SERIAL;
         modalScore.setDeviceId(deviceId);
         modalScore.setEndTime(PD_Utility.GetCurrentDateTime());
-        modalScore.setLevel(0);
         scoreDBHelper.addScore(modalScore);
 
         setResult(RESULT_CANCELED);

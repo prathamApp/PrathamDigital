@@ -76,6 +76,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     private static final int ACTIVITY_DOWNLOAD = 2;
     private static final int ACTIVITY_SEARCH = 3;
     private static final int ACTIVITY_PDF = 4;
+    private static final int ACTIVITY_VPLAYER = 5;
     @BindView(R.id.content_rv)
     RecyclerView content_rv;
     @BindView(R.id.gallery_rv)
@@ -425,7 +426,6 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                     Log.d("game_filepath:::", directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
                     intent.putExtra("pdfPath", "file:///" + directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
                     intent.putExtra("pdfTitle", subContents.get(position).getNodetitle());
-                    intent.putExtra("StartTime", PD_Utility.GetCurrentDateTime());
                     intent.putExtra("resId", subContents.get(position).getResourceid());
                     ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Main.this,
                             holder, "transition_pdf");
@@ -434,19 +434,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                     rs.gc();
                     rs.freeMemory();
                     startActivityForResult(intent, ACTIVITY_PDF, options.toBundle());
-                }/* else if (subContents.get(position).getResourcetype().equalsIgnoreCase("video")) {
-                    Intent intent = new Intent(Activity_Main.this, Activity_VPlayer.class);
-                    File directory = Activity_Main.this.getDir("PrathamVideo", Context.MODE_PRIVATE);
-                    Log.d("game_filepath:::", directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
-                    intent.putExtra("videoPath", "file:///" + directory.getAbsolutePath() + "/" + subContents.get(position).getResourcepath());
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Main.this,
-                            holder, "transition_pdf");
-                    Runtime rs = Runtime.getRuntime();
-                    rs.freeMemory();
-                    rs.gc();
-                    rs.freeMemory();
-                    startActivityForResult(intent, 5, options.toBundle());
-                }*/
+                }
             } else {
                 ArrayList<Modal_ContentDetail> list = db.Get_Contents(PD_Constant.TABLE_CHILD, subContents.get(position).getNodeid());
                 subContents.clear();
@@ -455,17 +443,30 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 subLibraryAdapter.updateData(subContents);
             }
         } else {
-            if (PD_Utility.isInternetAvailable(Activity_Main.this)) {
-                showDialog();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        new PD_ApiRequest(Activity_Main.this, Activity_Main.this).getDataVolley("BROWSE",
-                                PD_Constant.URL.BROWSE_BY_ID.toString() + arrayList_content.get(position).getNodeid());
-                    }
-                }, 2000);
+            if (arrayList_content.get(position).getResourcetype().equalsIgnoreCase("Video")) {
+                Intent intent = new Intent(Activity_Main.this, Activity_VPlayer.class);
+                Log.d("server_path:::", arrayList_content.get(position).getNodeserverpath());
+                intent.putExtra("videoPath", PD_Utility.getYouTubeID(arrayList_content.get(position).getNodeserverpath()));
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Main.this,
+                        holder, "transition_recommend");
+                Runtime rs = Runtime.getRuntime();
+                rs.freeMemory();
+                rs.gc();
+                rs.freeMemory();
+                startActivityForResult(intent, ACTIVITY_VPLAYER, options.toBundle());
             } else {
-                updateInternetConnection();
+                if (PD_Utility.isInternetAvailable(Activity_Main.this)) {
+                    showDialog();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            new PD_ApiRequest(Activity_Main.this, Activity_Main.this).getDataVolley("BROWSE",
+                                    PD_Constant.URL.BROWSE_BY_ID.toString() + arrayList_content.get(position).getNodeid());
+                        }
+                    }, 2000);
+                } else {
+                    updateInternetConnection();
+                }
             }
         }
     }

@@ -12,13 +12,18 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.pratham.prathamdigital.PrathamApplication;
 import com.pratham.prathamdigital.R;
+import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
+import com.pratham.prathamdigital.interfaces.Interface_Score;
+import com.pratham.prathamdigital.models.Modal_Score;
+import com.pratham.prathamdigital.util.PD_Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class Activity_WebView extends AppCompatActivity implements TextToSpeech.OnInitListener {
+public class Activity_WebView extends AppCompatActivity implements TextToSpeech.OnInitListener, Interface_Score {
 
     @BindView(R.id.loadPage)
     WebView webView;
@@ -29,6 +34,10 @@ public class Activity_WebView extends AppCompatActivity implements TextToSpeech.
     VideoPlayer playVideo;
     boolean timer;
     private TextToSpeech tts;
+    private String startTime;
+    private boolean backpressedFlag = false;
+    public static int totalMarks = 0;
+    public static int scoredMarks = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,7 @@ public class Activity_WebView extends AppCompatActivity implements TextToSpeech.
         setContentView(R.layout.activity_web_view);
         ButterKnife.bind(this);
         tts = new TextToSpeech(this, this);
+        startTime = PD_Utility.GetCurrentDateTime();
     }
 
     public void createWebView(String GamePath, String parse, String resId) {
@@ -49,7 +59,8 @@ public class Activity_WebView extends AppCompatActivity implements TextToSpeech.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
             }
-            webView.addJavascriptInterface(new JSInterface(this, webView, "file://" + parse, tts, resId), "Android");
+            webView.addJavascriptInterface(new JSInterface(Activity_WebView.this, webView,
+                    "file://" + parse, tts, resId, Activity_WebView.this), "Android");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
@@ -70,7 +81,59 @@ public class Activity_WebView extends AppCompatActivity implements TextToSpeech.
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (!backpressedFlag)
+            addScoreToDB();
+        if (tts != null) {
+            tts.shutdown();
+            Log.d("tts_destroyed", "TTS Destroyed");
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            String index_path = getIntent().getStringExtra("index_path");
+            String path = getIntent().getStringExtra("path");
+            String resId = getIntent().getStringExtra("resId");
+            createWebView(index_path, path, resId);
+        } else {
+            Log.d("tts_not:::", "initialized");
+        }
+    }
+
+    public void addScoreToDB() {
+
+        DatabaseHandler scoreDBHelper = new DatabaseHandler(getApplicationContext());
+        Modal_Score modalScore = new Modal_Score();
+        modalScore.setSessionId(PrathamApplication.sessionId);
+        modalScore.setResourceId(getIntent().getStringExtra("resId"));
+        modalScore.setScoredMarks(scoredMarks);
+        modalScore.setTotalMarks(totalMarks);
+        modalScore.setStartTime(startTime);
+        String deviceId = Build.SERIAL;
+        modalScore.setDeviceId(deviceId);
+        modalScore.setEndTime(PD_Utility.GetCurrentDateTime());
+        scoreDBHelper.addScore(modalScore);
+    }
+
+    @Override
     public void onBackPressed() {
+        addScoreToDB();
+        backpressedFlag = true;
         webView.post(new Runnable() {
             public void run() {
                 //String jsString = "javascript:Utils.closeAllAudios()";
@@ -89,36 +152,9 @@ public class Activity_WebView extends AppCompatActivity implements TextToSpeech.
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (tts != null) {
-            tts.shutdown();
-            Log.d("tts_destroyed", "TTS Destroyed");
-        }
-        super.onDestroy();
-    }
-
-    @Override
-    public void onInit(int status) {
-        if (status == TextToSpeech.SUCCESS) {
-            String index_path = getIntent().getStringExtra("index_path");
-            String path = getIntent().getStringExtra("path");
-            String resId = getIntent().getStringExtra("resId");
-            createWebView(index_path, path, resId);
-        } else {
-            Log.d("tts_not:::", "initialized");
-        }
+    public void setScore(int scoredMarks, int totalMarks) {
+        this.scoredMarks += scoredMarks;
+        this.totalMarks += totalMarks;
     }
 }
 

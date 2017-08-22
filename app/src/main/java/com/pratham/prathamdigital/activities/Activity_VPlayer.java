@@ -1,19 +1,22 @@
 package com.pratham.prathamdigital.activities;
 
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.ArcMotion;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
+import android.widget.TextView;
 
+import com.jaedongchicken.ytplayer.YoutubePlayerView;
+import com.jaedongchicken.ytplayer.model.PlaybackQuality;
+import com.jaedongchicken.ytplayer.model.YTParams;
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.custom.morphing.MorphDialogToFab;
 import com.pratham.prathamdigital.custom.morphing.MorphFabToDialog;
-import com.pratham.prathamdigital.custom.video_player.EasyVideoCallback;
-import com.pratham.prathamdigital.custom.video_player.EasyVideoPlayer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,24 +25,43 @@ import butterknife.ButterKnife;
  * Created by HP on 19-08-2017.
  */
 
-public class Activity_VPlayer extends AppCompatActivity implements EasyVideoCallback {
+public class Activity_VPlayer extends AppCompatActivity implements YoutubePlayerView.YouTubeListener {
 
-    @BindView(R.id.rl_easy_title)
-    ViewGroup rl_easy_title;
-    @BindView(R.id.easy_vp)
-    EasyVideoPlayer easy_vp;
-
-    private static final String TEST_URL = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+    @BindView(R.id.rl_vtitle)
+    ViewGroup rl_vtitle;
+    @BindView(R.id.v_title)
+    TextView v_title;
+    @BindView(R.id.youtubePlayerView)
+    YoutubePlayerView youtubePlayerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vplayer);
         ButterKnife.bind(this);
-//        setupEnterTransitions();
-        easy_vp.setCallback(this);
-        easy_vp.setSource(Uri.parse(TEST_URL));
-        easy_vp.start();
+        setupEnterTransitions();
+        YTParams params = new YTParams();
+        params.setPlaybackQuality(PlaybackQuality.medium);
+        youtubePlayerView.setAutoPlayerHeight(this);
+        Log.d("other::", getIntent().getStringExtra("videoPath"));
+        youtubePlayerView.initialize(getIntent().getStringExtra("videoPath"), params, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                youtubePlayerView.play();
+            }
+        }, 500);
+    }
+
+    @Override
+    protected void onDestroy() {
+        youtubePlayerView.destroy();
+        super.onDestroy();
     }
 
     private void setupEnterTransitions() {
@@ -57,9 +79,9 @@ public class Activity_VPlayer extends AppCompatActivity implements EasyVideoCall
         sharedReturn.setPathMotion(arcMotion);
         sharedReturn.setInterpolator(easeInOut);
 
-        if (rl_easy_title != null) {
-            sharedEnter.addTarget(rl_easy_title);
-            sharedReturn.addTarget(rl_easy_title);
+        if (rl_vtitle != null) {
+            sharedEnter.addTarget(rl_vtitle);
+            sharedReturn.addTarget(rl_vtitle);
         }
         getWindow().setSharedElementEnterTransition(sharedEnter);
         getWindow().setSharedElementReturnTransition(sharedReturn);
@@ -68,61 +90,51 @@ public class Activity_VPlayer extends AppCompatActivity implements EasyVideoCall
     @Override
     protected void onPause() {
         super.onPause();
-        easy_vp.pause();
+        youtubePlayerView.pause();
     }
 
     @Override
-    public void onStarted(EasyVideoPlayer player) {
-
+    public void onReady() {
+        Log.d("youtubePlayerView::","on ready");
     }
 
     @Override
-    public void onPaused(EasyVideoPlayer player) {
-        easy_vp.pause();
+    public void onStateChange(YoutubePlayerView.STATE state) {
+        Log.d("youtubePlayerView::","on state changed");
     }
 
     @Override
-    public void onPreparing(EasyVideoPlayer player) {
-
+    public void onPlaybackQualityChange(String arg) {
+        Log.d("youtubePlayerView::","on quality change");
     }
 
     @Override
-    public void onPrepared(EasyVideoPlayer player) {
-
+    public void onPlaybackRateChange(String arg) {
+        Log.d("youtubePlayerView::","on playbach rate change");
     }
 
     @Override
-    public void onBuffering(int percent) {
+    public void onError(String arg) {
+        Log.d("youtubePlayerView::","on Error");
     }
 
     @Override
-    public void onError(EasyVideoPlayer player, Exception e) {
-
+    public void onApiChange(String arg) {
+        Log.d("youtubePlayerView::","on Api change");
     }
 
     @Override
-    public void onCompletion(EasyVideoPlayer player) {
-        easy_vp.stop();
-        easy_vp.release();
-        setResult(RESULT_CANCELED);
-        finishAfterTransition();
+    public void onCurrentSecond(double second) {
+        Log.d("youtubePlayerView::","on Current Second");
     }
 
     @Override
-    public void onRetry(EasyVideoPlayer player, Uri source) {
-        easy_vp.reset();
+    public void onDuration(double duration) {
+        Log.d("youtubePlayerView::","on Duration");
     }
 
     @Override
-    public void onSubmit(EasyVideoPlayer player, Uri source) {
-        easy_vp.stop();
-        easy_vp.release();
-        setResult(RESULT_CANCELED);
-        finishAfterTransition();
-    }
-
-    @Override
-    public void onClickVideoFrame(EasyVideoPlayer player) {
-        easy_vp.toggleControls();
+    public void logs(String log) {
+        Log.d("youtubePlayerView::","on Logs");
     }
 }

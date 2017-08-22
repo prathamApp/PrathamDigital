@@ -76,6 +76,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.crypto.Mac;
@@ -166,28 +167,28 @@ public class PD_Utility {
 
     public static void setLocale(Context context, String lang) {
 
-        if(lang.equalsIgnoreCase("Hindi"))
-            lang="hi";
-        if(lang.equalsIgnoreCase("Marathi"))
-            lang="mr";
-        if(lang.equalsIgnoreCase("Kannada"))
-            lang="kn";
-        if(lang.equalsIgnoreCase("Telugu"))
-            lang="te";
-        if(lang.equalsIgnoreCase("Bengali"))
-            lang="bn-rIN";
-        if(lang.equalsIgnoreCase("Gujarati"))
-            lang="gu";
-        if(lang.equalsIgnoreCase("Punjabi"))
-            lang="pa-rIN";
-        if(lang.equalsIgnoreCase("Tamil"))
-            lang="ta";
-        if(lang.equalsIgnoreCase("Odiya"))
-            lang="or";
-        if(lang.equalsIgnoreCase("Malayalam"))
-            lang="ml";
-        if(lang.equalsIgnoreCase("Assamese"))
-            lang="as";
+        if (lang.equalsIgnoreCase("Hindi"))
+            lang = "hi";
+        if (lang.equalsIgnoreCase("Marathi"))
+            lang = "mr";
+        if (lang.equalsIgnoreCase("Kannada"))
+            lang = "kn";
+        if (lang.equalsIgnoreCase("Telugu"))
+            lang = "te";
+        if (lang.equalsIgnoreCase("Bengali"))
+            lang = "bn-rIN";
+        if (lang.equalsIgnoreCase("Gujarati"))
+            lang = "gu";
+        if (lang.equalsIgnoreCase("Punjabi"))
+            lang = "pa-rIN";
+        if (lang.equalsIgnoreCase("Tamil"))
+            lang = "ta";
+        if (lang.equalsIgnoreCase("Odiya"))
+            lang = "or";
+        if (lang.equalsIgnoreCase("Malayalam"))
+            lang = "ml";
+        if (lang.equalsIgnoreCase("Assamese"))
+            lang = "as";
 
         Locale myLocale = new Locale(lang);
         Locale.setDefault(myLocale);
@@ -198,7 +199,7 @@ public class PD_Utility {
         Configuration conf = context.getResources().getConfiguration();
         conf.setLocale(myLocale);
         context.createConfigurationContext(conf);
-        context.getResources().updateConfiguration(conf,context.getResources().getDisplayMetrics());
+        context.getResources().updateConfiguration(conf, context.getResources().getDisplayMetrics());
     }
 
     /**
@@ -1377,5 +1378,18 @@ public class PD_Utility {
         }
 
         activity.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+    }
+
+    public static String getYouTubeID(String url) {
+        String pattern = "(?<=watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*";
+
+        Pattern compiledPattern = Pattern.compile(pattern);
+        Matcher matcher = compiledPattern.matcher(url);
+
+        if (matcher.find()) {
+            return matcher.group();
+        } else {
+            return "nothing";
+        }
     }
 }

@@ -15,6 +15,7 @@ import android.widget.RadioGroup;
 
 import com.pratham.prathamdigital.PrathamApplication;
 import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
+import com.pratham.prathamdigital.interfaces.Interface_Score;
 import com.pratham.prathamdigital.models.Modal_Score;
 import com.pratham.prathamdigital.util.PD_Utility;
 
@@ -45,10 +46,12 @@ public class JSInterface extends Activity {
     private TextToSpeech textToSp;
     private String resId;
     private String audio_directory_path = "";
+    private Interface_Score interface_score;
 
 
-    JSInterface(Context c, WebView w, String gamePath, TextToSpeech textToSp, String resId) {
+    JSInterface(Context c, WebView w, String gamePath, TextToSpeech textToSp, String resId, Interface_Score score) {
         mContext = c;
+        this.interface_score = score;
         this.textToSp = textToSp;
         this.resId = resId;
         ttsGreater21("Welcome kids", "eng");
@@ -364,21 +367,9 @@ public class JSInterface extends Activity {
     public void addScore(String tempResId, int questionId, int scorefromGame, int totalMarks, int level, String startTime) {
         tempResId = "";
         try {
-            DatabaseHandler scoreDBHelper = new DatabaseHandler(mContext);
-
-            Modal_Score modalScore = new Modal_Score();
-            modalScore.setSessionId(PrathamApplication.sessionId);
-            modalScore.setResourceId(resId);
-            modalScore.setQuestionId(questionId);
-            modalScore.setScoredMarks(scorefromGame);
-            modalScore.setTotalMarks(totalMarks);
-            modalScore.setStartTime(startTime);
-            String deviceId = Build.SERIAL;
-            modalScore.setDeviceId(deviceId);
-            modalScore.setEndTime(PD_Utility.GetCurrentDateTime());
-            modalScore.setLevel(level);
-            scoreDBHelper.addScore(modalScore);
-
+            interface_score.setScore(scorefromGame, totalMarks);
+//            Activity_WebView.scoredMarks += scorefromGame;
+//            Activity_WebView.totalMarks += totalMarks;
         } catch (Exception e) {
             e.printStackTrace();
         }

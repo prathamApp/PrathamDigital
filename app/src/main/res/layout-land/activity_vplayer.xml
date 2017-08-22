@@ -16,16 +16,28 @@
             android:background="@android:color/transparent">
 
             <RelativeLayout
-                android:id="@+id/rl_easy_title"
+                android:id="@+id/rl_vtitle"
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:transitionName="transition_pdf" />
+                android:transitionName="transition_recommend">
 
-            <com.pratham.prathamdigital.custom.video_player.EasyVideoPlayer
-                android:id="@+id/easy_vp"
+                <TextView
+                    android:id="@+id/v_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:padding="@dimen/size_5"
+                    android:textColor="@color/charcoal"
+                    android:textSize="@dimen/size_25sp" />
+            </RelativeLayout>
+
+            <com.jaedongchicken.ytplayer.YoutubePlayerView
+                android:id="@+id/youtubePlayerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_below="@+id/rl_vtitle" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </FrameLayout>

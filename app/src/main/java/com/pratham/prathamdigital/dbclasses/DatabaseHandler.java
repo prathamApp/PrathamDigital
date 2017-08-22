@@ -89,10 +89,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_SCORE_TABLE = "CREATE TABLE " + TABLE_SCORE + "("
                 + RES_ID + " TEXT,"
                 + SESSION_ID + " TEXT,"
-                + QUESTION_ID + " INTEGER,"
                 + SCORED_MARKS + " INTEGER,"
                 + TOTAL_MARKS + " INTEGER,"
-                + LEVEL + " INTEGER,"
                 + START_TIME + " DATETIME,"
                 + END_TIME + " DATETIME,"
                 + DEVICE_ID + " TEXT" + ")";
@@ -200,15 +198,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             ContentValues contentValues = new ContentValues();
             contentValues.put("resourceId", modalScore.getResourceId());
             contentValues.put("sessionId", modalScore.getSessionId());
-            contentValues.put("questionId", modalScore.getQuestionId());
             contentValues.put("scoredMarks", modalScore.getScoredMarks());
             contentValues.put("totalMarks", modalScore.getTotalMarks());
             contentValues.put("startDateTime", modalScore.getStartTime());
             contentValues.put("endDateTime", modalScore.getEndTime());
-            contentValues.put("level", modalScore.getLevel());
             contentValues.put("deviceId", modalScore.getDeviceId());
 
+            /*long resultCount = */
             database.insert(TABLE_SCORE, null, contentValues);
+//            Log.d(aaa, "================================================================================ ");
+//
+//            Cursor allRows=database.rawQuery("select * from " + TABLE_SCORE + "", null);
+//            allRows.moveToFirst();
+//            String tableString = String.format("Table %s:\n", TABLE_SCORE);
+//            if (allRows.moveToFirst() ){
+//                String[] columnNames = allRows.getColumnNames();
+//                do {
+//                    for (String name: columnNames) {
+//                        tableString += String.format("%s: %s\n", name,
+//                                allRows.getString(allRows.getColumnIndex(name)));
+//                    }
+//                    tableString += "\n";
+//
+//                } while (allRows.moveToNext());
+//            }
+//            Log.d("addScore: ",tableString);
+//            Log.d(aaa, "================================================================================ ");
+
             database.close();
         } catch (Exception e) {
             e.printStackTrace();
