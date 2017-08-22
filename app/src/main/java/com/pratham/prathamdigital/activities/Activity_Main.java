@@ -447,6 +447,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 Intent intent = new Intent(Activity_Main.this, Activity_VPlayer.class);
                 Log.d("server_path:::", arrayList_content.get(position).getNodeserverpath());
                 intent.putExtra("videoPath", PD_Utility.getYouTubeID(arrayList_content.get(position).getNodeserverpath()));
+                intent.putExtra("title", arrayList_content.get(position).getNodetitle());
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Main.this,
                         holder, "transition_recommend");
                 Runtime rs = Runtime.getRuntime();

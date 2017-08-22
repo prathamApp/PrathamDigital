@@ -44,6 +44,7 @@ public class Activity_VPlayer extends AppCompatActivity implements YoutubePlayer
         params.setPlaybackQuality(PlaybackQuality.medium);
         youtubePlayerView.setAutoPlayerHeight(this);
         Log.d("other::", getIntent().getStringExtra("videoPath"));
+        v_title.setText(getIntent().getStringExtra("title"));
         youtubePlayerView.initialize(getIntent().getStringExtra("videoPath"), params, this);
     }
 
