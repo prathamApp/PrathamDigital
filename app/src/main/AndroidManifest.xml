@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pratham.prathamdigital">
 
+    <!--<supports-screens-->
+        <!--android:anyDensity="true"-->
+        <!--android:largeScreens="true"-->
+        <!--android:normalScreens="true"-->
+        <!--android:smallScreens="true"-->
+        <!--android:xlargeScreens="true" />-->
+
     <uses-permission android:name="android.permission.ACCESS_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -89,11 +96,8 @@
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
-        <supports-screens
-            android:anyDensity="true"
-            android:largeScreens="true"
-            android:normalScreens="true"
-            android:smallScreens="true"
-            android:xlargeScreens="true" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="e1d9330f62c878e9baee0e17b985180647272403" />
     </application>
 </manifest>

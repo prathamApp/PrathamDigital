@@ -5,7 +5,7 @@
     <string name="view_library">View Your Library Here</string>
     <string name="view_contents">All your contents can be accessed from here.</string>
     <string name="view_recommended">View the recommended contents here</string>
-    <string name="download_recommended" translatable="false">Download the recommended contents from here.</string>
+    <string name="download_recommended">Download the recommended contents from here.</string>
     <string name="search_contents_from_here">Search any content from here</string>
     <string name="search_and_download">Search and Download any content fromm here</string>
     <string name="no_internet">No Internet Connection</string>

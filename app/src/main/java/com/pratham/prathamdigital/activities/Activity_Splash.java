@@ -1,5 +1,6 @@
 package com.pratham.prathamdigital.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -15,12 +16,15 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.async.PD_ApiRequest;
 import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
@@ -29,6 +33,7 @@ import com.pratham.prathamdigital.models.GoogleCredentials;
 import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
 
+import io.fabric.sdk.android.Fabric;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -57,6 +62,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity__splash);
         ButterKnife.bind(this);
         // Database Initialization
@@ -72,6 +78,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
             animeWobble = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.wobble);
             img_logo.startAnimation(animeWobble);
             GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestScopes(new Scope(Scopes.PLUS_LOGIN))
                     .requestEmail()
                     .build();
             if (googleApiClient == null || !googleApiClient.isConnected()) {
@@ -118,7 +125,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == RC_SIGN_IN  && resultCode == Activity.RESULT_OK) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         } else {
