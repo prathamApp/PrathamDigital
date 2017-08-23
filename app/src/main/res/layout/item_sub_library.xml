@@ -11,9 +11,9 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/size_5"
         android:clickable="true"
+        android:transitionName="transition_pdf"
         app:cardCornerRadius="@dimen/size_5"
         app:cardElevation="@dimen/size_5"
-        android:transitionName="transition_pdf"
         app:cardUseCompatPadding="true">
 
         <RelativeLayout
@@ -25,8 +25,7 @@
             <ImageView
                 android:id="@+id/sub_lib_content_img"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerInside" />
+                android:layout_height="match_parent" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -1,10 +1,14 @@
 package com.pratham.prathamdigital.content_playing;
 
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -96,6 +100,7 @@ public class Activity_WebView extends AppCompatActivity implements TextToSpeech.
     protected void onDestroy() {
         if (!backpressedFlag)
             addScoreToDB();
+        Log.d("Destroyed Score Entry", "Destroyed Score Entry");
         if (tts != null) {
             tts.shutdown();
             Log.d("tts_destroyed", "TTS Destroyed");
@@ -155,6 +160,30 @@ public class Activity_WebView extends AppCompatActivity implements TextToSpeech.
     public void setScore(int scoredMarks, int totalMarks) {
         this.scoredMarks += scoredMarks;
         this.totalMarks += totalMarks;
+    }
+
+    public static class WebViewService extends Service {
+        Activity_WebView activity_webView;
+
+        @Override
+        public void onCreate() {
+            super.onCreate();
+            Log.v("Ketan:", "WebView Service Started");
+            activity_webView = new Activity_WebView();
+        }
+
+        @Nullable
+        @Override
+        public IBinder onBind(Intent intent) {
+            return null;
+        }
+
+        @Override
+        public void onTaskRemoved(Intent rootIntent) {
+            Log.v("Ketan:", "WebView Service task removed");
+//            super.onTaskRemoved(rootIntent);
+            stopSelf();
+        }
     }
 }
 

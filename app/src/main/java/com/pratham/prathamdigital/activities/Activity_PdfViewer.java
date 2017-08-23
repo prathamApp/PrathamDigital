@@ -1,10 +1,15 @@
 package com.pratham.prathamdigital.activities;
 
+import android.app.Service;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.ArcMotion;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
@@ -34,6 +39,7 @@ public class Activity_PdfViewer extends AppCompatActivity {
     private String myPdf;
     private String StartTime;
     private String resId;
+    private boolean backpressedFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +88,23 @@ public class Activity_PdfViewer extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        DatabaseHandler scoreDBHelper = new DatabaseHandler(Activity_PdfViewer.this);
+        backpressedFlag = true;
+        addScoreToDB();
+        setResult(RESULT_CANCELED);
+        finishAfterTransition();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (!backpressedFlag) {
+            addScoreToDB();
+        }
+        Log.d("pdf_activity", "Destroyed");
+        super.onDestroy();
+    }
+
+    public void addScoreToDB() {
+        DatabaseHandler scoreDBHelper = new DatabaseHandler(getApplicationContext());
         Modal_Score modalScore = new Modal_Score();
         modalScore.setSessionId(PrathamApplication.sessionId);
         modalScore.setResourceId(resId);
@@ -93,8 +115,29 @@ public class Activity_PdfViewer extends AppCompatActivity {
         modalScore.setDeviceId(deviceId);
         modalScore.setEndTime(PD_Utility.GetCurrentDateTime());
         scoreDBHelper.addScore(modalScore);
+    }
 
-        setResult(RESULT_CANCELED);
-        finishAfterTransition();
+    public static class PdfViewerService extends Service {
+        Activity_PdfViewer viewer;
+
+        @Override
+        public void onCreate() {
+            super.onCreate();
+            Log.v("onCreate:", "PDF Service Started");
+            viewer = new Activity_PdfViewer();
+        }
+
+        @Nullable
+        @Override
+        public IBinder onBind(Intent intent) {
+            return null;
+        }
+
+        @Override
+        public void onTaskRemoved(Intent rootIntent) {
+            Log.v("onTaskRemoved:", "PDF Service task removed");
+//            super.onTaskRemoved(rootIntent);
+            stopSelf();
+        }
     }
 }

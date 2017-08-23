@@ -79,6 +79,7 @@
                     app:srcCompat="@drawable/ic_search_50px_sel_wrapped" />
             </RelativeLayout>
 
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

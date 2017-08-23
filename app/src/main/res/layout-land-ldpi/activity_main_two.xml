@@ -8,10 +8,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:baselineAligned="false"
         android:orientation="horizontal"
         android:weightSum="1"
-        tools:ignore="MissingConstraints,UselessParent"
-        android:baselineAligned="false">
+        tools:ignore="MissingConstraints,UselessParent">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -22,26 +22,6 @@
             android:paddingLeft="@dimen/size_3"
             android:paddingRight="@dimen/size_3"
             android:weightSum="1">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight=".25"
-                tools:ignore="NestedWeights">
-
-                <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
-                    android:id="@+id/c_fab_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:contentDescription="@string/search"
-                    android:transitionName="transition_search"
-                    app:fab_colorNormal="@color/mustord_yellow"
-                    app:fab_colorPressed="@color/black_20"
-                    app:fab_colorRipple="@color/charcoal"
-                    app:fab_shadowColor="@color/black_20"
-                    app:srcCompat="@drawable/ic_search_50px_sel_wrapped" />
-            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -82,6 +62,26 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_weight=".25"
+                tools:ignore="NestedWeights">
+
+                <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
+                    android:id="@+id/c_fab_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/search"
+                    android:transitionName="transition_search"
+                    app:fab_colorNormal="@color/mustord_yellow"
+                    app:fab_colorPressed="@color/black_20"
+                    app:fab_colorRipple="@color/charcoal"
+                    app:fab_shadowColor="@color/black_20"
+                    app:srcCompat="@drawable/ic_search_50px_sel_wrapped" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight=".25">
 
                 <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
@@ -116,9 +116,9 @@
                     android:layout_width="@dimen/size_100"
                     android:layout_height="@dimen/size_100"
                     android:layout_centerInParent="true"
+                    android:contentDescription=""
                     android:scaleType="center"
                     app:srcCompat="@drawable/ic_sad_wrapped"
-                    android:contentDescription=""
                     tools:ignore="ContentDescription" />
 
                 <TextView

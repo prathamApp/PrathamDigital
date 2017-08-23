@@ -62,5 +62,6 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+    compile 'com.eftimoff:android-pathview:1.0.8@aar'
 }
 apply plugin: 'com.google.gms.google-services'

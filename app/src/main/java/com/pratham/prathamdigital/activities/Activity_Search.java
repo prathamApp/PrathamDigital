@@ -134,10 +134,20 @@ public class Activity_Search extends ActivityManagePermission implements VolleyR
             }
             search_chipcloud.setChipListener(new ChipListener() {
                 @Override
-                public void chipSelected(int index) {
-                    text.setText(search_tags.get(index));
-                    if (!expanded)
-                        search.performClick();
+                public void chipSelected(final int index) {
+                    if (PD_Utility.isInternetAvailable(getApplicationContext())) {
+                        showDialog();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                new PD_ApiRequest(Activity_Search.this, Activity_Search.this).getDataVolley("SEARCH",
+                                        PD_Constant.URL.SEARCH_BY_KEYWORD.toString() + "lang=" + db.GetUserLanguage()
+                                                + "&keyw=" + search_tags.get(index).replaceAll("\\s+", ""));
+                            }
+                        }, 2000);
+                    } else {
+                        updteInternetConnection();
+                    }
                 }
 
                 @Override

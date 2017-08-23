@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
+import com.eftimoff.androipathview.PathView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -34,6 +36,7 @@ import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
 
 import io.fabric.sdk.android.Fabric;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -48,7 +51,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
     @BindView(R.id.btn_google_login)
     Button btn_google_login;
     @BindView(R.id.img_logo)
-    ImageView img_logo;
+    PathView img_logo;
 
     DatabaseHandler gdb;
     private GoogleApiClient googleApiClient;
@@ -75,10 +78,8 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
     protected void onResume() {
         super.onResume();
         if (!isInitialized) {
-            animeWobble = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.wobble);
-            img_logo.startAnimation(animeWobble);
+//            animeWobble = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.wobble);
             GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestScopes(new Scope(Scopes.PLUS_LOGIN))
                     .requestEmail()
                     .build();
             if (googleApiClient == null || !googleApiClient.isConnected()) {
@@ -91,6 +92,31 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
                     e.printStackTrace();
                 }
             }
+//            img_logo.startAnimation(animeWobble);
+            img_logo.getPathAnimator()
+                    .delay(500)
+                    .duration(3000)
+                    .listenerStart(new PathView.AnimatorBuilder.ListenerStart() {
+                        @Override
+                        public void onAnimationStart() {
+
+                        }
+                    })
+                    .listenerEnd(new PathView.AnimatorBuilder.ListenerEnd() {
+                        @Override
+                        public void onAnimationEnd() {
+                            if (gdb.getGoogleID().equalsIgnoreCase("")) {
+                                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+                                startActivityForResult(signInIntent, RC_SIGN_IN);
+                            } else {
+                                updateUI(true, null);
+                            }
+                        }
+                    })
+                    .interpolator(new AccelerateDecelerateInterpolator())
+                    .start();
+            img_logo.useNaturalColors();
+            img_logo.setFillAfter(true);
             new Handler().postDelayed(new Runnable() {
                 /*
                  * Showing splash screen with a timer. This will be useful when you
@@ -98,13 +124,13 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
                  */
                 @Override
                 public void run() {
-                    img_logo.clearAnimation();
-                    if (gdb.getGoogleID().equalsIgnoreCase("")) {
-                        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-                        startActivityForResult(signInIntent, RC_SIGN_IN);
-                    } else {
-                        updateUI(true, null);
-                    }
+//                    img_logo.clearAnimation();
+//                    if (gdb.getGoogleID().equalsIgnoreCase("")) {
+//                        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+//                        startActivityForResult(signInIntent, RC_SIGN_IN);
+//                    } else {
+//                        updateUI(true, null);
+//                    }
                 }
             }, 1000);
             isInitialized = true;
@@ -125,7 +151,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN  && resultCode == Activity.RESULT_OK) {
+        if (requestCode == RC_SIGN_IN && resultCode == Activity.RESULT_OK) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         } else {
@@ -170,7 +196,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
                     params.put(PD_Constant.PERSON_NAME, personName);
                     params.put(PD_Constant.LANG, gObj.languageSelected);
                     final JSONObject jsonObject = new JSONObject(params);
-                    Log.d("google_data::",jsonObject.toString());
+                    Log.d("google_data::", jsonObject.toString());
                     if (PD_Utility.isInternetAvailable(Activity_Splash.this)) {
                         showDialog();
                         new Handler().postDelayed(new Runnable() {

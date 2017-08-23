@@ -124,7 +124,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     private ArrayList<Modal_ContentDetail> subContents = new ArrayList<>();
     private RV_LibraryContentAdapter libraryContentAdapter;
     private RV_SubLibraryAdapter subLibraryAdapter;
-    private boolean isLibrary;
+    private boolean isLibrary = false;
     private GalleryLayoutManager layoutManager;
     String googleId;
     private String url;
@@ -146,13 +146,6 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         super.onResume();
         NetworkChangeReceiver.getObservable().addObserver(this);
         if ((!isInitialized)) {
-            Boolean IntroStatus = db.CheckIntroShownStatus(googleId);
-            if (!IntroStatus) {
-                // Show Intro & then set flag as shown
-                db.SetIntroFlagTrue(1, googleId);
-                Log.d("IntroStatus:", db.CheckIntroShownStatus(googleId) + "");
-                ShowIntro(SEARCH);
-            }
             layoutManager = new GalleryLayoutManager(GalleryLayoutManager.VERTICAL);
             layoutManager.setItemTransformer(new ScaleTransformer());
             layoutManager.attach(gallery_rv);
@@ -162,6 +155,12 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
             content_rv.getViewTreeObserver().addOnPreDrawListener(preDrawListenerContent);
             fab_my_library.performClick();
             isInitialized = true;
+            Boolean IntroStatus = db.CheckIntroShownStatus(googleId);
+            if (!IntroStatus) {
+                // Show Intro & then set flag as shown
+                Log.d("IntroStatus:", db.CheckIntroShownStatus(googleId) + "");
+                ShowIntro(LANGUAGE);
+            }
         }
 
     }
@@ -170,14 +169,14 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         int id = 0;
         String text = "";
         String content_text = "";
-        if (target == SEARCH) {
-            id = R.id.c_fab_search;
-            text = getResources().getString(R.string.search);
-            content_text = getResources().getString(R.string.search_and_download);
-        } else if (target == MY_LIBRARY) {
+        if (target == MY_LIBRARY) {
             id = R.id.fab_my_library;
             text = getResources().getString(R.string.my_library);
             content_text = getResources().getString(R.string.view_contents);
+        } else if (target == SEARCH) {
+            id = R.id.c_fab_search;
+            text = getResources().getString(R.string.search);
+            content_text = getResources().getString(R.string.search_and_download);
         } else if (target == RECOMMEND) {
             id = R.id.fab_recom;
             text = getResources().getString(R.string.recommended);
@@ -198,13 +197,15 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                     public void onPromptStateChanged(MaterialTapTargetPrompt prompt, int state) {
                         if (state == MaterialTapTargetPrompt.STATE_DISMISSED) {
                             if (target == SEARCH) {
-                                ShowIntro(MY_LIBRARY);
+//                                ShowIntro(LANGUAGE);
+                                db.SetIntroFlagTrue(1, googleId);
+                                fab_my_library.performClick();
                             } else if (target == MY_LIBRARY) {
                                 ShowIntro(RECOMMEND);
                             } else if (target == RECOMMEND) {
-                                ShowIntro(LANGUAGE);
+                                ShowIntro(SEARCH);
                             } else {
-                                fab_recom.performClick();
+                                fab_language.performClick();
                             }
                         }
                     }
@@ -380,10 +381,14 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 db.SetUserLanguage(language, db.getGoogleID());
                 Log.d("language_after_insert::", db.GetUserLanguage());
                 PD_Utility.setLocale(this, db.GetUserLanguage());
-                if (!isLibrary)
-                    fab_recom.performClick();
-                else
-                    fab_my_library.performClick();
+                if (!db.CheckIntroShownStatus(googleId)) {
+                    ShowIntro(MY_LIBRARY);
+                } else {
+                    if (!isLibrary)
+                        fab_recom.performClick();
+                    else
+                        fab_my_library.performClick();
+                }
             }
         } else if (requestCode == ACTIVITY_DOWNLOAD) {
             if (resultCode == Activity.RESULT_OK) {
@@ -443,7 +448,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 subLibraryAdapter.updateData(subContents);
             }
         } else {
-            if (arrayList_content.get(position).getResourcetype().equalsIgnoreCase("Video")) {
+            /*if (arrayList_content.get(position).getResourcetype().equalsIgnoreCase("Video")) {
                 Intent intent = new Intent(Activity_Main.this, Activity_VPlayer.class);
                 Log.d("server_path:::", arrayList_content.get(position).getNodeserverpath());
                 intent.putExtra("videoPath", PD_Utility.getYouTubeID(arrayList_content.get(position).getNodeserverpath()));
@@ -455,20 +460,20 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 rs.gc();
                 rs.freeMemory();
                 startActivityForResult(intent, ACTIVITY_VPLAYER, options.toBundle());
+            } else {*/
+            if (PD_Utility.isInternetAvailable(Activity_Main.this)) {
+                showDialog();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        new PD_ApiRequest(Activity_Main.this, Activity_Main.this).getDataVolley("BROWSE",
+                                PD_Constant.URL.BROWSE_BY_ID.toString() + arrayList_content.get(position).getNodeid());
+                    }
+                }, 2000);
             } else {
-                if (PD_Utility.isInternetAvailable(Activity_Main.this)) {
-                    showDialog();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            new PD_ApiRequest(Activity_Main.this, Activity_Main.this).getDataVolley("BROWSE",
-                                    PD_Constant.URL.BROWSE_BY_ID.toString() + arrayList_content.get(position).getNodeid());
-                        }
-                    }, 2000);
-                } else {
-                    updateInternetConnection();
-                }
+                updateInternetConnection();
             }
+//            }
         }
     }
 

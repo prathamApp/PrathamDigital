@@ -1392,4 +1392,24 @@ public class PD_Utility {
             return "nothing";
         }
     }
+
+    public static String getDisplayMetrics(AppCompatActivity context) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        if (metrics.densityDpi == DisplayMetrics.DENSITY_LOW) {
+            return "ldpi";
+        } else if (metrics.densityDpi == DisplayMetrics.DENSITY_MEDIUM) {
+            return "mdpi";
+        } else if (metrics.densityDpi == DisplayMetrics.DENSITY_HIGH) {
+            return "hdpi";
+        } else if (metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH) {
+            return "xhdpi";
+        } else if (metrics.densityDpi == DisplayMetrics.DENSITY_XXHIGH) {
+            return "xxhdpi";
+        } else if (metrics.densityDpi == DisplayMetrics.DENSITY_XXXHIGH) {
+            return "xxxhdpi";
+        } else {
+            return "mdpi";
+        }
+    }
 }
