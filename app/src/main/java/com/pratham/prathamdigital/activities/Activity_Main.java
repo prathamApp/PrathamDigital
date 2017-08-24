@@ -33,6 +33,7 @@ import com.pratham.prathamdigital.adapters.RV_RecommendAdapter;
 import com.pratham.prathamdigital.adapters.RV_SubLibraryAdapter;
 import com.pratham.prathamdigital.async.PD_ApiRequest;
 import com.pratham.prathamdigital.content_playing.Activity_WebView;
+import com.pratham.prathamdigital.content_playing.TextToSp;
 import com.pratham.prathamdigital.custom.GalleryLayoutManager;
 import com.pratham.prathamdigital.custom.ScaleTransformer;
 import com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton;
@@ -128,12 +129,14 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     private GalleryLayoutManager layoutManager;
     String googleId;
     private String url;
+    public static TextToSp ttspeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_two);
         ButterKnife.bind(this);
+        ttspeech = new TextToSp(this);
         dialog = PD_Utility.showLoader(Activity_Main.this);
         db = new DatabaseHandler(Activity_Main.this);
         googleId = db.getGoogleID();
@@ -641,5 +644,15 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     public void onPause() {
         super.onPause();
         NetworkChangeReceiver.getObservable().deleteObserver(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("Destroyed Score Entry", "Destroyed Score Entry");
+        if (ttspeech != null) {
+            ttspeech.shutDownTTS();
+            Log.d("tts_destroyed", "TTS Destroyed");
+        }
+        super.onDestroy();
     }
 }

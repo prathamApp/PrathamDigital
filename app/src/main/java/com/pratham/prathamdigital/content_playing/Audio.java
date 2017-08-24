@@ -58,8 +58,8 @@ public class Audio extends Thread {
                 mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
                 mediaRecorder.setAudioEncodingBitRate(96000);
                 mediaRecorder.setAudioSamplingRate(44100);
-                mediaRecorder.setOutputFile(audio_directory_path + recName);
-                Log.d("audio_output_path:::", audio_directory_path + recName);
+                mediaRecorder.setOutputFile(audio_directory_path + "/" + recName);
+                Log.d("audio_output_path:::",audio_directory_path + "/" + recName);
                 mediaRecorder.prepare();
             } catch (Exception e) {
                 e.printStackTrace();

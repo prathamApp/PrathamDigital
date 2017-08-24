@@ -27,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class Activity_WebView extends AppCompatActivity implements TextToSpeech.OnInitListener, Interface_Score {
+public class Activity_WebView extends AppCompatActivity implements Interface_Score {
 
     @BindView(R.id.loadPage)
     WebView webView;
@@ -37,7 +37,6 @@ public class Activity_WebView extends AppCompatActivity implements TextToSpeech.
     Context sessionContex;
     VideoPlayer playVideo;
     boolean timer;
-    private TextToSpeech tts;
     private String startTime;
     private boolean backpressedFlag = false;
     public static int totalMarks = 0;
@@ -50,8 +49,12 @@ public class Activity_WebView extends AppCompatActivity implements TextToSpeech.
         playVideo = new VideoPlayer();
         setContentView(R.layout.activity_web_view);
         ButterKnife.bind(this);
-        tts = new TextToSpeech(this, this);
         startTime = PD_Utility.GetCurrentDateTime();
+
+        String index_path = getIntent().getStringExtra("index_path");
+        String path = getIntent().getStringExtra("path");
+        String resId = getIntent().getStringExtra("resId");
+        createWebView(index_path, path, resId);
     }
 
     public void createWebView(String GamePath, String parse, String resId) {
@@ -64,7 +67,7 @@ public class Activity_WebView extends AppCompatActivity implements TextToSpeech.
                 webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
             }
             webView.addJavascriptInterface(new JSInterface(Activity_WebView.this, webView,
-                    "file://" + parse, tts, resId, Activity_WebView.this), "Android");
+                    "file://" + parse, resId, Activity_WebView.this), "Android");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
@@ -101,23 +104,11 @@ public class Activity_WebView extends AppCompatActivity implements TextToSpeech.
         if (!backpressedFlag)
             addScoreToDB();
         Log.d("Destroyed Score Entry", "Destroyed Score Entry");
-        if (tts != null) {
-            tts.shutdown();
-            Log.d("tts_destroyed", "TTS Destroyed");
-        }
+//        if (tts != null) {
+//            tts.shutdown();
+//            Log.d("tts_destroyed", "TTS Destroyed");
+//        }
         super.onDestroy();
-    }
-
-    @Override
-    public void onInit(int status) {
-        if (status == TextToSpeech.SUCCESS) {
-            String index_path = getIntent().getStringExtra("index_path");
-            String path = getIntent().getStringExtra("path");
-            String resId = getIntent().getStringExtra("resId");
-            createWebView(index_path, path, resId);
-        } else {
-            Log.d("tts_not:::", "initialized");
-        }
     }
 
     public void addScoreToDB() {

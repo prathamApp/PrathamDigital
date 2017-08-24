@@ -6,23 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.RadioGroup;
 
-import com.pratham.prathamdigital.PrathamApplication;
-import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
+import com.pratham.prathamdigital.activities.Activity_Main;
 import com.pratham.prathamdigital.interfaces.Interface_Score;
-import com.pratham.prathamdigital.models.Modal_Score;
-import com.pratham.prathamdigital.util.PD_Utility;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
 
 
@@ -43,18 +36,19 @@ public class JSInterface extends Activity {
     static Boolean trailerFlag = false;
     static Boolean completeFlag = false;
     public String gamePath;
-    private TextToSpeech textToSp;
+    static TextToSp textToSp;
+    //    private TextToSpeech textToSp;
     private String resId;
     private String audio_directory_path = "";
     private Interface_Score interface_score;
 
 
-    JSInterface(Context c, WebView w, String gamePath, TextToSpeech textToSp, String resId, Interface_Score score) {
+    JSInterface(Context c, WebView w, String gamePath, String resId, Interface_Score score) {
         mContext = c;
         this.interface_score = score;
-        this.textToSp = textToSp;
+        this.textToSp = Activity_Main.ttspeech;
         this.resId = resId;
-        ttsGreater21("Welcome kids", "eng");
+//        ttsGreater21("Welcome kids", "eng");
         this.gamePath = gamePath;
         createRecordingFolder();
         mp = new MediaPlayer();
@@ -163,11 +157,16 @@ public class JSInterface extends Activity {
     @JavascriptInterface
     public void audioPlayerForStory(String filename, String storyName) {
         try {
-            mp.stop();
+            mp = new MediaPlayer();
+
+            if (mp.isPlaying())
+                mp.stop();
             mp.reset();
-            if (textToSp.isSpeaking()) {
-                stopSpeakerDuringJS();
+
+            if (textToSp.textToSpeech.isSpeaking()) {
+                textToSp.stopSpeakerDuringJS();
             }
+
             String path = "";
             audioFlag = true;
             flag = 0;
@@ -175,16 +174,20 @@ public class JSInterface extends Activity {
 
             try {
                 if (storyName != null) {
-                    mp3File = "storyGame/Raw/" + storyName + "/" + filename;
-                } else {
-                    mp3File = "/storage/sdcard0/.POSinternal/recordings" + filename;
-                }
+                    File file = mContext.getDir(audio_directory_path + "/" + storyName, Context.MODE_PRIVATE);
+                    if (!file.exists()) {
+                        file.mkdirs();
+                    }
+                    mp3File = audio_directory_path + "/" + storyName + "/" + filename;
+                } else
+                    mp3File = audio_directory_path + "/" + filename;
+
                 if (filename.charAt(0) == '/') {
-                    path = "/storage/sdcard0/.POSinternal/recordings" + filename;//check for recording game and then change
+                    path = audio_directory_path + filename;//check for recording game and then change
                     mp.setDataSource(path);
-                } else {
+                } else
                     mp.setDataSource(path);
-                }
+
                 if (mp.isPlaying())
                     mp.stop();
 
@@ -208,7 +211,6 @@ public class JSInterface extends Activity {
 
                     }
                 });
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -217,12 +219,6 @@ public class JSInterface extends Activity {
 /*            log.error("Exception occurred at : " + e.getMessage());*/
         }
     }
-
-    public void stopSpeakerDuringJS() {
-        textToSp.stop();
-        textToSp.shutdown();
-    }
-
 
     // Ketan's Code
     @JavascriptInterface
@@ -249,21 +245,13 @@ public class JSInterface extends Activity {
                     }
                 });
             } catch (Exception e) {
-/*
-                log.error("Exception occurred at : " + e.getMessage());
-                showAlert.showDialogue(mContext, "Problem occurred in audio player. Please contact your administrator.");
-                SyncActivityLogs syncActivityLogs = new SyncActivityLogs(mContext);
-                syncActivityLogs.addToDB("audioPlayer-JSInterface", e, "Error");
-                BackupDatabase.backup(mContext);
-*/
                 e.printStackTrace();
             }
         } catch (Exception e) {
-/*
-            log.error("Exception occurred at : " + e.getMessage());
-*/
+            e.printStackTrace();
         }
     }
+
 
     @JavascriptInterface
     public void audioPause() {
@@ -333,25 +321,25 @@ public class JSInterface extends Activity {
     public void playTts(String theWordWasAndYouSaid, String ttsLanguage) {
         mp.stop();
         mp.reset();
-        if (textToSp.isSpeaking()) {
-            stopSpeakerDuringJS();
+        if (textToSp.textToSpeech.isSpeaking()) {
+            textToSp.stopSpeakerDuringJS();
         }
         if (ttsLanguage == null) {
-            ttsGreater21(theWordWasAndYouSaid, "eng");
+            textToSp.ttsFunction(theWordWasAndYouSaid, "eng");
         }
         if (ttsLanguage.equals("eng") || ttsLanguage.equals("hin")) {
-            ttsGreater21(theWordWasAndYouSaid, ttsLanguage);
+            textToSp.ttsFunction(theWordWasAndYouSaid, ttsLanguage);
         }
     }
 
     @JavascriptInterface
     public void stopTts() {
-        stopSpeakerDuringJS();
+        textToSp.stopSpeakerDuringJS();
     }
 
     @JavascriptInterface
     public void playTts(final String toSpeak) {
-        ttsGreater21(toSpeak, "eng");
+        textToSp.ttsFunction(toSpeak, "eng");
     }
 
     @JavascriptInterface
@@ -360,7 +348,7 @@ public class JSInterface extends Activity {
     }
 
     public void stopTtsBackground() {
-        stopSpeakerDuringJS();
+        textToSp.stopSpeakerDuringJS();
     }
 
     @JavascriptInterface
@@ -373,17 +361,5 @@ public class JSInterface extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void ttsGreater21(String text, String lang) {
-        String utteranceId = this.hashCode() + "";
-
-        if (lang.equals("hin"))
-            textToSp.setLanguage(new Locale("hi", "IN"));
-        else
-            textToSp.setLanguage(new Locale("en", "IN"));
-
-        textToSp.speak(text, TextToSpeech.QUEUE_FLUSH, null, utteranceId);
     }
 }
