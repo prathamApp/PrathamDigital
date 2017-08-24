@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "723575559657",
-    "project_id": "prathamdigital-175604"
+    "firebase_url": "https://prathamdigital-175604.firebaseio.com",
+    "project_id": "prathamdigital-175604",
+    "storage_bucket": "prathamdigital-175604.appspot.com"
   },
   "client": [
     {
@@ -13,7 +15,39 @@
       },
       "oauth_client": [
         {
+          "client_id": "723575559657-f4scdrrc3vdqadg5sdrpdv46sjopqcou.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pratham.prathamdigital",
+            "certificate_hash": "fbfb3f4d8f5159a4d691a31ca36287508ee6a592"
+          }
+        },
+        {
           "client_id": "723575559657-7ledst9thogr0h1djsvi1g9sf0satv96.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "723575559657-uh3bk4s8vg4kvu4b55s2ap8i4shhford.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pratham.prathamdigital",
+            "certificate_hash": "2af73247b761b73722cd30203d7a766cee5f5983"
+          }
+        },
+        {
+          "client_id": "723575559657-0dpfva1m02be1u0t3chqpptil2895fim.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pratham.prathamdigital",
+            "certificate_hash": "5e9fa6ed6247b9ccf09f5c1e78a009782add290c"
+          }
+        },
+        {
+          "client_id": "723575559657-csi4urk5vlc003k1bnlc4hij38lhdagp.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "723575559657-b7obcf9pjc0pir4nkvckb95iv8qfjmf9.apps.googleusercontent.com",
           "client_type": 3
         },
         {
@@ -27,7 +61,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBQwhZHShRyM2HH8P20zPs5zth8mNguA54"
+          "current_key": "AIzaSyC-d-L72KG7cRPHTdrvmuoYxfUtKRWvL5c"
         }
       ],
       "services": {
@@ -35,11 +69,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "723575559657-7ledst9thogr0h1djsvi1g9sf0satv96.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
