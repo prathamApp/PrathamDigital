@@ -52,10 +52,8 @@
                     app:fab_progress_showBackground="false"
                     app:fab_shadowColor="@color/black_20"
                     app:fab_shadowRadius="@dimen/size_4"
-                    app:fab_shadowXOffset="@dimen/size_1"
-                    app:fab_shadowYOffset="@dimen/size_3"
                     app:fab_showShadow="true"
-                    app:fab_size="mini"
+                    app:fab_size="normal"
                     app:srcCompat="@drawable/ic_download_wrapped" />
 
                 <TextView

@@ -7,5 +7,6 @@ package com.pratham.prathamdigital.interfaces;
 public interface ProgressUpdate {
     void onProgressUpdate(int progress);
     void onZipDownloaded(boolean isDownloaded);
+    void onZipExtracted(boolean isExtracted);
     void lengthOfTheFile(int length);
 }

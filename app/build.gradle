@@ -62,5 +62,7 @@ dependencies {
         transitive = true;
     }
     compile 'com.eftimoff:android-pathview:1.0.8@aar'
+    compile 'com.aloj.progress:download-progress:1.0'
+    compile 'com.facebook.rebound:rebound:0.3.8'
 }
 apply plugin: 'com.google.gms.google-services'

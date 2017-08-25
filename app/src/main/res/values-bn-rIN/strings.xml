@@ -62,4 +62,8 @@
     </string-array>
     <string name="evp_submit">জমা করা</string>
     <string name="evp_retry">পুনরায় কর</string>
+    <string name="downloading">Downloading...</string>
+    <string name="please_wait">Please wait......</string>
+    <string name="let_them_download">Let them download first!</string>
+    <string name="press_again_to_exit">Press again to exit.</string>
 </resources>

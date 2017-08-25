@@ -52,8 +52,6 @@ public class Activity_DownloadDialog extends AppCompatActivity implements Volley
     ViewGroup card_content;
     @BindView(R.id.d_content_img)
     ImageView d_content_img;
-    //    @BindView(R.id.d_progressbar)
-//    CircleProgressView d_progressbar;
     @BindView(R.id.fab_download2)
     FloatingActionButton fab_download2;
     @BindView(R.id.d_name)
@@ -160,6 +158,11 @@ public class Activity_DownloadDialog extends AppCompatActivity implements Volley
             }
             addContentToDatabase(download_content);
         }
+    }
+
+    @Override
+    public void onZipExtracted(boolean isExtracted) {
+
     }
 
     private void addContentToDatabase(Modal_DownloadContent download_content) {

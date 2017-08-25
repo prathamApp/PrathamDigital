@@ -1,18 +1,20 @@
 package com.pratham.prathamdigital.adapters;
 
+import android.animation.Animator;
 import android.content.Context;
-import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton;
-import com.pratham.prathamdigital.custom.progress_indicators.CircleProgressView;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
 import com.squareup.picasso.Picasso;
@@ -51,22 +53,19 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.recom_name.setText(sub_content.get(position).getNodetitle());
-        Picasso.with(context).load(sub_content.get(position).getNodeserverimage()).into(holder.recommend_content_img);
-        if (sub_content.get(position).getNodetype().equalsIgnoreCase("Resource")) {
-            if (selectedIndex != -1 && selectedIndex == position) {         //sub_content.get(position).getResourcetype().equalsIgnoreCase("Video")
-//                holder.fab_download.setVisibility(View.GONE);
-//                holder.card_recom.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        browseAdapter_clicks.contentButtonClicked(holder.getAdapterPosition(), holder.itemView);
-//                    }
-//                });
+        holder.recom_name.setText(sub_content.get(holder.getAdapterPosition()).getNodetitle());
+        Picasso.with(context).load(sub_content.get(holder.getAdapterPosition()).getNodeserverimage()).into(holder.recommend_content_img);
+        if (sub_content.get(holder.getAdapterPosition()).isDownloading()) {
+            holder.rl_reveal.setVisibility(View.VISIBLE);
+        } else if (sub_content.get(holder.getAdapterPosition()).getNodetype().equalsIgnoreCase("Resource")) {
+            holder.rl_reveal.setVisibility(View.INVISIBLE);
+            if (selectedIndex != -1 && selectedIndex == holder.getAdapterPosition()) {         //sub_content.get(position).getResourcetype().equalsIgnoreCase("Video")
             } else {
                 holder.fab_download.setVisibility(View.VISIBLE);
             }
             holder.card_recom.setOnClickListener(null);
         } else {
+            holder.rl_reveal.setVisibility(View.INVISIBLE);
             holder.fab_download.setVisibility(View.GONE);
             holder.card_recom.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -78,7 +77,7 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
         holder.fab_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                browseAdapter_clicks.downloadClick(holder.getAdapterPosition(), holder.itemView);
+                browseAdapter_clicks.downloadClick(holder.getAdapterPosition(), holder.rl_reveal);
             }
         });
     }
@@ -96,6 +95,21 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
         notifyDataSetChanged();
     }
 
+    public void reveal(View view) {
+        // previously invisible view
+        int centerX = view.getWidth();
+        int centerY = view.getHeight();
+        int startRadius = 0;
+        int endRadius = (int) Math
+                .hypot(view.getWidth(), view.getHeight());
+        Animator anim =
+                ViewAnimationUtils.createCircularReveal(view, centerX, centerY, startRadius, endRadius);
+        anim.setInterpolator(new AccelerateDecelerateInterpolator());
+        anim.setDuration(300);
+        view.setVisibility(View.VISIBLE);
+        anim.start();
+    }
+
     public void updateData(ArrayList<Modal_ContentDetail> arrayList_content) {
         this.sub_content = arrayList_content;
         progress = 0;
@@ -108,12 +122,12 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        //        @BindView(R.id.recom_img_download)
-//        ImageView recom_img_download;
+        @BindView(R.id.item_progress)
+        ProgressBar item_progress;
         @BindView(R.id.recom_name)
         TextView recom_name;
-        //        @BindView(R.id.recom_progressbar2)
-//        CircleProgressView recom_progressbar2;
+        @BindView(R.id.rl_reveal)
+        RelativeLayout rl_reveal;
         @BindView(R.id.recommend_content_img)
         ImageView recommend_content_img;
         @BindView(R.id.card_recom)

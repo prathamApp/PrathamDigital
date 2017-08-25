@@ -168,10 +168,12 @@ public class ZipDownloader {
             try {
                 File file = new File(fileWithinMyDir.getAbsolutePath());
                 boolean deleted = file.delete();
+                progressUpdate.onZipExtracted(true);
                 if (deleted) Log.d("file:::", "deleted");
                 wakeLock.release();
             } catch (Exception e) {
                 e.printStackTrace();
+                progressUpdate.onZipExtracted(false);
             }
         }
 

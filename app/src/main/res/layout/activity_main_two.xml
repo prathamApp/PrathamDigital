@@ -225,4 +225,36 @@
                 android:background="@android:color/transparent" />
         </RelativeLayout>
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_rl_download"
+        android:layout_width="@dimen/size_250"
+        android:layout_height="@dimen/size_50"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/size_5"
+        android:background="@drawable/download_rounded_corners">
+
+        <com.aloj.progress.DownloadProgressView
+            android:id="@+id/main_fab_download"
+            android:layout_width="@dimen/size_45"
+            android:layout_height="@dimen/size_45"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            app:matProg_rimColor="@color/colorPrimary"
+            android:layout_marginEnd="@dimen/size_10"
+            android:clickable="false"
+            app:matProg_barColor="@color/charcoal"
+            app:matProg_progressIndeterminate="true" />
+
+        <TextView
+            android:id="@+id/main_download_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/size_3"
+            android:layout_toStartOf="@+id/main_fab_download"
+            android:gravity="center"
+            android:textColor="@color/charcoal" />
+    </RelativeLayout>
 </RelativeLayout>

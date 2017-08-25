@@ -35,6 +35,15 @@ public class Modal_ContentDetail {
     int level;
     @SerializedName("parentid")
     int parentid;
+    boolean isDownloading = false;
+
+    public boolean isDownloading() {
+        return isDownloading;
+    }
+
+    public void setDownloading(boolean downloading) {
+        isDownloading = downloading;
+    }
 
     public int getNodeid() {
         return nodeid;

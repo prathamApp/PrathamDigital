@@ -76,7 +76,7 @@ public class FloatingActionButton extends ImageButton {
 
     // Progress
     private boolean mProgressBarEnabled;
-    private int mProgressWidth = FAB_Util.dpToPx(getContext(), 6f);
+    private int mProgressWidth = FAB_Util.dpToPx(getContext(), 4f);
     private int mProgressColor;
     private int mProgressBackgroundColor;
     private boolean mShouldUpdateButtonPosition;
