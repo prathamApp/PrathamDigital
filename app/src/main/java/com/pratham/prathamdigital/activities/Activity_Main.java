@@ -127,7 +127,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     int[] punjabi_age_id = {55, 56, 57, 58};
     int[] odiya_age_id = {60, 61, 62, 63};
     int[] tamil_age_id = {65, 66, 67, 68};
-    int[] childs = {R.drawable.ic_baby_wrapped, R.drawable.ic_boy_wrapped, R.drawable.ic_10year_boy_wrapped, R.drawable.ic_adult_boy_wrapped};
+    int[] childs = {R.drawable.ic_boy_wrapped, R.drawable.ic_10year_boy_wrapped, R.drawable.ic_adult_boy_wrapped};
     private String[] age;
     private boolean isInitialized;
     RV_AgeFilterAdapter ageFilterAdapter;
@@ -156,6 +156,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         ttspeech = new TextToSp(this);
         dialog = PD_Utility.showLoader(Activity_Main.this);
         db = new DatabaseHandler(Activity_Main.this);
+        PD_Utility.setLocale(this, db.GetUserLanguage());
         googleId = db.getGoogleID();
         Log.d("googleId::", googleId);
         isInitialized = false;

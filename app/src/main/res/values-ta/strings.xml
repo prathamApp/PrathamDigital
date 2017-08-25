@@ -30,7 +30,6 @@
         <item>3-6 வயதுக்கான\nவிளையாட்டுகள்</item>
         <item>6-10 வயதுக்கான\nவிளையாட்டுகள்</item>
         <item>8-14 வயதுக்கான\nவிளையாட்டுகள்</item>
-        <item> 14 வயதுக்கு மேல்</item>
     </string-array>
     <string-array name="languages">
         <!--<item>English</item>-->

@@ -64,6 +64,7 @@ public class RV_LibraryContentAdapter extends RecyclerView.Adapter<RV_LibraryCon
                 Log.d("adapter_filename:::", fileName);
                 Log.d("adapter_filepath:::", filepath.toString());
                 holder.child_avatar.setImageDrawable(Drawable.createFromPath(filepath.toString()));
+                holder.child_avatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
             holder.card_age.setOnClickListener(new View.OnClickListener() {
                 @Override

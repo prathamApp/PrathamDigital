@@ -176,11 +176,11 @@ public class PD_Utility {
         if (lang.equalsIgnoreCase("Telugu"))
             lang = "te";
         if (lang.equalsIgnoreCase("Bengali"))
-            lang = "bn-rIN";
+            lang = "bn";
         if (lang.equalsIgnoreCase("Gujarati"))
             lang = "gu";
         if (lang.equalsIgnoreCase("Punjabi"))
-            lang = "pa-rIN";
+            lang = "pa";
         if (lang.equalsIgnoreCase("Tamil"))
             lang = "ta";
         if (lang.equalsIgnoreCase("Odiya"))
