@@ -31,7 +31,7 @@ public class TastyToast {
 
     static SuccessToastView successToastView;
     static WarningToastView warningToastView;
-//    static ErrorToastView errorToastView;
+    static ErrorToastView errorToastView;
 //    static InfoToastView infoToastView;
 //    static DefaultToastView defaultToastView;
 //    static ConfusingToastView confusingToastView;
@@ -93,18 +93,18 @@ public class TastyToast {
                 toast.setView(layout);
                 break;
             }
-//            case 3: {
-//                View layout = LayoutInflater.from(context).inflate(R.layout.error_toast_layout, null, false);
-//
-//                TextView text = (TextView) layout.findViewById(R.id.toastMessage);
-//                text.setText(msg);
-//                errorToastView = (ErrorToastView) layout.findViewById(R.id.errorView);
-//                errorToastView.startAnim();
-//                text.setBackgroundResource(R.drawable.error_toast);
-//                text.setTextColor(Color.parseColor("#FFFFFF"));
-//                toast.setView(layout);
-//                break;
-//            }
+            case 3: {
+                View layout = LayoutInflater.from(context).inflate(R.layout.error_toast_layout, null, false);
+
+                TextView text = (TextView) layout.findViewById(R.id.toastMessage);
+                text.setText(msg);
+                errorToastView = (ErrorToastView) layout.findViewById(R.id.errorView);
+                errorToastView.startAnim();
+                text.setBackgroundResource(R.drawable.error_toast);
+                text.setTextColor(Color.parseColor("#FFFFFF"));
+                toast.setView(layout);
+                break;
+            }
 //            case 4: {
 //                View layout = LayoutInflater.from(context).inflate(R.layout.info_toast_layout, null, false);
 //

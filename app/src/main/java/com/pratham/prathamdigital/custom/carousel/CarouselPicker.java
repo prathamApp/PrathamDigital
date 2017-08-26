@@ -134,10 +134,10 @@ public class CarouselPicker extends ViewPager {
                     iv.setVisibility(GONE);
                     tv.setVisibility(VISIBLE);
                     tv.setText(pickerItem.getText());
-                    int textSize = ((TextItem) pickerItem).getTextSize();
-                    if (textSize != 0) {
-                        tv.setTextSize(dpToPx(((TextItem) pickerItem).getTextSize()));
-                    }
+//                    int textSize = ((TextItem) pickerItem).getTextSize();
+//                    if (textSize != 0) {
+//                        tv.setTextSize(dpToPx(((TextItem) pickerItem).getTextSize()));
+//                    }
                 }
             }
             view.setTag(position);

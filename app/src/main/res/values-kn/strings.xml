@@ -66,4 +66,5 @@
     <string name="let_them_download">Let them download first!</string>
     <string name="press_again_to_exit">Press again to exit.</string>
     <string name="dialog_default_title">Are you sure!</string>
+    <string name="something_went_wrong">Something went wrong.Please try again later..</string>
 </resources>

@@ -729,14 +729,16 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     }
 
     private ArrayList<Modal_ContentDetail> removeContentIfDownloaded(ArrayList<Modal_ContentDetail> arrayList_content) {
-        ArrayList<String> downloaded_ids = db.getDownloadContentID(PD_Constant.TABLE_DOWNLOADED);
+        ArrayList<String> downloaded_ids = db.getDownloadContentID(PD_Constant.TABLE_CHILD);
         if (downloaded_ids.size() > 0) {
             Log.d("contents_downloaded::", downloaded_ids.size() + "");
             for (int i = 0; i < downloaded_ids.size(); i++) {
                 for (int j = 0; j < arrayList_content.size(); j++) {
-                    if (arrayList_content.get(j).getResourceid().equalsIgnoreCase(downloaded_ids.get(i))) {
-                        Log.d("contents_downloaded::", "downloaded content removed");
-                        arrayList_content.remove(j);
+                    if (arrayList_content.get(j).getNodetype().equalsIgnoreCase("Resource")) {
+                        if (String.valueOf(arrayList_content.get(j).getNodeid()).equalsIgnoreCase(downloaded_ids.get(i))) {
+                            Log.d("contents_downloaded::", "downloaded content removed");
+                            arrayList_content.remove(j);
+                        }
                     }
                 }
             }
@@ -830,6 +832,12 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                         .execute(download_content.getNodelist().get(i).getNodeserverimage());
             }
             addContentToDatabase(download_content);
+        } else {
+            main_rl_download.startAnimation(AnimationUtils.loadAnimation(Activity_Main.this, R.anim.fab_scale_down));
+            main_rl_download.setVisibility(View.GONE);
+            TastyToast.makeText(getApplicationContext(), getString(R.string.something_went_wrong), TastyToast.LENGTH_LONG,
+                    TastyToast.ERROR);
+            to_be_downloaded.remove(0);
         }
     }
 
@@ -868,7 +876,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                     db.Add_Content(PD_Constant.TABLE_CHILD, download_content.getNodelist().get(i));
             }
         }
-        db.Add_DOownloadedFileDetail(download_content.getNodelist().get(download_content.getNodelist().size() - 1));
+//        db.Add_DOownloadedFileDetail(download_content.getNodelist().get(download_content.getNodelist().size() - 1));
     }
 
     @Override

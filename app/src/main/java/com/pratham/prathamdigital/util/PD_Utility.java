@@ -35,6 +35,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -252,7 +253,20 @@ public class PD_Utility {
         return dateFormat.format(cal.getTime());
     }
 
+    public static int convertDpToPixels(float dp, Context context) {
+        int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+        return px;
+    }
 
+    public static int convertSpToPixels(float sp, Context context) {
+        int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
+        return px;
+    }
+
+    public static int convertDpToSp(float dp, Context context) {
+        int sp = (int) (convertDpToPixels(dp, context) / (float) convertSpToPixels(dp, context));
+        return sp;
+    }
 //    private void startAnim() {
 //        int mainViewHeight = logo_pathview.getRootView().getHeight();
 //        ObjectAnimator mainViewScaleXAnim = ObjectAnimator.ofFloat(logo_pathview, "scaleX", 1.0f, 0.8f);

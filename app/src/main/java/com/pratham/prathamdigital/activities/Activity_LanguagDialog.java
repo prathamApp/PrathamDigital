@@ -62,7 +62,7 @@ public class Activity_LanguagDialog extends AppCompatActivity {
         String[] str = getResources().getStringArray(R.array.languages);
         main_lang = getResources().getStringArray(R.array.main_languages);
         for (int i = 0; i < str.length; i++) {
-            languages.add(new CarouselPicker.TextItem(str[i], 20));
+            languages.add(new CarouselPicker.TextItem(str[i], 0));
         }
         CarouselPicker.CarouselViewAdapter mixAdapter = new CarouselPicker.CarouselViewAdapter(this, languages, 0);
         lang_picker.setAdapter(mixAdapter);
