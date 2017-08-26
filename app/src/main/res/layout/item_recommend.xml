@@ -26,7 +26,7 @@
                 android:id="@+id/recommend_content_img"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/size_130"
-                android:scaleType="centerInside" />
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"

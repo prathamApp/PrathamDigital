@@ -22,6 +22,25 @@
             android:paddingLeft="@dimen/size_3"
             android:paddingRight="@dimen/size_3"
             android:weightSum="1">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight=".25"
+                tools:ignore="NestedWeights">
+
+                <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
+                    android:id="@+id/c_fab_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/search"
+                    android:transitionName="transition_search"
+                    app:fab_colorNormal="@color/mustord_yellow"
+                    app:fab_colorPressed="@color/black_20"
+                    app:fab_colorRipple="@color/charcoal"
+                    app:fab_shadowColor="@color/black_20"
+                    app:srcCompat="@drawable/ic_app_logo" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -57,26 +76,6 @@
                     app:fab_colorRipple="@color/charcoal"
                     app:fab_shadowColor="@color/black_20"
                     app:srcCompat="@drawable/ic_recomm_selected_wrapped" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight=".25"
-                tools:ignore="NestedWeights">
-
-                <com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton
-                    android:id="@+id/c_fab_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:contentDescription="@string/search"
-                    android:transitionName="transition_search"
-                    app:fab_colorNormal="@color/mustord_yellow"
-                    app:fab_colorPressed="@color/black_20"
-                    app:fab_colorRipple="@color/charcoal"
-                    app:fab_shadowColor="@color/black_20"
-                    app:srcCompat="@drawable/ic_search_50px_sel_wrapped" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -161,67 +160,79 @@
             android:layout_weight=".63"
             android:background="@color/lavender">
 
-            <RelativeLayout
-                android:id="@+id/rl_no_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/i2"
-                    android:layout_width="@dimen/size_100"
-                    android:layout_height="@dimen/size_100"
-                    android:layout_centerInParent="true"
-                    android:scaleType="center"
-                    app:srcCompat="@drawable/ic_cloiud_wrapped"
-                    tools:ignore="ContentDescription" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/i2"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/size_5"
-                    android:gravity="center"
-                    android:padding="@dimen/size_10"
-                    android:text="@string/no_content"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/size_17sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_no_internet"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/img_no_net"
-                    android:layout_width="@dimen/size_100"
-                    android:layout_height="@dimen/size_180"
-                    android:layout_centerInParent="true"
-                    android:scaleType="centerInside"
-                    app:srcCompat="@drawable/ic_no_connection_wrapped"
-                    tools:ignore="ContentDescription" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/img_no_net"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/size_5"
-                    android:gravity="center"
-                    android:padding="@dimen/size_10"
-                    android:text="@string/no_internet"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/size_17sp" />
-            </RelativeLayout>
-
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/content_rv"
+                android:id="@+id/level_rv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_40"
+                android:background="@android:color/transparent" />
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent" />
+                android:layout_below="@id/level_rv">
+
+                <RelativeLayout
+                    android:id="@+id/rl_no_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/i2"
+                        android:layout_width="@dimen/size_100"
+                        android:layout_height="@dimen/size_100"
+                        android:layout_centerInParent="true"
+                        android:scaleType="center"
+                        app:srcCompat="@drawable/ic_cloiud_wrapped"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/i2"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/size_5"
+                        android:gravity="center"
+                        android:padding="@dimen/size_10"
+                        android:text="@string/no_content"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/size_17sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_no_internet"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/img_no_net"
+                        android:layout_width="@dimen/size_100"
+                        android:layout_height="@dimen/size_180"
+                        android:layout_centerInParent="true"
+                        android:scaleType="centerInside"
+                        app:srcCompat="@drawable/ic_no_connection_wrapped"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/img_no_net"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/size_5"
+                        android:gravity="center"
+                        android:padding="@dimen/size_10"
+                        android:text="@string/no_internet"
+                        android:textColor="@color/charcoal"
+                        android:textSize="@dimen/size_17sp" />
+                </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/content_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent" />
+            </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
 
@@ -241,11 +252,11 @@
             android:layout_height="@dimen/size_45"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            app:matProg_rimColor="@color/colorPrimary"
             android:layout_marginEnd="@dimen/size_10"
             android:clickable="false"
             app:matProg_barColor="@color/charcoal"
-            app:matProg_progressIndeterminate="true" />
+            app:matProg_progressIndeterminate="true"
+            app:matProg_rimColor="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/main_download_title"

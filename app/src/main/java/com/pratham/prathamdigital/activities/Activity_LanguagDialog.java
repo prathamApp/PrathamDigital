@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pratham.prathamdigital.R;
@@ -41,9 +42,9 @@ public class Activity_LanguagDialog extends AppCompatActivity {
     @BindView(R.id.lang_picker)
     CarouselPicker lang_picker;
     @BindView(R.id.lang_okay)
-    Button lang_okay;
-    @BindView(R.id.lang_cancel)
-    TextView lang_cancel;
+    ImageView lang_okay;
+    //    @BindView(R.id.lang_cancel)
+//    TextView lang_cancel;
     @BindView(R.id.txt_language)
     TextView txt_language;
 
@@ -148,9 +149,9 @@ public class Activity_LanguagDialog extends AppCompatActivity {
         finishAfterTransition();
     }
 
-    @OnClick(R.id.lang_cancel)
-    public void setLang_Cancel() {
-        setResult(Activity.RESULT_CANCELED);
-        finishAfterTransition();
-    }
+//    @OnClick(R.id.lang_cancel)
+//    public void setLang_Cancel() {
+//        setResult(Activity.RESULT_CANCELED);
+//        finishAfterTransition();
+//    }
 }

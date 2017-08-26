@@ -1,35 +1,26 @@
 package com.pratham.prathamdigital.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
-import com.eftimoff.androipathview.PathView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Scope;
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.async.PD_ApiRequest;
 import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
@@ -37,8 +28,6 @@ import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
 import com.pratham.prathamdigital.models.GoogleCredentials;
 import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
-
-import io.fabric.sdk.android.Fabric;
 
 import org.json.JSONObject;
 
@@ -48,13 +37,14 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.fabric.sdk.android.Fabric;
 
 public class Activity_Splash extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, VolleyResult_JSON {
 
     @BindView(R.id.btn_google_login)
     Button btn_google_login;
     @BindView(R.id.img_logo)
-    PathView img_logo;
+    ImageView img_logo;
 
     DatabaseHandler gdb;
     private GoogleApiClient googleApiClient;
@@ -75,19 +65,19 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
         dialog = PD_Utility.showLoader(this);
         gdb = new DatabaseHandler(this);
         isInitialized = false;
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        if (googleApiClient == null || !googleApiClient.isConnected()) {
-            try {
-                googleApiClient = new GoogleApiClient.Builder(this)
-                        .enableAutoManage(this, this)
-                        .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-                        .build();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail()
+//                .build();
+//        if (googleApiClient == null || !googleApiClient.isConnected()) {
+//            try {
+//                googleApiClient = new GoogleApiClient.Builder(this)
+//                        .enableAutoManage(this, this)
+//                        .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+//                        .build();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     @Override
@@ -119,31 +109,32 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
     protected void onResume() {
         super.onResume();
         if (!isInitialized) {
-            img_logo.getPathAnimator()
-                    .delay(500)
-                    .duration(3000)
-                    .listenerStart(new PathView.AnimatorBuilder.ListenerStart() {
-                        @Override
-                        public void onAnimationStart() {
-
-                        }
-                    })
-                    .listenerEnd(new PathView.AnimatorBuilder.ListenerEnd() {
-                        @Override
-                        public void onAnimationEnd() {
-                            if (gdb.getGoogleID().equalsIgnoreCase("")) {
+            if (gdb.getGoogleID().equalsIgnoreCase("")) {
 //                                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
 //                                startActivityForResult(signInIntent, RC_SIGN_IN);
-                                insertGoogleData();
-                            } else {
-                                updateUI(true, null);
-                            }
-                        }
-                    })
-                    .interpolator(new AccelerateDecelerateInterpolator())
-                    .start();
-            img_logo.useNaturalColors();
-            img_logo.setFillAfter(true);
+                insertGoogleData();
+            } else {
+                updateUI(true, null);
+            }
+//            img_logo.getPathAnimator()
+//                    .delay(500)
+//                    .duration(3000)
+//                    .listenerStart(new PathView.AnimatorBuilder.ListenerStart() {
+//                        @Override
+//                        public void onAnimationStart() {
+//
+//                        }
+//                    })
+//                    .listenerEnd(new PathView.AnimatorBuilder.ListenerEnd() {
+//                        @Override
+//                        public void onAnimationEnd() {
+//
+//                        }
+//                    })
+//                    .interpolator(new AccelerateDecelerateInterpolator())
+//                    .start();
+//            img_logo.useNaturalColors();
+//            img_logo.setFillAfter(true);
             isInitialized = true;
         }
     }

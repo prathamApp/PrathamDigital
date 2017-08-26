@@ -58,6 +58,7 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
         if (sub_content.get(holder.getAdapterPosition()).isDownloading()) {
             holder.rl_reveal.setVisibility(View.VISIBLE);
         } else if (sub_content.get(holder.getAdapterPosition()).getNodetype().equalsIgnoreCase("Resource")) {
+            holder.recommend_content_img.setScaleType(ImageView.ScaleType.FIT_XY);
             holder.rl_reveal.setVisibility(View.INVISIBLE);
             if (selectedIndex != -1 && selectedIndex == holder.getAdapterPosition()) {         //sub_content.get(position).getResourcetype().equalsIgnoreCase("Video")
             } else {
@@ -65,6 +66,7 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
             }
             holder.card_recom.setOnClickListener(null);
         } else {
+            holder.recommend_content_img.setScaleType(ImageView.ScaleType.CENTER_CROP);
             holder.rl_reveal.setVisibility(View.INVISIBLE);
             holder.fab_download.setVisibility(View.GONE);
             holder.card_recom.setOnClickListener(new View.OnClickListener() {

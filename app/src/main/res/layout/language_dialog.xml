@@ -42,28 +42,36 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true">
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/size_10">
 
-                <Button
+                <ImageView
                     android:id="@+id/lang_okay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:background="@color/charcoal"
-                    android:text="@string/okay"
-                    android:textAllCaps="false"
-                    android:textColor="@color/ghost_white" />
+                    android:layout_centerHorizontal="true"
+                    app:srcCompat="@drawable/ic_checked_wrapped" />
 
-                <TextView
-                    android:id="@+id/lang_cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/size_15"
-                    android:padding="@dimen/size_5"
-                    android:text="@string/cancel"
-                    android:textColor="@color/charcoal"
-                    android:textSize="@dimen/size_17sp" />
+                <!--<Button-->
+                <!--android:id="@+id/lang_okay"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:background="@color/charcoal"-->
+                <!--android:text="@string/okay"-->
+                <!--android:textAllCaps="false"-->
+                <!--android:textColor="@color/ghost_white" />-->
+
+                <!--<TextView-->
+                <!--android:id="@+id/lang_cancel"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginStart="@dimen/size_15"-->
+                <!--android:padding="@dimen/size_5"-->
+                <!--android:text="@string/cancel"-->
+                <!--android:textColor="@color/charcoal"-->
+                <!--android:textSize="@dimen/size_17sp" />-->
             </RelativeLayout>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
