@@ -17,4 +17,6 @@ public interface MainActivityAdapterListeners {
     public void downloadClick(int position, View holder);
 
     public void downloadComplete(int position);
+
+    public void onContentDelete(int position);
 }

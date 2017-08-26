@@ -423,6 +423,11 @@ public class Activity_Search extends ActivityManagePermission implements VolleyR
     }
 
     @Override
+    public void onContentDelete(int position) {
+
+    }
+
+    @Override
     public void update(Observable observable, Object o) {
         Log.d("update:::", "called");
         updteInternetConnection();

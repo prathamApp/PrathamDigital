@@ -45,7 +45,7 @@ public class RV_LibraryContentAdapter extends RecyclerView.Adapter<RV_LibraryCon
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_age_filter, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_library_filter, parent, false);
         ViewHolder holder = new ViewHolder(v);
         return holder;
     }
@@ -54,7 +54,7 @@ public class RV_LibraryContentAdapter extends RecyclerView.Adapter<RV_LibraryCon
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         try {
             if (downloadContents.size() > 0) {
-                holder.c_age.setText(downloadContents.get(position).getNodetitle());
+                holder.l_c_age.setText(downloadContents.get(position).getNodetitle());
                 String fileName = downloadContents.get(position).getNodeserverimage()
                         .substring(downloadContents.get(position).getNodeserverimage().lastIndexOf('/') + 1);
                 //path to /data/data/yourapp/app_data/dirName
@@ -63,19 +63,19 @@ public class RV_LibraryContentAdapter extends RecyclerView.Adapter<RV_LibraryCon
                 File filepath = new File(directory, fileName);
                 Log.d("adapter_filename:::", fileName);
                 Log.d("adapter_filepath:::", filepath.toString());
-                holder.child_avatar.setImageDrawable(Drawable.createFromPath(filepath.toString()));
-                holder.child_avatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                holder.l_child_avatar.setImageDrawable(Drawable.createFromPath(filepath.toString()));
+//                holder.l_child_avatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
-            holder.card_age.setOnClickListener(new View.OnClickListener() {
+            holder.l_card_age.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     browseAdapter_clicks.browserButtonClicked(holder.getAdapterPosition());
                 }
             });
             if (selectedIndex != -1 && selectedIndex == position) {
-                holder.card_age.setBackgroundColor(context.getResources().getColor(R.color.ghost_white));
+                holder.l_card_age.setBackgroundColor(context.getResources().getColor(R.color.ghost_white));
             } else {
-                holder.card_age.setBackground(context.getResources().getDrawable(R.drawable.pink_blue_gradient));
+                holder.l_card_age.setBackground(context.getResources().getDrawable(R.drawable.pink_blue_gradient));
             }
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
@@ -93,12 +93,12 @@ public class RV_LibraryContentAdapter extends RecyclerView.Adapter<RV_LibraryCon
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.child_avatar)
-        ImageView child_avatar;
-        @BindView(R.id.card_age)
-        RelativeLayout card_age;
-        @BindView(R.id.c_age)
-        TextView c_age;
+        @BindView(R.id.l_child_avatar)
+        ImageView l_child_avatar;
+        @BindView(R.id.l_card_age)
+        RelativeLayout l_card_age;
+        @BindView(R.id.l_c_age)
+        TextView l_c_age;
 
         public ViewHolder(View itemView) {
             super(itemView);

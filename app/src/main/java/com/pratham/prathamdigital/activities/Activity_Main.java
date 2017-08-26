@@ -42,8 +42,8 @@ import com.pratham.prathamdigital.content_playing.TextToSp;
 import com.pratham.prathamdigital.custom.GalleryLayoutManager;
 import com.pratham.prathamdigital.custom.ScaleTransformer;
 import com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton;
+import com.pratham.prathamdigital.custom.dialogs.SweetAlertDialog;
 import com.pratham.prathamdigital.custom.fancy_toast.TastyToast;
-import com.pratham.prathamdigital.custom.progress_indicators.ProgressWheel;
 import com.pratham.prathamdigital.dbclasses.DatabaseHandler;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 import com.pratham.prathamdigital.interfaces.PermissionResult;
@@ -62,6 +62,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.StringTokenizer;
@@ -238,14 +239,25 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     private void initializeGalleryAdapater(final boolean isLibrary) {
         if (isLibrary) {
             downloadContents = db.Get_Contents(PD_Constant.TABLE_PARENT, 0);
+            ArrayList<Integer> positionWithNoChilds = new ArrayList<>();
+            for (int i = 0; i < downloadContents.size(); i++) {
+                int count = db.Get_Total_Contents(downloadContents.get(i).getNodeid());
+                if (count == 0) {
+                    db.deleteContentFromParent(downloadContents.get(i).getNodeid());
+                    positionWithNoChilds.add(i);
+                }
+            }
+            PD_Utility.DEBUG_LOG(1, TAG, "positionWithNoChilds::" + positionWithNoChilds.size());
+            for (int j = positionWithNoChilds.size() - 1; j >= 0; j--) {
+                downloadContents.remove(positionWithNoChilds.get(j));
+            }
+            PD_Utility.DEBUG_LOG(1, TAG, "db_list_size::" + downloadContents.size());
             if (downloadContents.size() > 0) {
                 gallery_rv.setVisibility(View.VISIBLE);
                 rl_no_internet.setVisibility(View.GONE);
                 rl_no_data.setVisibility(View.GONE);
                 rl_no_content.setVisibility(View.GONE);
                 content_rv.setVisibility(View.VISIBLE);
-                PD_Utility.DEBUG_LOG(1, TAG, "db_list_size::" + downloadContents.size());
-                PD_Utility.DEBUG_LOG(1, TAG, "db_nodelist_size::" + downloadContents.size());
                 libraryContentAdapter = new RV_LibraryContentAdapter(Activity_Main.this, this, downloadContents);
                 gallery_rv.setAdapter(libraryContentAdapter);
             } else {
@@ -568,6 +580,77 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     }
 
     @Override
+    public void onContentDelete(final int position) {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Are you sure?")
+                .setContentText("Won't be able to recover this file!")
+                .setConfirmText("Yes,delete it!")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        // reuse previous dialog instance
+                        int parentId = subContents.get(position).getParentid();
+                        db.deleteContentFromChild(subContents.get(position).getNodeid());
+                        String substr[] = subContents.get(position).getResourcepath().split("/");
+                        deleteResource(subContents.get(position).getResourcetype(), substr[0]);
+                        checkAndDeleteParent(parentId);
+                        sDialog.setTitleText("Deleted!")
+                                .setContentText("Your imaginary file has been deleted!")
+                                .setConfirmText("OK")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        fab_my_library.performClick();
+                                        sweetAlertDialog.dismiss();
+                                    }
+                                })
+                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                    }
+                })
+                .show();
+    }
+
+    private void deleteResource(String resourcetype, String resourcePath) {
+        if (resourcetype.equalsIgnoreCase("Game")) {
+            File dir = getDir("PrathamGame", Context.MODE_PRIVATE);
+            File file = new File(dir.getAbsolutePath() + "/" + resourcePath);
+            Log.d("dir_path2::", file.getAbsolutePath());
+            boolean deleted = deleteDir(file);
+            Log.d("dir_path_deleted::", "" + deleted);
+        }
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                Log.d("dir_child_path::", new File(dir, children[i]).getAbsolutePath());
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // The directory is now empty so delete it
+        return dir.delete();
+    }
+
+    private void checkAndDeleteParent(int parentId) {
+        int count = db.Get_Total_Contents(parentId);
+        Log.d("remaining::", "" + count);
+        if (count == 0) {
+            int p_id = db.getParentID(parentId); //Getting the parentId of the parent node
+            db.deleteContentFromChild(parentId);
+            if (p_id != -1) {
+                checkAndDeleteParent(p_id);
+            }
+            /*
+            delete file from internal
+             */
+        }
+    }
+
+    @Override
     public void notifySuccess(String requestType, String response) {
         try {
             Log.d("response:::", response);
@@ -646,8 +729,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     }
 
     private ArrayList<Modal_ContentDetail> removeContentIfDownloaded(ArrayList<Modal_ContentDetail> arrayList_content) {
-        ArrayList<String> downloaded_ids = new ArrayList<>();
-        downloaded_ids = db.getDownloadContentID(PD_Constant.TABLE_DOWNLOADED);
+        ArrayList<String> downloaded_ids = db.getDownloadContentID(PD_Constant.TABLE_DOWNLOADED);
         if (downloaded_ids.size() > 0) {
             Log.d("contents_downloaded::", downloaded_ids.size() + "");
             for (int i = 0; i < downloaded_ids.size(); i++) {

@@ -62,9 +62,9 @@ public class RV_SubLibraryAdapter extends RecyclerView.Adapter<RV_SubLibraryAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.sub_lib_name.setText(sub_content.get(position).getNodetitle());
-        String fileName = sub_content.get(position).getNodeserverimage()
-                .substring(sub_content.get(position).getNodeserverimage().lastIndexOf('/') + 1);
+        holder.sub_lib_name.setText(sub_content.get(holder.getAdapterPosition()).getNodetitle());
+        String fileName = sub_content.get(holder.getAdapterPosition()).getNodeserverimage()
+                .substring(sub_content.get(holder.getAdapterPosition()).getNodeserverimage().lastIndexOf('/') + 1);
         //path to /data/data/yourapp/app_data/dirName
         ContextWrapper cw = new ContextWrapper(context);
         File directory = cw.getDir("PrathamImages", Context.MODE_PRIVATE);
@@ -75,9 +75,21 @@ public class RV_SubLibraryAdapter extends RecyclerView.Adapter<RV_SubLibraryAdap
         holder.card_sub_lib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                browseAdapter_clicks.contentButtonClicked(position, holder.itemView);
+                browseAdapter_clicks.contentButtonClicked(holder.getAdapterPosition(), holder.itemView);
             }
         });
+        if (sub_content.get(holder.getAdapterPosition()).getNodetype().equalsIgnoreCase("Resource")) {
+            holder.c_delete.setVisibility(View.VISIBLE);
+            holder.c_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    browseAdapter_clicks.onContentDelete(holder.getAdapterPosition());
+                }
+            });
+        } else {
+            holder.c_delete.setVisibility(View.GONE);
+            holder.c_delete.setOnClickListener(null);
+        }
     }
 
     public void setSelectedIndex(int position) {
@@ -102,6 +114,8 @@ public class RV_SubLibraryAdapter extends RecyclerView.Adapter<RV_SubLibraryAdap
         ImageView sub_lib_content_img;
         @BindView(R.id.card_sub_lib)
         RelativeLayout card_sub_lib;
+        @BindView(R.id.c_delete)
+        ImageView c_delete;
 
         public ViewHolder(View itemView) {
             super(itemView);

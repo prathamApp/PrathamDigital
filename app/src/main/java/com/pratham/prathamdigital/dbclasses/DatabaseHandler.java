@@ -417,6 +417,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             return "";
         }
     }
+
+    public int getParentID(int id) {
+        try {
+            SQLiteDatabase database = this.getWritableDatabase();
+            Cursor cursor = database.rawQuery("SELECT " + CONTENT_PARENTID + " from " + TABLE_CHILD
+                    + " where " + CONTENT_NODEID + "=" + id, null);
+            cursor.moveToFirst();
+            String t_id = cursor.getString(0);
+            cursor.close();
+            database.close();
+            return Integer.parseInt(t_id);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
     // Updating single contact
 //    public int Update_Contact(Contact contact) {
 //        SQLiteDatabase db = this.getWritableDatabase();
@@ -431,23 +446,39 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //                new String[]{String.valueOf(contact.getID())});
 //    }
 
-    // Deleting single contact
-//    public void Delete_Contact(int id) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        db.delete(TABLE_CONTACTS, KEY_ID + " = ?",
-//                new String[]{String.valueOf(id)});
-//        db.close();
-//    }
-//
+    //     Deleting single content
+    public void deleteContentFromChild(int id) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_CHILD, CONTENT_NODEID + " = ?",
+                    new String[]{String.valueOf(id)});
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteContentFromParent(int id) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_PARENT, CONTENT_NODEID + " = ?",
+                    new String[]{String.valueOf(id)});
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //
 //    // Getting contacts Count
-//    public int Get_Total_Contacts() {
-//        String countQuery = "SELECT  * FROM " + TABLE_CONTENTS;
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor cursor = db.rawQuery(countQuery, null);
-//        cursor.close();
-//
-//        // return count
-//        return cursor.getCount();
-//    }
+    public int Get_Total_Contents(int id) {
+        String countQuery = "SELECT  * FROM " + TABLE_CHILD + " WHERE " + CONTENT_PARENTID + " = " + id;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int count = cursor.getCount();
+        cursor.close();
+        // return count
+        return count;
+    }
 
 }

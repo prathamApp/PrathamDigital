@@ -13,17 +13,14 @@
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
-        android:id="@+id/card_age"
+        android:id="@+id/l_card_age"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/child_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_adult_boy_wrapped"
-            tools:ignore="ContentDescription" />
+            android:id="@+id/l_child_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -31,11 +28,10 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="@color/trans_charcoal"
-            tools:ignore="RtlHardcoded">
+            android:background="@color/trans_charcoal">
 
             <TextView
-                android:id="@+id/c_age"
+                android:id="@+id/l_c_age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -43,8 +39,7 @@
                 android:gravity="center"
                 android:maxLines="2"
                 android:textColor="@color/ghost_white"
-                android:textSize="@dimen/size_15sp"
-                tools:ignore="HardcodedText" />
+                android:textSize="@dimen/size_15sp" />
         </RelativeLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView><!--</RelativeLayout>-->

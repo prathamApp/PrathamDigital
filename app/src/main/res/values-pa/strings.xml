@@ -65,4 +65,5 @@
     <string name="please_wait">Please wait......</string>
     <string name="let_them_download">Let them download first!</string>
     <string name="press_again_to_exit">Press again to exit.</string>
+    <string name="dialog_default_title">Are you sure!</string>
 </resources>

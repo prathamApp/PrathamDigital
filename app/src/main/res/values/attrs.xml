@@ -67,17 +67,6 @@
         <attr name="maxProgress" format="integer" />
         <attr name="autoProgress" format="boolean" />
     </declare-styleable>
-    <declare-styleable name="CircularProgressView">
-        <attr name="cpv_text_prefix" format="string" />
-        <attr name="cpv_text_suffix" format="string" />
-        <attr name="cpv_progress" format="integer" />
-        <attr name="cpv_circle_color" format="color" />
-        <attr name="cpv_background_circle_color" format="color" />
-        <attr name="cpv_text_color" format="color" />
-        <attr name="cpv_text_size" format="integer" />
-        <attr name="cpv_circle_width" format="dimension" />
-        <attr name="cpv_background_circle_width" format="dimension" />
-    </declare-styleable>
     <declare-styleable name="CarouselPicker">
         <attr name="items_visible" />
     </declare-styleable>
@@ -149,6 +138,17 @@
         <attr name="matProg_fillRadius" format="boolean" />
         <attr name="matProg_barWidth" format="dimension" />
         <attr name="matProg_linearProgress" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="Rotate3dAnimation">
+        <attr name="rollType" format="enum">
+            <enum name="x" value="0"/>
+            <enum name="y" value="1"/>
+            <enum name="z" value="2"/>
+        </attr>
+        <attr name="fromDeg" format="float" />
+        <attr name="toDeg" format="float" />
+        <attr name="pivotX" format="fraction"/>
+        <attr name="pivotY" format="fraction" />
     </declare-styleable>
     <!--<declare-styleable name="StepperIndicator" tools:ignore="ResourceName">-->
     <!--<attr name="stpi_stepCount" format="integer" />-->
