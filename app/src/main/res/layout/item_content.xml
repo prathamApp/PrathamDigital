@@ -7,11 +7,11 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/size_220"
+        android:layout_height="@dimen/size_200"
         android:layout_centerHorizontal="true"
-        android:transitionName="transition_recommend"
         android:layout_margin="@dimen/size_5"
         android:clickable="true"
+        android:transitionName="transition_recommend"
         app:cardCornerRadius="@dimen/size_5"
         app:cardElevation="@dimen/size_5"
         app:cardUseCompatPadding="true">
@@ -19,21 +19,22 @@
         <RelativeLayout
             android:id="@+id/item_parent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/pink_blue_gradient"
             android:clickable="true">
 
             <ImageView
                 android:id="@+id/item_content_img"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/size_120"
                 android:scaleType="centerInside"
-                android:src="@drawable/khelbadi" />
+                android:src="@drawable/dekho_aur_seekho" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/size_60"
                 android:layout_alignParentBottom="true"
+                android:layout_below="@+id/item_content_img"
                 android:background="@color/trans_charcoal">
 
                 <!--<ImageView-->

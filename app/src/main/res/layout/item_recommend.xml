@@ -25,13 +25,14 @@
             <ImageView
                 android:id="@+id/recommend_content_img"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/size_130"
                 android:scaleType="centerInside" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/size_55"
+                android:layout_height="@dimen/size_60"
                 android:layout_alignParentBottom="true"
+                android:layout_below="@+id/recommend_content_img"
                 android:background="@color/trans_charcoal">
 
                 <!--<ImageView-->
@@ -86,14 +87,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true" />
+
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/item_progress"
-                android:text="@string/downloading"
-                android:textColor="@color/charcoal"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/size_5"
-                android:layout_height="wrap_content" />
+                android:text="@string/downloading"
+                android:textColor="@color/charcoal" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </RelativeLayout>
