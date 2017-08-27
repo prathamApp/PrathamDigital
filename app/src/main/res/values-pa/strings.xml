@@ -10,7 +10,7 @@
     <string name="search_and_download">ਕਿਸੇ ਵੀ ਮਟੀਰੀਅਲ ਨੂੰ ਡਾਊਨਲੋਡ ਕਰਨ ਲਈ ਇੱਥੋਂ ਖੋਜ ਕਰੋ</string>
     <string name="no_internet">ਇੰਟਰਨੈੱਟ ਕੁਨੈਕਸ਼ਨ ਨਹੀਂ ਹੈ</string>
     <string name="provide_storage_permission">ਪਹਿਲਾਂ ਸਟੋਰ ਕਰਨ ਲਈ ਮਨਜ਼ੂਰੀ ਦਿਉ</string>
-    <string name="select_language">ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ</string>
+    <string name="select_language">Select your language</string>
     <string name="okay">ਠੀਕ ਹੈ</string>
     <string name="cancel">ਰੱਦ ਕਰੋ</string>
     <string name="my_library">ਸੰਗ੍ਰਹਿ</string>

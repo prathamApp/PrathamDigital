@@ -10,7 +10,7 @@
     <string name="search_and_download">ఏదైనా విషయాన్ని ఇక్కడ శోధించండి మరియు డౌన్లోడ్ చేయండి</string>
     <string name="no_internet">అంతర్జాల అనుసంధానం లేదు.</string>
     <string name="provide_storage_permission">సంగ్రహణ కొరకు మొదట అనుమతించండి</string>
-    <string name="select_language">మీ భాషను ఎంచుకోండి</string>
+    <string name="select_language">Select your language</string>
     <string name="okay">సరే</string>
     <string name="cancel">రద్దు</string>
     <string name="my_library">గ్రంధాలయం</string>

@@ -10,11 +10,11 @@
     <string name="search_and_download">यकोई भी सामग्री यहाँ खोजें और डाउनलोड करें</string>
     <string name="no_internet">इन्टरनेट से संपर्क नहीं है</string>
     <string name="provide_storage_permission">पहले संग्रहित करने की अनुमति दें</string>
-    <string name="select_language">अपनी भाषा चुनें।</string>
+    <string name="select_language">Select your language</string>
     <string name="okay">ठीक है</string>
     <string name="cancel">नकैंसिल करें</string>
     <string name="my_library">संग्रह</string>
-    <string name="recommended">सहमारे सुझाव</string>
+    <string name="recommended">हमारे सुझाव</string>
     <string name="search">खोजें</string>
     <string name="language">भाषा</string>
     <string name="no_data_downloaded">कृपया सामग्री डाउनलोड करें</string>

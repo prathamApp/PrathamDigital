@@ -10,7 +10,7 @@
     <string name="search_and_download">ಇಲ್ಲಿಂದ ಯಾವುದೇ ವಿಷಯವನ್ನು ಹುಡುಕಿ ಮತ್ತು ಡೌನ್ಲೋಡ್ ಮಾಡಿ</string>
     <string name="no_internet">ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವಿಲ್ಲ</string>
     <string name="provide_storage_permission">ಮೊದಲು ಸಂಗ್ರಹಣೆಗಾಗಿ ಅನುಮತಿಯನ್ನು ಒದಗಿಸಿ</string>
-    <string name="select_language">ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡಿ</string>
+    <string name="select_language">Select your language</string>
     <string name="okay">ಸರಿ</string>
     <string name="cancel">ರದ್ದು ಮಾಡಿ</string>
     <string name="my_library">ಗ್ರಂಥಾಲಯ</string>

@@ -10,7 +10,7 @@
     <string name="search_and_download">যেকোন বিষয়বস্তু এখান থেকে খোঁজো ও ডাউনলোড করো</string>
     <string name="no_internet">কোনো ইন্টারনেট সংযোগের প্রয়োজন নেই</string>
     <string name="provide_storage_permission">প্রথমে সংগ্রহ করার অনুমতি দাও</string>
-    <string name="select_language">তোমার ভাষা নির্বাচন করো</string>
+    <string name="select_language">Select your language</string>
     <string name="okay">ঠিক আছে</string>
     <string name="cancel">বাতিল করো</string>
     <string name="my_library">সংগ্রহশালা</string>

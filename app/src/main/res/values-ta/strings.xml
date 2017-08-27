@@ -10,7 +10,7 @@
     <string name="search_and_download">இங்கே எந்தவொரு பொருளடக்கத்தையும் தேடலாம் மற்றும் டவுன்லோடு செய்யலாம் </string>
     <string name="no_internet">இணையதள இணைப்பு இல்லை</string>
     <string name="provide_storage_permission">ஸ்டோரேஜ் செய்வதர்கான அனுமதி வழங்கவும்</string>
-    <string name="select_language">உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="select_language">Select your language</string>
     <string name="okay">சரி</string>
     <string name="cancel">நீக்குக</string>
     <string name="my_library">நூலகம்</string>
