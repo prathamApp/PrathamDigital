@@ -2,23 +2,23 @@
     <string name="app_name">ପ୍ରଥମ ଡିଜିଟାଲ୍‌</string>
     <string name="search_content">ବିଷୟର ତାଲିକାଗୁଡ଼ିକ ଖୋଜ</string>
     <string name="Sign_In">Sign In</string> <!--ଖୋଲିବା-->
-    <string name="view_library">ଲାଇବ୍ରେରୀକୁ ଏଠାରେ ଦେଖନ୍ତୁ</string>
-    <string name="view_contents">ଅନୁମୋଦିତ ବିଷୟର ତାଲିକା ଏଠାରୁ ପରିଚାଳିତ ହୋଇପାରେ</string>
-    <string name="view_recommended">ଏଠାରେ ସମସ୍ତ ବିଷୟର ସୂଚୀ ଦିଆଯାଇଛି</string>
-    <string name="download_recommended">ଦିଆଯାଇଥିବା ବିଷୟର ସୂଚୀକୁ ଡାଉନ୍‌ଲୋଡ଼୍‌ କରନ୍ତୁ</string>
-    <string name="search_contents_from_here">ଯେ କୌଣସି ଗୋଟିଏ ବିଷୟର ସୂଚୀକୁ ଖୋଜନ୍ତୁ</string>
-    <string name="search_and_download">ଏଠାରେ ଯେକୌଣସି ବିଷୟର ସୂଚୀକୁ ଖୋଜନ୍ତୁ ଏବଂ ଡାଉନ୍ ଲୋଡ଼୍ କରନ୍ତୁ</string>
+    <string name="view_library">ଏଠାରେ ଆପଣଙ୍କର ଲାଇବ୍ରେରୀକୁ  ଦେଖନ୍ତୁ</string>
+    <string name="view_contents">ଆପଣଙ୍କର ସମସ୍ତ ବିଷୟର ତାଲିକା ଏଠାରେ ଦେଖନ୍ତୁ</string>
+    <string name="view_recommended">ସୂଚିତ ସମସ୍ତ ବିଷୟଗୁଡିକୁ ଏଠାରେ ଦେଖନ୍ତୁ</string>
+    <string name="download_recommended">ଦିଆଯାଇଥିବା ବିଷୟଗୁଡିକୁ  ଡାଉନ୍‌ଲୋଡ଼୍‌ କରନ୍ତୁ</string>
+    <string name="search_contents_from_here">ଯେ କୌଣସି  ବିଷୟକୁ ଏଠାରେ  ଖୋଜନ୍ତୁ</string>
+    <string name="search_and_download">ଏଠାରେ ଯେକୌଣସି ବିଷୟକୁ ଖୋଜନ୍ତୁ ଏବଂ ଡାଉନ୍ ଲୋଡ଼୍ କରନ୍ତୁ</string>
     <string name="no_internet">ଇଣ୍ଟରନେଟ୍‌ର ସଂଯୋଗ ନାହିଁ</string>
     <string name="provide_storage_permission">ସଂରକ୍ଷଣ କରିବାକୁ ପ୍ରଥମେ ଅନୁମତି ଦିଅନ୍ତୁ</string>
     <string name="select_language">ନିଜର ଭାଷା ବାଛନ୍ତୁ</string>
     <string name="okay">ଠିକ୍‌ ଅଛି</string>
-    <string name="cancel">ବରଖାସ୍ତ</string>
-    <string name="my_library">ଲାଇବ୍ରେରୀ</string>
+    <string name="cancel">କ୍ୟାନସେଲ୍</string>
+    <string name="my_library">ସଂଗ୍ରହ କର</string>
     <string name="recommended">ସୁପାରିଶ କରିବା</string>
     <string name="search">ଖୋଜିବା</string>
     <string name="language">ଭାଷା</string>
-    <string name="no_data_downloaded">ଦୟାକରି ବିଷୟସୂଚୀ ଡାଉନଲୋଡ୍ କର</string>
-    <string name="no_content">ମନେହେଉଛି ବର୍ତ୍ତମାନ ବିଷୟସୂଚୀ ଉପଲବ୍ଧ ନାହିଁ!</string>
+    <string name="no_data_downloaded">ଦୟାକରି ବିଷୟଗୁଡିକୁ ଡାଉନଲୋଡ୍ କର</string>
+    <string name="no_content"> ବର୍ତ୍ତମାନ କୌଣସି  ବିଷୟ  ଉପଲବ୍ଧ ନାହିଁ!</string>
     <string-array name="search_tags">
         <item>ଇଂରାଜୀ</item>
         <item>ଗଣିତ</item>

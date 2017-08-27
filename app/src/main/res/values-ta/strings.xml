@@ -4,17 +4,17 @@
     <string name="Sign_In">Sign In</string> <!--உள்ளே நுழைக-->
     <string name="view_library">இங்கே உங்கள் நூலகத்தை பாருங்கள்</string>
     <string name="view_contents">உங்களுக்கு தேவையான எல்லா பொருளடகங்களுக்கும் இங்கே அணுகவும்.</string>
-    <string name="view_recommended">உங்களுக்குகாக பரிந்துரைக்கப்பட்டபொருளடக்கத்தை இங்கே பாருங்கள்</string>
-    <string name="download_recommended">இங்கே பரிந்துரைக்கப்பட்ட பொருளடக்கத்தை பதிவிறக்கம் செய்க</string>
+    <string name="view_recommended">உங்களுக்குகாக பரிந்துரைக்கப்பட்ட பொருளடக்கத்தை இங்கே பாருங்கள்</string>
+    <string name="download_recommended">இங்கே பரிந்துரைக்கப்பட்ட பொருளடக்கத்தை டவுன்லோடு செய்க </string>
     <string name="search_contents_from_here">இங்கே எந்தவொரு பொருளடக்கத்தையும் தேடலாம்</string>
-    <string name="search_and_download">இங்கே எந்தவொரு பொருளடக்கத்தையும் தேடலாம் மற்றும் பதிவிறக்கம் செய்யலாம்</string>
+    <string name="search_and_download">இங்கே எந்தவொரு பொருளடக்கத்தையும் தேடலாம் மற்றும் டவுன்லோடு செய்யலாம் </string>
     <string name="no_internet">இணையதள இணைப்பு இல்லை</string>
-    <string name="provide_storage_permission">முதலில் சேமிப்புக்கான அனுமதி வழங்கவேண்டும்</string>
+    <string name="provide_storage_permission">ஸ்டோரேஜ் செய்வதர்கான அனுமதி வழங்கவும்</string>
     <string name="select_language">உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்</string>
     <string name="okay">சரி</string>
     <string name="cancel">நீக்குக</string>
     <string name="my_library">நூலகம்</string>
-    <string name="recommended">பரிந்துரைக்கப்படுகிறது</string>
+    <string name="recommended">பரிந்துரைக்கப்பட்டது</string>
     <string name="search">தேடல்</string>
     <string name="language">மொழி</string>
     <string name="no_data_downloaded">தயவு செய்து  பொருளடக்கத்தை பதிவிறக்கம் செய்யவும்</string>
@@ -27,9 +27,9 @@
         <item>பார்த்து கற்றுக்கொள்ளுங்கள்</item>
     </string-array>
     <string-array name="main_contents">
-        <item>3-6 வயதுக்கான\nவிளையாட்டுகள்</item>
-        <item>6-10 வயதுக்கான\nவிளையாட்டுகள்</item>
-        <item>8-14 வயதுக்கான\nவிளையாட்டுகள்</item>
+        <item>3-6 வயதுக்கான விளையாட்டுகள்</item>
+        <item>6-10 வயதுக்கான விளையாட்டுகள்</item>
+        <item>8-14 வயதுக்கான விளையாட்டுகள்</item>
     </string-array>
     <string-array name="languages">
         <!--<item>English</item>-->

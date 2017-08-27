@@ -88,7 +88,7 @@ public class RV_SubLibraryAdapter extends RecyclerView.Adapter<RV_SubLibraryAdap
                 }
             });
         } else {
-            holder.sub_lib_content_img.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            holder.sub_lib_content_img.setScaleType(ImageView.ScaleType.CENTER_CROP);
             holder.c_delete.setVisibility(View.GONE);
             holder.c_delete.setOnClickListener(null);
         }

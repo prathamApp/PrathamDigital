@@ -2,34 +2,34 @@
     <string name="app_name">प्रथम डिजिटल</string>
     <string name="search_content">सामग्री खोजें</string>
     <string name="Sign_In">साइन इन</string>
-    <string name="view_library">यहाँ अपनी लाइब्रेरी देखें।</string>
-    <string name="view_contents">अपनी सभी सामग्रियों को यहाँ देख सकते हैं।</string>
+    <string name="view_library">अपना संग्रह यहाँ देखें</string>
+    <string name="view_contents">अपनी सभी सामग्रियाँ यहाँ देखें</string>
     <string name="view_recommended">सुझाई गई सामग्रियाँ यहाँ देखें।</string>
     <string name="download_recommended">सुझाई गई सामग्रियाँ यहाँ से डाउनलोड करें।</string>
-    <string name="search_contents_from_here">यहाँ से कोई भी सामग्री खोजें।</string>
-    <string name="search_and_download">यहाँ से कोई भी सामग्री खोजें और डाउनलोड करें।</string>
-    <string name="no_internet">इन्टरनेट के संपर्क में नहीं है।</string>
-    <string name="provide_storage_permission">पहले संग्रहित करने के लिए अनुमति दें।</string>
+    <string name="search_contents_from_here">कोई भी सामग्री यहाँ खोजें</string>
+    <string name="search_and_download">यकोई भी सामग्री यहाँ खोजें और डाउनलोड करें</string>
+    <string name="no_internet">इन्टरनेट से संपर्क नहीं है</string>
+    <string name="provide_storage_permission">पहले संग्रहित करने की अनुमति दें</string>
     <string name="select_language">अपनी भाषा चुनें।</string>
     <string name="okay">ठीक है</string>
-    <string name="cancel">निरस्त करें</string>
-    <string name="my_library">लाइब्रेरी</string>
-    <string name="recommended">सुझाए गए</string>
+    <string name="cancel">नकैंसिल करें</string>
+    <string name="my_library">संग्रह</string>
+    <string name="recommended">सहमारे सुझाव</string>
     <string name="search">खोजें</string>
     <string name="language">भाषा</string>
-    <string name="no_data_downloaded">कृपया सामग्रियाँ डाउनलोड करें</string>
+    <string name="no_data_downloaded">कृपया सामग्री डाउनलोड करें</string>
     <string name="no_content">अभी कोई सामग्री उपलब्ध नहीं है!</string>
     <string-array name="search_tags">
-        <item>इंग्रजी</item>
+        <item>अंग्रेज़ी</item>
         <item>गणित</item>
         <item>खेल</item>
         <item>विज्ञान</item>
         <item>देखो और सीखो</item>
     </string-array>
     <string-array name="main_contents">
-        <item>आयु 3-6\nखेलबाड़ी</item>
-        <item>आयु 6-10\nखेलपुरी</item>
-        <item>आयु 8-14\nदेखो और सीखो</item>
+        <item>आयु 3–6 खेलबाड़ी</item>
+        <item>आयु 6–10 खेलपुरी</item>
+        <item>आयु 8–14 देखो और सीखो</item>
     </string-array>
     <string-array name="languages">
         <!--<item>English</item>-->

@@ -78,7 +78,7 @@
                     app:fab_colorPressed="@color/black_20"
                     app:fab_colorRipple="@color/charcoal"
                     app:fab_shadowColor="@color/black_20"
-                    app:srcCompat="@drawable/ic_recomm_selected_wrapped" />
+                    app:srcCompat="@drawable/ic_file_download_wrapped" />
             </RelativeLayout>
 
             <RelativeLayout

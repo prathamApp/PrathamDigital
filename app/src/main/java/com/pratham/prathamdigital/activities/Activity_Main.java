@@ -133,7 +133,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     int[] punjabi_age_id = {55, 56, 57, 58};
     int[] odiya_age_id = {60, 61, 62, 63};
     int[] tamil_age_id = {65, 66, 67, 68};
-    int[] childs = {R.drawable.ic_boy_wrapped, R.drawable.ic_10year_boy_wrapped, R.drawable.ic_adult_boy_wrapped};
+    int[] childs = {R.drawable.khel_badi, R.drawable.khel_puri, R.drawable.dekho_aur_seekho};
     private String[] age;
     private boolean isInitialized;
     RV_AgeFilterAdapter ageFilterAdapter;
@@ -287,6 +287,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         layoutManager.setOnItemSelectedListener(new GalleryLayoutManager.OnItemSelectedListener() {
             @Override
             public void onItemSelected(RecyclerView recyclerView, View item, final int position) {
+                arrayList_level.clear();
                 if (isLibrary) {
                     content_rv.setVisibility(View.VISIBLE);
                     subContents = db.Get_Contents(PD_Constant.TABLE_CHILD, downloadContents.get(position).getNodeid());

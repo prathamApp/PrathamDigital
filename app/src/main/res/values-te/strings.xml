@@ -3,18 +3,18 @@
     <string name="search_content">విషయ శోధన</string>
     <string name="Sign_In">Sign In</string> <!--సైన్ ఇన్-->
     <string name="view_library">మీ గ్రంధాలయాన్ని ఇక్కడ చూడండి</string>
-    <string name="view_contents">మీకు కావలసిన అన్ని విషయాలని ఇక్కడి నుండి పొందవచ్చు</string>
+    <string name="view_contents">మీకు కావలసిన అన్ని విషయాలను ఇక్కడి నుండి పొందవచ్చు</string>
     <string name="view_recommended"> సిఫారసు చేయబడిన విషయాలను ఇక్కడ చూడండి</string>
-    <string name="download_recommended">సిఫారసు చేయబడిన విషయాలను ఇక్కడ నుండి డౌన్లోడ్ చేసుకోండి</string>
+    <string name="download_recommended">సిఫారసు చేయబడిన విషయాలను ఇక్కడి నుండి డౌన్లోడ్ చేసుకోండి</string>
     <string name="search_contents_from_here">ఏదైనా విషయాన్ని ఇక్కడ శోధించండి.</string>
     <string name="search_and_download">ఏదైనా విషయాన్ని ఇక్కడ శోధించండి మరియు డౌన్లోడ్ చేయండి</string>
     <string name="no_internet">అంతర్జాల అనుసంధానం లేదు.</string>
-    <string name="provide_storage_permission">మొదట; నిల్వ చేయడానికి అనుమతి ఇవ్వండి.</string>
+    <string name="provide_storage_permission">సంగ్రహణ కొరకు మొదట అనుమతించండి</string>
     <string name="select_language">మీ భాషను ఎంచుకోండి</string>
     <string name="okay">సరే</string>
     <string name="cancel">రద్దు</string>
-    <string name="my_library">గ్రంథాలయం</string>
-    <string name="recommended"> సిఫారసు</string>
+    <string name="my_library">గ్రంధాలయం</string>
+    <string name="recommended">సిఫారసు చేయబడిన</string>
     <string name="search">శోధన</string>
     <string name="language">భాష</string>
     <string name="no_data_downloaded">దయచేసి విషయాలను డౌన్లోడ్ చేసుకోండి.</string>
@@ -27,9 +27,9 @@
         <item>చూడండి మరియు నేర్చుకోండి</item>
     </string-array>
     <string-array name="main_contents">
-        <item>3-6 వయస్సు,\nఖేల్ బడి</item>
-        <item>6-10 వయస్సు,\nఖేల్ పురి</item>
-        <item>8-14 వయస్సు,\nచూడండి మరియు నేర్చుకోండి</item>
+        <item>3-6 వయస్సు -  ఖేల్ బడి</item>
+        <item>6-10 వయస్సు -  ఖేల్ పురి</item>
+        <item>8-14 వయస్సు -  చూడండి మరియు నేర్చుకోండి</item>
     </string-array>
     <string-array name="languages">
         <!--<item>English</item>-->
@@ -60,7 +60,7 @@
         <!--<item>Malayalam</item>-->
     </string-array>
     <string name="evp_submit">నివేదించు</string>
-    <string name="evp_retry">మరల ప్రయత్నించు</string>
+    <string name="evp_retry">మరలా ప్రయత్నించు</string>
     <string name="downloading">Downloading...</string>
     <string name="please_wait">Please wait......</string>
     <string name="let_them_download">Let them download first!</string>

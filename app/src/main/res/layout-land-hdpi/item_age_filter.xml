@@ -19,10 +19,11 @@
 
         <ImageView
             android:id="@+id/child_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_100"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_adult_boy_wrapped"
+            android:scaleType="centerCrop"
+            android:src="@drawable/dekho_aur_seekho"
             tools:ignore="ContentDescription" />
 
         <RelativeLayout
@@ -31,6 +32,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_below="@+id/child_avatar"
             android:background="@color/trans_charcoal"
             tools:ignore="RtlHardcoded">
 

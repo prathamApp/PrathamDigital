@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">પ્રથમ ડિજીટલ</string>
-    <string name="search_content">વિષયવસ્તુ શોધો</string>
+    <string name="app_name">પ્રથમ ડિજિટલ</string>
+    <string name="search_content">વિષયવસ્તુ શોધો </string>
     <string name="Sign_In">Sign In</string> <!--સાઈન ઇન-->
-    <string name="view_library">તમારી લાઈબ્રેરી અહી જુઓ</string>
-    <string name="view_contents">અહીંથી તમે બધી જ વિષયવસ્તુ પર જઈ શકો છો.</string>
+    <string name="view_library">તમારી લાઈબ્રેરી અહીં જુઓ</string>
+    <string name="view_contents">અહીંથી તમે વિષયવસ્તુ પર જઈ શકો છો.</string>
     <string name="view_recommended">અહિયાં સૂચિત વિષયવસ્તુ જુઓ.</string>
     <string name="download_recommended">અહીંથી સૂચિત વિષયવસ્તુને ડાઉનલોડ કરો.</string>
     <string name="search_contents_from_here">અહીંથી કોઈ પણ વિષયવસ્તુ શોધો.</string>
@@ -11,10 +11,10 @@
     <string name="no_internet">ઈન્ટરનેટનું જોડાણ નથી.</string>
     <string name="provide_storage_permission">સૌથી પહેલાં સ્ટોરેજ માટે પરવાનગી આપો.</string>
     <string name="select_language">તમારી ભાષા પસંદ કરો.</string>
-    <string name="okay">સારું</string>
-    <string name="cancel">રદ કરવું</string>
+    <string name="okay">ઓકે</string>
+    <string name="cancel">રદ કરો</string>
     <string name="my_library">લાઈબ્રેરી</string>
-    <string name="recommended">સૂચિત</string>
+    <string name="recommended">સૂચિત વિષયવસ્તુ</string>
     <string name="search">શોધો</string>
     <string name="language">ભાષા</string>
     <string name="no_data_downloaded">કૃપા કરીને, વિષયવસ્તુ ડાઉનલોડ કરો.</string>
@@ -27,9 +27,9 @@
         <item>જુઓ અને શીખો</item>
     </string-array>
     <string-array name="main_contents">
-        <item>૩-૬ વર્ષની વયજૂથ : ખેલવાડી</item>
-        <item>૬-૧૦ વર્ષની વયજૂથ : ખેલપુરી</item>
-        <item>૮-૧૪ વર્ષની વયજૂથ : જુઓ અને શીખો</item>
+        <item>વયજૂથ ૩-૬ વર્ષ : ખેલવાડી</item>
+        <item>વયજૂથ ૬-૧૦ વર્ષ : ખેલપૂરી</item>
+        <item>વયજૂથ ૮-૧૦ વર્ષ : જુઓ અને શીખો </item>
     </string-array>
     <string-array name="languages">
         <!--<item>English</item>-->
@@ -59,7 +59,7 @@
         <item>Odiya</item>
         <!--<item>Malayalam</item>-->
     </string-array>
-    <string name="evp_submit">સબમીટ કરો</string>
+    <string name="evp_submit">સબમિટ કરો.</string>
     <string name="evp_retry">ફરીથી પ્રયત્ન કરો</string>
     <string name="downloading">Downloading...</string>
     <string name="please_wait">Please wait......</string>
