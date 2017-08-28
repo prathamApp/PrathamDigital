@@ -69,11 +69,11 @@ public class Activity_WebView extends AppCompatActivity implements Interface_Sco
             webView.addJavascriptInterface(new JSInterface(Activity_WebView.this, webView,
                     "file://" + parse, resId, Activity_WebView.this), "Android");
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
-                    webView.setWebContentsDebuggingEnabled(true);
-                }
-            }
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE)) {
+            webView.setWebContentsDebuggingEnabled(true);
+//                }
+//            }
             webView.setWebViewClient(new WebViewClient());
             webView.setWebChromeClient(new WebChromeClient());
             webView.clearCache(true);

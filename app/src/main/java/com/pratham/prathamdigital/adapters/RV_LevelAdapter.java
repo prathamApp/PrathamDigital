@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.interfaces.Interface_Level;
 import com.pratham.prathamdigital.models.Modal_Level;
+import com.pratham.prathamdigital.util.PD_Utility;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,7 @@ public class RV_LevelAdapter extends RecyclerView.Adapter<RV_LevelAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.l_name.setText(levels.get(holder.getAdapterPosition()).getName());
+        PD_Utility.setFont(context, holder.l_name);
         holder.l_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

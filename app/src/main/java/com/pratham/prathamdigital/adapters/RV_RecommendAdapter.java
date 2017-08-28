@@ -17,12 +17,15 @@ import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.custom.custom_fab.FloatingActionButton;
 import com.pratham.prathamdigital.interfaces.MainActivityAdapterListeners;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
+import com.pratham.prathamdigital.util.PD_Utility;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.pratham.prathamdigital.activities.Activity_Main.db;
 
 /**
  * Created by HP on 01-08-2017.
@@ -54,6 +57,7 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.recom_name.setText(sub_content.get(holder.getAdapterPosition()).getNodetitle());
+        PD_Utility.setFont(context, holder.recom_name);
         Picasso.with(context).load(sub_content.get(holder.getAdapterPosition()).getNodeserverimage()).into(holder.recommend_content_img);
         if (sub_content.get(holder.getAdapterPosition()).isDownloading()) {
             holder.rl_reveal.setVisibility(View.VISIBLE);

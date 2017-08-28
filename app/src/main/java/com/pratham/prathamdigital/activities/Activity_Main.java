@@ -143,7 +143,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     private ArrayList<Modal_ContentDetail> arrayList_content = new ArrayList<>();
     private ArrayList<Modal_ContentDetail> to_be_downloaded = new ArrayList<>();
     private ArrayList<Modal_Level> arrayList_level = new ArrayList<>();
-    private DatabaseHandler db;
+    public static DatabaseHandler db;
     private Modal_DownloadContent download_content;
     private int selected_content;
     private ArrayList<Modal_ContentDetail> downloadContents = new ArrayList<>();
@@ -340,12 +340,16 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                             url += tamil_age_id[position];
                             level.setId(tamil_age_id[position]);
                         }
+                        if (db.GetUserLanguage().equalsIgnoreCase("Odiya")) {
+                            url += odiya_age_id[position];
+                            level.setId(odiya_age_id[position]);
+                        }
+                        if (db.GetUserLanguage().equalsIgnoreCase("Assamese")) {
+                            url += assamese_age_id[position];
+                            level.setId(assamese_age_id[position]);
+                        }
                         /*
-                        if (db.GetUserLanguage().equalsIgnoreCase("Odiya"))
-                            url += tamil_age_id[position];
                         if (db.GetUserLanguage().equalsIgnoreCase("Malayalam"))
-                            url += tamil_age_id[position];
-                        if (db.GetUserLanguage().equalsIgnoreCase("Assamese"))
                             url += tamil_age_id[position];
                             */
                         setRecyclerLevel(level);
@@ -443,6 +447,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         isLibrary = true;
         txt_title.setAlpha(0f);
         txt_title.setText(getResources().getString(R.string.my_library));
+        PD_Utility.setFont(Activity_Main.this, txt_title);
         txt_title.animate().alpha(1f).setStartDelay(100).setDuration(500).setInterpolator(new FastOutSlowInInterpolator());
         initializeGalleryAdapater(isLibrary);
     }
@@ -455,6 +460,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         isLibrary = false;
         txt_title.setAlpha(0f);
         txt_title.setText(getResources().getString(R.string.recommended));
+        PD_Utility.setFont(Activity_Main.this, txt_title);
         txt_title.animate().alpha(1f).setStartDelay(100).setDuration(500).setInterpolator(new FastOutSlowInInterpolator());
         initializeGalleryAdapater(isLibrary);
     }

@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -49,6 +50,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pratham.prathamdigital.R;
@@ -82,6 +84,8 @@ import java.util.regex.Pattern;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import static com.pratham.prathamdigital.activities.Activity_Main.db;
 
 public class PD_Utility {
 
@@ -266,6 +270,23 @@ public class PD_Utility {
     public static int convertDpToSp(float dp, Context context) {
         int sp = (int) (convertDpToPixels(dp, context) / (float) convertSpToPixels(dp, context));
         return sp;
+    }
+
+
+    public static void setFont(Context context, TextView view) {
+        Typeface font = null;
+        if (db.GetUserLanguage().equalsIgnoreCase("Odiya")) {
+            font = Typeface.createFromAsset(context.getAssets(), "fonts/lohit_oriya.ttf");
+        } else if (db.GetUserLanguage().equalsIgnoreCase("Assamese")) {
+            font = Typeface.createFromAsset(context.getAssets(), "fonts/geetl_assamese.ttf");
+        } else if (db.GetUserLanguage().equalsIgnoreCase("Gujarati")) {
+            font = Typeface.createFromAsset(context.getAssets(), "fonts/muktavaani_gujarati.ttf");
+        } else if (db.GetUserLanguage().equalsIgnoreCase("Punjabi")) {
+            font = Typeface.createFromAsset(context.getAssets(), "fonts/raavi_punjabi.ttf");
+        }
+        if (font != null) {
+            view.setTypeface(font, Typeface.NORMAL);
+        }
     }
 //    private void startAnim() {
 //        int mainViewHeight = logo_pathview.getRootView().getHeight();
