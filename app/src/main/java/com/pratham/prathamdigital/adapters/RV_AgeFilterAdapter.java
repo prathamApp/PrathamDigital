@@ -19,8 +19,6 @@ import java.util.HashSet;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.pratham.prathamdigital.activities.Activity_Main.db;
-
 /**
  * Created by HP on 01-08-2017.
  */
@@ -51,6 +49,7 @@ public class RV_AgeFilterAdapter extends RecyclerView.Adapter<RV_AgeFilterAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.c_age.setText(age[position]);
+        holder.child_avatar.setImageResource(childs[position]);
         PD_Utility.setFont(context, holder.c_age);
         holder.card_age.setOnClickListener(new View.OnClickListener() {
             @Override

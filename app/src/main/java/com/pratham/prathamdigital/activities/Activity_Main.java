@@ -221,7 +221,9 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         new MaterialTapTargetPrompt.Builder(Activity_Main.this)
                 .setTarget(findViewById(id))
                 .setPrimaryText(text)
+                .setPrimaryTextTypeface(PD_Utility.getFont(Activity_Main.this))
                 .setSecondaryText(content_text)
+                .setSecondaryTextTypeface(PD_Utility.getFont(Activity_Main.this))
                 .setAnimationInterpolator(new FastOutSlowInInterpolator())
                 .setBackButtonDismissEnabled(false)
                 .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
@@ -854,22 +856,25 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     @Override
     public void update(Observable observable, Object o) {
         Log.d("update:::", "called");
-        if (!isLibrary) {
-            updateInternetConnection();
-        }
+        updateInternetConnection();
     }
 
     private void updateInternetConnection() {
-        if (!PD_Utility.isInternetAvailable(Activity_Main.this)) {
-            content_rv.setVisibility(View.GONE);
-            rl_no_content.setVisibility(View.GONE);
-            rl_no_internet.setVisibility(View.VISIBLE);
-            AnimatedVectorDrawable avd = (AnimatedVectorDrawable)
-                    Activity_Main.this.getDrawable(R.drawable.avd_no_connection);
-            img_no_net.setImageDrawable(avd);
-            Drawable animation = img_no_net.getDrawable();
-            if (animation instanceof Animatable) {
-                ((Animatable) animation).start();
+        if (!isLibrary) {
+            if (!PD_Utility.isInternetAvailable(Activity_Main.this)) {
+                content_rv.setVisibility(View.GONE);
+                rl_no_content.setVisibility(View.GONE);
+                rl_no_internet.setVisibility(View.VISIBLE);
+                AnimatedVectorDrawable avd = (AnimatedVectorDrawable)
+                        Activity_Main.this.getDrawable(R.drawable.avd_no_connection);
+                img_no_net.setImageDrawable(avd);
+                Drawable animation = img_no_net.getDrawable();
+                if (animation instanceof Animatable) {
+                    ((Animatable) animation).start();
+                }
+            } else {
+                content_rv.setVisibility(View.VISIBLE);
+                rl_no_internet.setVisibility(View.GONE);
             }
         } else {
             content_rv.setVisibility(View.VISIBLE);

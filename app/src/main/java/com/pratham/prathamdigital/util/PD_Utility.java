@@ -288,6 +288,20 @@ public class PD_Utility {
             view.setTypeface(font, Typeface.NORMAL);
         }
     }
+
+    public static Typeface getFont(Context context) {
+        Typeface font = null;
+        if (db.GetUserLanguage().equalsIgnoreCase("Odiya")) {
+            font = Typeface.createFromAsset(context.getAssets(), "fonts/lohit_oriya.ttf");
+        } else if (db.GetUserLanguage().equalsIgnoreCase("Assamese")) {
+            font = Typeface.createFromAsset(context.getAssets(), "fonts/geetl_assamese.ttf");
+        } else if (db.GetUserLanguage().equalsIgnoreCase("Gujarati")) {
+            font = Typeface.createFromAsset(context.getAssets(), "fonts/muktavaani_gujarati.ttf");
+        } else if (db.GetUserLanguage().equalsIgnoreCase("Punjabi")) {
+            font = Typeface.createFromAsset(context.getAssets(), "fonts/raavi_punjabi.ttf");
+        }
+        return font;
+    }
 //    private void startAnim() {
 //        int mainViewHeight = logo_pathview.getRootView().getHeight();
 //        ObjectAnimator mainViewScaleXAnim = ObjectAnimator.ofFloat(logo_pathview, "scaleX", 1.0f, 0.8f);
