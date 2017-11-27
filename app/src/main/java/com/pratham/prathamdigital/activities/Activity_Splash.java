@@ -1,9 +1,9 @@
 package com.pratham.prathamdigital.activities;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -141,14 +141,14 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
 
     private void insertGoogleData() {
         gObj = new GoogleCredentials();
-        String deviceId = Build.SERIAL;
-        gObj.GoogleID = deviceId;
+        String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        gObj.GoogleID = deviceId.equals(null) ? "0000" : deviceId;
         gObj.Email = "";
         gObj.PersonName = "";
         gObj.IntroShown = 0;
         gObj.languageSelected = "Hindi";
         Map<String, Object> params = new HashMap<>();
-        params.put(PD_Constant.GOOGLE_ID, deviceId);
+        params.put(PD_Constant.GOOGLE_ID, deviceId.equals(null) ? "0000" : deviceId);
         params.put(PD_Constant.EMAIL, "");
         params.put(PD_Constant.PERSON_NAME, "");
         params.put(PD_Constant.LANG, gObj.languageSelected);

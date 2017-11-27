@@ -12,6 +12,8 @@ import java.util.UUID;
  */
 
 public class PrathamApplication extends Application {
+    private static PrathamApplication mInstance;
+
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
@@ -23,6 +25,9 @@ public class PrathamApplication extends Application {
     }
 
     public static String sessionId = UUID.randomUUID().toString();
+    public static synchronized PrathamApplication getInstance() {
+        return mInstance;
+    }
 
 }
 

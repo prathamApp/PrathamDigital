@@ -2,10 +2,11 @@ package com.pratham.prathamdigital.activities;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.ArcMotion;
@@ -41,6 +42,12 @@ public class Activity_PdfViewer extends AppCompatActivity {
     private String resId;
     private boolean backpressedFlag = false;
 
+    // Shared Preferences
+    SharedPreferences pref;
+
+    // Editor for Shared preferences
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +68,8 @@ public class Activity_PdfViewer extends AppCompatActivity {
                 .scrollHandle(null)
                 .enableAntialiasing(true)
                 .load();
+
+        pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
     }
 
     private void setupEnterTransitions() {
@@ -111,9 +120,17 @@ public class Activity_PdfViewer extends AppCompatActivity {
         modalScore.setScoredMarks(0);
         modalScore.setTotalMarks(0);
         modalScore.setStartTime(StartTime);
-        String deviceId = Build.SERIAL;
-        modalScore.setDeviceId(deviceId);
+        // Unique Device ID
+        String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        modalScore.setDeviceId(deviceId.equals(null) ? "0000" : deviceId);
         modalScore.setEndTime(PD_Utility.GetCurrentDateTime());
+        // Location
+        String loc = pref.getString("prefLocation", "dummyLocation");
+        modalScore.setLocation(loc);
+        Log.d("scoreLoc :::",loc);
+        // Sent Flag 0 = Local, Sent Flag 1 = pushedToServer
+        modalScore.setSentFlag(0);
+
         scoreDBHelper.addScore(modalScore);
     }
 

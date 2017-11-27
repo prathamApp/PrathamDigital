@@ -1,8 +1,5 @@
 package com.pratham.prathamdigital.dbclasses;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,13 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.pratham.prathamdigital.models.GoogleCredentials;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
-import com.pratham.prathamdigital.models.Modal_DownloadContent;
 import com.pratham.prathamdigital.models.Modal_Score;
 import com.pratham.prathamdigital.util.PD_Constant;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by HP on 12-08-2017.
@@ -42,6 +39,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_RESOURCEID = "resourceid";
     private static final String KEY_NODEID = "nodeid";
     private static final String KEY_NODETITLE = "nodetitle";
+
     // Modal_Score Table Columns names
     private static final String RES_ID = "resourceId";
     private static final String SESSION_ID = "sessionId";
@@ -52,6 +50,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String START_TIME = "startDateTime";
     private static final String END_TIME = "endDateTime";
     private static final String DEVICE_ID = "deviceId";
+    private static final String LOCATION = "location";
+    private static final String SENT_FLAG = "sentFlag";
 
     // Contents Table Parent names
     public static final String CONTENT_NODEDESC = "nodedesc";
@@ -74,6 +74,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String GOOGLE_PERSONALNAME = "PersonName";
     public static final String GOOGLE_INTROSHOWN = "IntroShown";
     public static final String GOOGLE_LANGUAGE = "languageSelected";
+    public SQLiteDatabase db;
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -93,6 +94,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + TOTAL_MARKS + " INTEGER,"
                 + START_TIME + " DATETIME,"
                 + END_TIME + " DATETIME,"
+                + LOCATION + " location,"
+                + SENT_FLAG + " sentFlag,"
                 + DEVICE_ID + " TEXT" + ")";
         String CREATE_PARENT_TABLE = "CREATE TABLE " + TABLE_PARENT + "("
                 + CONTENT_NODEID + " TEXT,"
@@ -153,6 +156,49 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * All CRUD(Create, Read, Update, Delete) Operations
      */
 
+
+    // Get Local Scores which are not sent to server yet
+    public List<Modal_Score> getNewScores() {
+        try {
+            db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery("select * from table_score where sentFlag = 0", null);
+            return _PopulateListFromCursor(cursor);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    private List<Modal_Score> _PopulateListFromCursor(Cursor cursor) {
+        try {
+            List<Modal_Score> scoreList = new ArrayList<Modal_Score>();
+            Modal_Score score;
+            cursor.moveToFirst();
+
+            while (cursor.isAfterLast() == false) {
+                score = new Modal_Score();
+
+                score.SessionId = cursor.getString(cursor.getColumnIndex("sessionId"));
+                score.ResourceId = cursor.getString(cursor.getColumnIndex("resourceId"));
+                score.DeviceId = cursor.getString(cursor.getColumnIndex("deviceId"));
+                score.Location = cursor.getString(cursor.getColumnIndex("location"));
+                score.QuestionId = cursor.getInt(cursor.getColumnIndex("questionId"));
+                score.ScoredMarks = cursor.getInt(cursor.getColumnIndex("scoredMarks"));
+                score.TotalMarks = cursor.getInt(cursor.getColumnIndex("totalMarks"));
+                score.Level = cursor.getInt(cursor.getColumnIndex("level"));
+                score.StartTime = cursor.getString(cursor.getColumnIndex("startDateTime"));
+                score.EndTime = cursor.getString(cursor.getColumnIndex("endDateTime"));
+
+                scoreList.add(score);
+                cursor.moveToNext();
+                db.close();
+            }
+            cursor.close();
+            return scoreList;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
     // Adding new contact
     public void Add_Content(String tableName, Modal_ContentDetail contentDetail) {
         try {
@@ -203,28 +249,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             contentValues.put("startDateTime", modalScore.getStartTime());
             contentValues.put("endDateTime", modalScore.getEndTime());
             contentValues.put("deviceId", modalScore.getDeviceId());
+            contentValues.put("location", modalScore.getLocation());
+            contentValues.put("sentFlag", modalScore.getSentFlag());
 
-            /*long resultCount = */
             database.insert(TABLE_SCORE, null, contentValues);
-//            Log.d(aaa, "================================================================================ ");
-//
-//            Cursor allRows=database.rawQuery("select * from " + TABLE_SCORE + "", null);
-//            allRows.moveToFirst();
-//            String tableString = String.format("Table %s:\n", TABLE_SCORE);
-//            if (allRows.moveToFirst() ){
-//                String[] columnNames = allRows.getColumnNames();
-//                do {
-//                    for (String name: columnNames) {
-//                        tableString += String.format("%s: %s\n", name,
-//                                allRows.getString(allRows.getColumnIndex(name)));
-//                    }
-//                    tableString += "\n";
-//
-//                } while (allRows.moveToNext());
-//            }
-//            Log.d("addScore: ",tableString);
-//            Log.d(aaa, "================================================================================ ");
-
             database.close();
         } catch (Exception e) {
             e.printStackTrace();

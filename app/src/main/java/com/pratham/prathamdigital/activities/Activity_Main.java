@@ -1,20 +1,31 @@
 package com.pratham.prathamdigital.activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -26,6 +37,14 @@ import android.widget.Toast;
 
 import com.aloj.progress.DownloadProgressView;
 import com.android.volley.VolleyError;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -54,18 +73,26 @@ import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
 import com.pratham.prathamdigital.models.Modal_ContentDetail;
 import com.pratham.prathamdigital.models.Modal_DownloadContent;
 import com.pratham.prathamdigital.models.Modal_Level;
+import com.pratham.prathamdigital.models.Modal_Score;
 import com.pratham.prathamdigital.util.ActivityManagePermission;
+import com.pratham.prathamdigital.util.ConnectivityReceiver;
 import com.pratham.prathamdigital.util.NetworkChangeReceiver;
 import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
 import com.pratham.prathamdigital.util.PermissionUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.StringTokenizer;
@@ -75,14 +102,17 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
+// Location
+
 /**
  * Created by HP on 17-08-2017.
  */
 
 public class Activity_Main extends ActivityManagePermission implements MainActivityAdapterListeners,
-        VolleyResult_JSON, Observer, ProgressUpdate, Interface_Level {
+        VolleyResult_JSON, Observer, ProgressUpdate, Interface_Level, ConnectionCallbacks,
+        OnConnectionFailedListener, LocationListener {
 
-    private static final String TAG = Activity_Main.class.getSimpleName();
+    private static final String TAGs = Activity_Main.class.getSimpleName();
     private static final int SEARCH = 1;
     private static final int MY_LIBRARY = 2;
     private static final int RECOMMEND = 3;
@@ -156,6 +186,32 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     private String url;
     public static TextToSp ttspeech;
 
+    // Location
+    // LogCat tag
+    private static final String TAG = Activity_Main.class.getSimpleName();
+
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
+
+    private Location mLastLocation;
+
+    // Google client to interact with Google API
+    private GoogleApiClient mGoogleApiClient;
+
+    // boolean flag to toggle periodic location updates
+    private boolean mRequestingLocationUpdates = false;
+
+    private LocationRequest mLocationRequest;
+
+    // Location updates intervals in sec
+    private static int UPDATE_INTERVAL = 10000; // 10 sec
+    private static int FATEST_INTERVAL = 5000; // 5 sec
+    private static int DISPLACEMENT = 10; // 10 meters
+
+    SharedPreferences pref;
+
+    ArrayList<String> path = new ArrayList<String>();
+    boolean isConnected;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,11 +224,398 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         googleId = db.getGoogleID();
         Log.d("googleId::", googleId);
         isInitialized = false;
+
+
+        pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+
+        // Location
+        // First we need to check availability of play services
+        if (checkPlayServices()) {
+
+            // Building the GoogleApi client
+            buildGoogleApiClient();
+            // createLocationRequest();
+        }
+
+
+        // Checking Internet Connection
+        checkConnection();
+
+        if (isConnected) {
+            // Push the new Score to Server if connected to Internet
+            pushNewData();
+        }
+        else {
+            // No Internet
+        }
+
+/*
+        // NO LONGER NEEDED AS WE ARE DOING THE SAME THING IN onResume() but STILL DONT DELETE
+        // Show location
+         displayLocation();
+
+        // Toggling the periodic location updates
+       new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // This method will be executed once the timer is over
+                // Start your app main activity
+                togglePeriodicLocationUpdates();
+            }
+        }, 2000);*/
+
     }
+
+    // Check internet Connection
+// Receiver for checking connection
+    private void checkConnection() {
+        isConnected = ConnectivityReceiver.isConnected();
+    }
+
+    private void pushNewData() {
+        // Get New Data from DB(sentFlag = 0)
+        DatabaseHandler sdb = new DatabaseHandler(Activity_Main.this);
+        List<Modal_Score> scores = sdb.getNewScores();
+
+        JSONArray scoreData = new JSONArray();
+        {
+            try {
+
+                for (int i = 0; i < scores.size(); i++) {
+                    JSONObject _obj = new JSONObject();
+                    Modal_Score scoreObj = (Modal_Score) scores.get(i);
+
+                    try {
+                        _obj.put("sessionId", scoreObj.SessionId);
+                        _obj.put("deviceId", scoreObj.DeviceId);
+                        _obj.put("resourceId", scoreObj.ResourceId);
+                        _obj.put("questionId", scoreObj.QuestionId);
+                        _obj.put("scoredMarks", scoreObj.ScoredMarks);
+                        _obj.put("location", scoreObj.Location);
+                        _obj.put("totalMarks", scoreObj.TotalMarks);
+                        _obj.put("startDateTime", scoreObj.StartTime);
+                        _obj.put("endDateTime", scoreObj.EndTime);
+                        _obj.put("level", scoreObj.Level);
+
+                        scoreData.put(_obj);
+
+                        // creating json file
+                        String requestString = "{  \"scoreData\": " + scoreData + "}";
+                        String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                        WriteSettings(Activity_Main.this, requestString, "pushNewDataToServer-" + (deviceId.equals(null) ? "0000" : deviceId));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Pushing File to Server
+//            TreansferFile("pushNewDataToServer-");
+//
+//            // Reset sentFlag to 1 if Pushed
+//            resetSentFlag();
+
+
+        }
+    }
+
+
+    // Json File Creation for Pushing Data
+    // Creating file in Transferred Usage
+    public void WriteSettings(Context context, String data, String fName) {
+
+        FileOutputStream fOut = null;
+        OutputStreamWriter osw = null;
+
+        try {
+            String MainPath = Environment.getExternalStorageDirectory() + fName + ".json";
+            File file = new File(MainPath);
+            try {
+                path.add(MainPath);
+                fOut = new FileOutputStream(file);
+                osw = new OutputStreamWriter(fOut);
+                osw.write(data);
+                osw.flush();
+                osw.close();
+                fOut.close();
+
+            } catch (Exception e) {
+            } finally {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            //Toast.makeText(context, "Settings not saved", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    // Method to get Address
+
+    public Address getAddress(double latitude, double longitude) {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            return addresses.get(0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
+    /**
+     * Method to display the location on UI
+     */
+    private void displayLocation() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if (mLastLocation != null) {
+            double latitude = mLastLocation.getLatitude();
+            double longitude = mLastLocation.getLongitude();
+
+            // pass latitude & longitude to address to get the Location Name
+            Address locationAddress = getAddress(latitude, longitude);
+
+            if (locationAddress != null) {
+                String address = locationAddress.getAddressLine(0);
+                String address1 = locationAddress.getAddressLine(1);
+                String city = locationAddress.getLocality();
+                String state = locationAddress.getAdminArea();
+                String country = locationAddress.getCountryName();
+                String postalCode = locationAddress.getPostalCode();
+
+                String currentLocation;
+
+                if (!TextUtils.isEmpty(address)) {
+                    currentLocation = address;
+
+//                    if (!TextUtils.isEmpty(address1))
+//                        currentLocation += "\n" + address1;
+//
+//                    if (!TextUtils.isEmpty(city)) {
+//                        currentLocation += "\n" + city;
+//
+//                        if (!TextUtils.isEmpty(postalCode))
+//                            currentLocation += " - " + postalCode;
+//                    } else {
+//                        if (!TextUtils.isEmpty(postalCode))
+//                            currentLocation += "\n" + postalCode;
+//                    }
+//
+//                    if (!TextUtils.isEmpty(state))
+//                        currentLocation += "\n" + state;
+//
+//                    if (!TextUtils.isEmpty(country))
+//                        currentLocation += "\n" + country;
+
+                    Toast.makeText(this, "" + currentLocation, Toast.LENGTH_LONG).show();
+
+                    // Store Address in Shared Pref for offline Usage
+                    SharedPreferences.Editor editor = pref.edit();
+
+                    // Clear Prev Data
+                    editor.clear();
+                    editor.commit(); // commit changes
+
+                    // Store Last Known Location
+                    editor.putString("prefLocation", currentLocation); // Storing string
+                    editor.commit(); // commit changes
+
+                }
+
+            }
+
+            //Toast.makeText(this, "lat : " + latitude + ", lon : " + longitude, Toast.LENGTH_SHORT).show();
+
+        } else {
+            Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Location
+
+    /**
+     * Creating google api client object
+     */
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API).build();
+    }
+
+    /**
+     * Method to verify google play services on the device
+     */
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "This device is not supported.", Toast.LENGTH_LONG)
+                        .show();
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    /**
+     * Google api callback methods
+     */
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = "
+                + result.getErrorCode());
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int arg0) {
+        mGoogleApiClient.connect();
+    }
+
+
+    // Update Location
+
+    /**
+     * Method to toggle periodic location updates
+     */
+    private void togglePeriodicLocationUpdates() {
+        if (!mRequestingLocationUpdates) {
+            // Changing the button text
+            //btnStartLocationUpdates.setText(getString(R.string.btn_stop_location_updates));
+
+            mRequestingLocationUpdates = true;
+
+            // Starting the location updates
+            startLocationUpdates();
+
+            Log.d(TAG, "Periodic location updates started!");
+
+        } else {
+            // Changing the button text
+            //   btnStartLocationUpdates.setText(getString(R.string.btn_start_location_updates));
+
+            mRequestingLocationUpdates = false;
+
+            // Stopping the location updates
+            stopLocationUpdates();
+
+            Log.d(TAG, "Periodic location updates stopped!");
+        }
+    }
+
+    /**
+     * Creating location request object
+     */
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(DISPLACEMENT); // 10 meters
+    }
+
+    /**
+     * Starting the location updates
+     */
+    protected void startLocationUpdates() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+    }
+
+    /**
+     * Stopping location updates
+     */
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    @Override
+    public void onConnected(Bundle arg0) {
+
+        // Once connected with google api, get the location
+        displayLocation();
+
+        if (mRequestingLocationUpdates) {
+            startLocationUpdates();
+        }
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        // Assign the new location
+        mLastLocation = location;
+
+        Toast.makeText(getApplicationContext(), "Location changed!",
+                Toast.LENGTH_SHORT).show();
+
+        // Displaying the new location on UI
+        displayLocation();
+    }
+
+
+
+
+/*   -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*   */
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Location
+        checkPlayServices();
+        // Resuming the periodic location updates
+        if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
+            startLocationUpdates();
+        }
+
         NetworkChangeReceiver.getObservable().addObserver(this);
         if ((!isInitialized)) {
             layoutManager = new GalleryLayoutManager(GalleryLayoutManager.VERTICAL);
@@ -425,6 +868,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         }
     };
 
+    @SuppressLint("RestrictedApi")
     @OnClick(R.id.c_fab_language)
     public void setLanguage() {
         Intent intent = new Intent(Activity_Main.this, Activity_LanguagDialog.class);
@@ -505,6 +949,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
 
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void contentButtonClicked(final int position, View holder) {
         if (isLibrary) {
@@ -891,6 +1336,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     @Override
     public void onPause() {
         super.onPause();
+        stopLocationUpdates();
         NetworkChangeReceiver.getObservable().deleteObserver(this);
     }
 

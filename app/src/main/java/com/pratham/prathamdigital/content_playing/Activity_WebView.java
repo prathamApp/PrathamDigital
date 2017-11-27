@@ -3,11 +3,11 @@ package com.pratham.prathamdigital.content_playing;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.speech.tts.TextToSpeech;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -42,6 +42,12 @@ public class Activity_WebView extends AppCompatActivity implements Interface_Sco
     public static int totalMarks = 0;
     public static int scoredMarks = 0;
 
+    // Shared Preferences
+    SharedPreferences pref;
+
+    // Editor for Shared preferences
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +61,9 @@ public class Activity_WebView extends AppCompatActivity implements Interface_Sco
         String path = getIntent().getStringExtra("path");
         String resId = getIntent().getStringExtra("resId");
         createWebView(index_path, path, resId);
+
+        pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+
     }
 
     public void createWebView(String GamePath, String parse, String resId) {
@@ -120,9 +129,17 @@ public class Activity_WebView extends AppCompatActivity implements Interface_Sco
         modalScore.setScoredMarks(scoredMarks);
         modalScore.setTotalMarks(totalMarks);
         modalScore.setStartTime(startTime);
-        String deviceId = Build.SERIAL;
-        modalScore.setDeviceId(deviceId);
+        // Unique Device ID
+        String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        modalScore.setDeviceId(deviceId.equals(null) ? "0000" : deviceId);
         modalScore.setEndTime(PD_Utility.GetCurrentDateTime());
+        // Location
+        String loc = pref.getString("prefLocation", "dummyLocation");
+        modalScore.setLocation(loc);
+        Log.d("scoreLoc :::", loc);
+        // Sent Flag 0 = Local, Sent Flag 1 = pushedToServer
+        modalScore.setSentFlag(0);
+
         scoreDBHelper.addScore(modalScore);
     }
 

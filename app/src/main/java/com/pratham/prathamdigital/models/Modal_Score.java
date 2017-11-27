@@ -14,6 +14,42 @@ public class Modal_Score {
     public String StartTime;
     public String EndTime;
     public String DeviceId;
+    public String Location;
+    public int sentFlag; //0 = Not Sent, 1 = Sent
+
+
+    @Override
+    public String toString() {
+        return "Modal_Score{" +
+                "SessionId='" + SessionId + '\'' +
+                ", ResourceId='" + ResourceId + '\'' +
+                ", QuestionId=" + QuestionId +
+                ", ScoredMarks=" + ScoredMarks +
+                ", TotalMarks=" + TotalMarks +
+                ", Level=" + Level +
+                ", StartTime='" + StartTime + '\'' +
+                ", EndTime='" + EndTime + '\'' +
+                ", DeviceId='" + DeviceId + '\'' +
+                ", Location='" + Location + '\'' +
+                ", sentFlag=" + sentFlag +
+                '}';
+    }
+
+    public String getLocation() {
+        return Location;
+    }
+
+    public void setLocation(String location) {
+        Location = location;
+    }
+
+    public int getSentFlag() {
+        return sentFlag;
+    }
+
+    public void setSentFlag(int sentFlag) {
+        this.sentFlag = sentFlag;
+    }
 
     public String getSessionId() {
         return SessionId;
