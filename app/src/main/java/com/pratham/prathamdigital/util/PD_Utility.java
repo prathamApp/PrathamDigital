@@ -172,6 +172,8 @@ public class PD_Utility {
 
     public static void setLocale(Context context, String lang) {
 
+        if (lang.equalsIgnoreCase("English"))
+            lang = "en";
         if (lang.equalsIgnoreCase("Hindi"))
             lang = "hi";
         if (lang.equalsIgnoreCase("Marathi"))

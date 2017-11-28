@@ -1,32 +1,29 @@
 package com.pratham.prathamdigital.async;
 
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.pratham.prathamdigital.interfaces.VolleyResult_JSON;
-import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by HP on 30-12-2016.
@@ -201,6 +198,77 @@ public class PD_ApiRequest {
 
             queue.add(jsonObj);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void postDataVolley(Context context, final String requestType, String url, final String object) {
+        try {
+            RequestQueue queue = Volley.newRequestQueue(context);
+            StringRequest jsonObj = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    if (volleyResult != null)
+                        volleyResult.notifySuccess(requestType, response.toString());
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (volleyResult != null) {
+                        volleyResult.notifyError(requestType, error);
+                        NetworkResponse response = error.networkResponse;
+                        if (error instanceof ServerError && response != null) {
+                            try {
+                                String res = new String(response.data,
+                                        HttpHeaderParser.parseCharset(response.headers));
+                                // Now you can use any deserializer to make sense of data
+                                Log.d("resp_err:", res);
+                                JSONObject obj = new JSONObject(res);
+                                Log.d("resp_errr", obj.toString());
+                            } catch (UnsupportedEncodingException e1) {
+                                // Couldn't properly decode data to string
+                                e1.printStackTrace();
+                            } catch (JSONException e2) {
+                                // returned data is not JSONObject?
+                                e2.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return object == null ? null : object.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", object, "utf-8");
+                        return null;
+                    }
+                }
+
+                @Override
+                protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                    String responseString = "";
+                    if (response != null) {
+                        responseString = String.valueOf(response.statusCode);
+                        // can get more details such as response.headers
+                    }
+                    return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                }
+            };
+            jsonObj.setShouldCache(false);
+            jsonObj.setRetryPolicy(new DefaultRetryPolicy(
+                    6000,  /*timeout*/
+                    3,      /*MAX_RETRIES*/
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            ));
+            queue.add(jsonObj);
         } catch (Exception e) {
             e.printStackTrace();
         }

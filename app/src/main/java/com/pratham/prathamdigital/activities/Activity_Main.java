@@ -14,11 +14,11 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AlertDialog;
@@ -48,6 +48,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.pratham.prathamdigital.PrathamApplication;
 import com.pratham.prathamdigital.R;
 import com.pratham.prathamdigital.adapters.RV_AgeFilterAdapter;
 import com.pratham.prathamdigital.adapters.RV_LevelAdapter;
@@ -110,7 +111,7 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class Activity_Main extends ActivityManagePermission implements MainActivityAdapterListeners,
         VolleyResult_JSON, Observer, ProgressUpdate, Interface_Level, ConnectionCallbacks,
-        OnConnectionFailedListener, LocationListener {
+        OnConnectionFailedListener, LocationListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
     private static final String TAGs = Activity_Main.class.getSimpleName();
     private static final int SEARCH = 1;
@@ -128,7 +129,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     RecyclerView gallery_rv;
     @BindView(R.id.c_fab_language)
     FloatingActionButton fab_language;
-    //    @BindView(R.id.c_fab_search)
+    //    @BindView(R.id.c_fab_search)        IMPORT FUNCTION
 //    FloatingActionButton fab_search;
     @BindView(R.id.fab_recom)
     FloatingActionButton fab_recom;
@@ -153,6 +154,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     @BindView(R.id.level_rv)
     RecyclerView level_rv;
 
+    int[] english_age_id = {1100, 1101, 1102, 1103};
     int[] hindi_age_id = {20, 21, 22, 23};
     int[] marathi_age_id = {25, 26, 27, 28};
     int[] kannada_age_id = {30, 31, 32, 33};
@@ -163,6 +165,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     int[] punjabi_age_id = {55, 56, 57, 58};
     int[] odiya_age_id = {60, 61, 62, 63};
     int[] tamil_age_id = {65, 66, 67, 68};
+
     int[] childs = {R.drawable.khel_badi, R.drawable.khel_puri, R.drawable.dekho_aur_seekho};
     private String[] age;
     private boolean isInitialized;
@@ -243,9 +246,13 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
 
         if (isConnected) {
             // Push the new Score to Server if connected to Internet
-            pushNewData();
-        }
-        else {
+            try {
+                PushDataToServer push = new PushDataToServer();
+                push.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
             // No Internet
         }
 
@@ -266,6 +273,28 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
 
     }
 
+    // Push the new Score to Server if connected to Internet
+    public class PushDataToServer extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            // Runs on UI thread
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // Runs on the background thread
+            pushNewData();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void res) {
+            // Runs on the UI thread
+        }
+
+    }
+
     // Check internet Connection
 // Receiver for checking connection
     private void checkConnection() {
@@ -277,47 +306,50 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         DatabaseHandler sdb = new DatabaseHandler(Activity_Main.this);
         List<Modal_Score> scores = sdb.getNewScores();
 
-        JSONArray scoreData = new JSONArray();
-        {
-            try {
+        if (scores.size() > 0) {
 
-                for (int i = 0; i < scores.size(); i++) {
-                    JSONObject _obj = new JSONObject();
-                    Modal_Score scoreObj = (Modal_Score) scores.get(i);
+            JSONArray scoreData = new JSONArray();
+            {
+                try {
 
-                    try {
-                        _obj.put("sessionId", scoreObj.SessionId);
-                        _obj.put("deviceId", scoreObj.DeviceId);
-                        _obj.put("resourceId", scoreObj.ResourceId);
-                        _obj.put("questionId", scoreObj.QuestionId);
-                        _obj.put("scoredMarks", scoreObj.ScoredMarks);
-                        _obj.put("location", scoreObj.Location);
-                        _obj.put("totalMarks", scoreObj.TotalMarks);
-                        _obj.put("startDateTime", scoreObj.StartTime);
-                        _obj.put("endDateTime", scoreObj.EndTime);
-                        _obj.put("level", scoreObj.Level);
+                    for (int i = 0; i < scores.size(); i++) {
+                        JSONObject _obj = new JSONObject();
+                        Modal_Score scoreObj = (Modal_Score) scores.get(i);
 
-                        scoreData.put(_obj);
+                        try {
+                            _obj.put("sessionId", scoreObj.SessionId);
+                            _obj.put("deviceId", scoreObj.DeviceId);
+                            _obj.put("resourceId", scoreObj.ResourceId);
+                            _obj.put("questionId", scoreObj.QuestionId);
+                            _obj.put("scoredMarks", scoreObj.ScoredMarks);
+                            _obj.put("location", scoreObj.Location);
+                            _obj.put("totalMarks", scoreObj.TotalMarks);
+                            _obj.put("startDateTime", scoreObj.StartTime);
+                            _obj.put("endDateTime", scoreObj.EndTime);
+                            _obj.put("level", scoreObj.Level);
 
-                        // creating json file
-                        String requestString = "{  \"scoreData\": " + scoreData + "}";
-                        String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-                        WriteSettings(Activity_Main.this, requestString, "pushNewDataToServer-" + (deviceId.equals(null) ? "0000" : deviceId));
+                            scoreData.put(_obj);
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                            // creating json file
+//                        String requestString = "{  \"scoreData\": " + scoreData + "}";
+//                        String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+//                        WriteSettings(Activity_Main.this, requestString, "pushNewDataToServer-" + (deviceId.equals(null) ? "0000" : deviceId));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
+
+                    // Pushing File to Server
+                    Log.d("array:::", scoreData.toString());
+                    new PD_ApiRequest(Activity_Main.this, Activity_Main.this)
+                            .postDataVolley(Activity_Main.this, "SCORE", "http://prodigi.openiscool.org/api/pushdata/pushdata", scoreData.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+
+
             }
-
-            // Pushing File to Server
-//            TreansferFile("pushNewDataToServer-");
-//
-//            // Reset sentFlag to 1 if Pushed
-//            resetSentFlag();
-
 
         }
     }
@@ -428,7 +460,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
 //                    if (!TextUtils.isEmpty(country))
 //                        currentLocation += "\n" + country;
 
-                    Toast.makeText(this, "" + currentLocation, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(this, "" + currentLocation, Toast.LENGTH_LONG).show();
 
                     // Store Address in Shared Pref for offline Usage
                     SharedPreferences.Editor editor = pref.edit();
@@ -448,7 +480,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
             //Toast.makeText(this, "lat : " + latitude + ", lon : " + longitude, Toast.LENGTH_SHORT).show();
 
         } else {
-            Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -609,6 +641,8 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     protected void onResume() {
         super.onResume();
 
+        PrathamApplication.getInstance().setConnectivityListener(this);
+
         // Location
         checkPlayServices();
         // Resuming the periodic location updates
@@ -753,6 +787,10 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                         url = PD_Constant.URL.BROWSE_BY_ID.toString();
                         Modal_Level level = new Modal_Level();
                         level.setName(age[position]);
+                        if (db.GetUserLanguage().equalsIgnoreCase("english")) {
+                            url += english_age_id[position];
+                            level.setId(english_age_id[position]);
+                        }
                         if (db.GetUserLanguage().equalsIgnoreCase("hindi")) {
                             url += hindi_age_id[position];
                             level.setId(hindi_age_id[position]);
@@ -876,6 +914,32 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 fab_language, "transition_dialog");
         startActivityForResult(intent, ACTIVITY_LANGUAGE, options.toBundle());
     }
+
+
+
+    /*@OnClick(R.id.c_fab_search)
+    public void importData() {
+        //Creating the instance of PopupMenu
+        PopupMenu popup = new PopupMenu(Activity_Main.this, fab_search);
+        //Inflating the Popup using xml file
+        popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+
+        //registering popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                // To Do on Import button Clicked
+
+                // File Picker
+
+                Toast.makeText(Activity_Main.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        popup.show();//showing popup menu
+
+    }*/
+
 
 //    @OnClick(R.id.c_fab_search)
 //    public void setFabSearch() {
@@ -1234,6 +1298,10 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                     new ZipDownloader(Activity_Main.this, Activity_Main.this, download_content.getDownloadurl(),
                             download_content.getFoldername(), fileName, wl);
                 }
+            } else if (requestType.equalsIgnoreCase("SCORE")) {
+                // Reset sentFlag to 1 if Pushed
+                Log.d("success:::","score");
+                resetSentFlag();
             }
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
@@ -1243,6 +1311,17 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
             if (dialog != null) {
                 dialog.dismiss();
             }
+        }
+    }
+
+    private void resetSentFlag() {
+        // Reset Sent Flag to 1 if Pushed
+        try {
+            DatabaseHandler sdb = new DatabaseHandler(Activity_Main.this);
+            sdb.updateSentFlag();
+            Log.d("FlagStatus :::", "Data Sent hence flag set to 1");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1457,6 +1536,11 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     }
 
     private void uploadScoreToServer() {
+
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
 
     }
 }

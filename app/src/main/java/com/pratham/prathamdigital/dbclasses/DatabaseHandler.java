@@ -94,8 +94,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + TOTAL_MARKS + " INTEGER,"
                 + START_TIME + " DATETIME,"
                 + END_TIME + " DATETIME,"
-                + LOCATION + " location,"
-                + SENT_FLAG + " sentFlag,"
+                + LOCATION + " TEXT,"
+                + SENT_FLAG + " INTEGER,"
                 + DEVICE_ID + " TEXT" + ")";
         String CREATE_PARENT_TABLE = "CREATE TABLE " + TABLE_PARENT + "("
                 + CONTENT_NODEID + " TEXT,"
@@ -156,6 +156,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * All CRUD(Create, Read, Update, Delete) Operations
      */
 
+    // set Flag to true i.e 1 if sent
+    public void updateSentFlag() {
+        try {
+            db = getWritableDatabase();
+            Cursor cursor = db.rawQuery("update table_score set sentFlag = 1 WHERE sentFlag = 0", null);
+            if (cursor.equals(null)) {
+
+            } else if (cursor != null) {
+                if (cursor.getCount() > 0) {
+                    cursor.moveToFirst();
+                }
+            }
+            cursor.close();
+            db.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     // Get Local Scores which are not sent to server yet
     public List<Modal_Score> getNewScores() {
@@ -164,6 +182,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             Cursor cursor = db.rawQuery("select * from table_score where sentFlag = 0", null);
             return _PopulateListFromCursor(cursor);
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
@@ -181,14 +200,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 score.ResourceId = cursor.getString(cursor.getColumnIndex("resourceId"));
                 score.DeviceId = cursor.getString(cursor.getColumnIndex("deviceId"));
                 score.Location = cursor.getString(cursor.getColumnIndex("location"));
-                score.QuestionId = cursor.getInt(cursor.getColumnIndex("questionId"));
                 score.ScoredMarks = cursor.getInt(cursor.getColumnIndex("scoredMarks"));
                 score.TotalMarks = cursor.getInt(cursor.getColumnIndex("totalMarks"));
-                score.Level = cursor.getInt(cursor.getColumnIndex("level"));
                 score.StartTime = cursor.getString(cursor.getColumnIndex("startDateTime"));
                 score.EndTime = cursor.getString(cursor.getColumnIndex("endDateTime"));
 
                 scoreList.add(score);
+
                 cursor.moveToNext();
                 db.close();
             }

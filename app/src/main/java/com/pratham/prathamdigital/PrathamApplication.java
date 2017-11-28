@@ -5,6 +5,8 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 
+import com.pratham.prathamdigital.util.ConnectivityReceiver;
+
 import java.util.UUID;
 
 /**
@@ -18,6 +20,14 @@ public class PrathamApplication extends Application {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        mInstance = this;
+    }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -25,8 +35,13 @@ public class PrathamApplication extends Application {
     }
 
     public static String sessionId = UUID.randomUUID().toString();
+
     public static synchronized PrathamApplication getInstance() {
         return mInstance;
+    }
+
+    public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener) {
+        ConnectivityReceiver.connectivityReceiverListener = listener;
     }
 
 }

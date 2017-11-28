@@ -32,7 +32,7 @@
         <item>ವಯಸ್ಸು 8-14\nನೋಡಿ ಕಲಿಯಿರಿ</item>
     </string-array>
     <string-array name="languages">
-        <!--<item>English</item>-->
+        <item>English</item>
         <item>हिंदी</item>
         <item>मराठी</item>
         <item>ಕನ್ನಡ</item>
@@ -46,7 +46,7 @@
         <!--<item>മലയാളം</item>-->
     </string-array>
     <string-array name="main_languages">
-        <!--<item>English</item>-->
+        <item>English</item>
         <item>Hindi</item>
         <item>Marathi</item>
         <item>Kannada</item>

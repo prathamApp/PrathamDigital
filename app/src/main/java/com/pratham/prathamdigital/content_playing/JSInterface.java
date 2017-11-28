@@ -7,13 +7,16 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
+import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
+import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.RadioGroup;
 
 import com.pratham.prathamdigital.activities.Activity_Main;
 import com.pratham.prathamdigital.interfaces.Interface_Score;
+import com.pratham.prathamdigital.models.Modal_Score;
 
 import java.io.File;
 import java.util.Locale;
@@ -351,13 +354,19 @@ public class JSInterface extends Activity {
         textToSp.stopSpeakerDuringJS();
     }
 
+    public String formatCustomDate(String[] splitedDate, String delimiter){
+        for (int k=0;k<splitedDate.length;k++) {
+            if (Integer.parseInt(splitedDate[k]) < 10) {
+                splitedDate[k]= "0"+splitedDate[k];
+            }
+        }
+        return TextUtils.join(delimiter,splitedDate);
+    }
+
     @JavascriptInterface
     public void addScore(String tempResId, int questionId, int scorefromGame, int totalMarks, int level, String startTime) {
-        tempResId = "";
         try {
             interface_score.setScore(scorefromGame, totalMarks);
-//            Activity_WebView.scoredMarks += scorefromGame;
-//            Activity_WebView.totalMarks += totalMarks;
         } catch (Exception e) {
             e.printStackTrace();
         }
