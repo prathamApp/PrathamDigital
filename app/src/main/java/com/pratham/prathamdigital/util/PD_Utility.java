@@ -1463,4 +1463,17 @@ public class PD_Utility {
             return "mdpi";
         }
     }
+
+    public static String getCurrentVersion(Context context) {
+        PackageManager pm = context.getPackageManager();
+        PackageInfo pInfo = null;
+        try {
+            pInfo = pm.getPackageInfo(context.getPackageName(), 0);
+
+        } catch (PackageManager.NameNotFoundException e1) {
+            e1.printStackTrace();
+        }
+        String currentVersion = pInfo.versionName;
+        return currentVersion;
+    }
 }

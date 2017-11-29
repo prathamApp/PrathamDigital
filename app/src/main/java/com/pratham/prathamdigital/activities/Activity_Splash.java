@@ -1,6 +1,9 @@
 package com.pratham.prathamdigital.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -16,7 +19,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -30,13 +32,14 @@ import com.pratham.prathamdigital.util.PD_Constant;
 import com.pratham.prathamdigital.util.PD_Utility;
 
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 
 public class Activity_Splash extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, VolleyResult_JSON {
@@ -80,63 +83,47 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
 //        }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-//        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
-//        if (opr.isDone()) {
-//            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
-//            // and the GoogleSignInResult will be available instantly.
-//            Log.d("splash:::", "Got cached sign-in");
-//            GoogleSignInResult result = opr.get();
-//            handleSignInResult(result);
-//        } else {
-//            // If the user has not previously signed in on this device or the sign-in has expired,
-//            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
-//            // single sign-on will occur in this branch.
-//            Log.d("splash:::", "else sign-in");
-//            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-//                @Override
-//                public void onResult(GoogleSignInResult googleSignInResult) {
-//                    handleSignInResult(googleSignInResult);
-//                }
-//            });
-//        }
+    private void checkVersion() {
+        String latestVersion = "";
+        String currentVersion = PD_Utility.getCurrentVersion(Activity_Splash.this);
+        Log.d("version::", "Current version = " + currentVersion);
+        try {
+            latestVersion = new GetLatestVersion().execute().get();
+            Log.d("version::", "Latest version = " + latestVersion);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        if ((!currentVersion.equals(latestVersion)) && latestVersion != null) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Upgrade to a better version !");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Click button action
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.pratham.prathamdigital")));
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
+        } else {
+            if (!isInitialized) {
+                if (gdb.getGoogleID().equalsIgnoreCase("")) {
+                    insertGoogleData();
+                } else {
+                    updateUI(true, null);
+                }
+                isInitialized = true;
+            }
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isInitialized) {
-            if (gdb.getGoogleID().equalsIgnoreCase("")) {
-//                                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-//                                startActivityForResult(signInIntent, RC_SIGN_IN);
-                insertGoogleData();
-            } else {
-                updateUI(true, null);
-            }
-//            img_logo.getPathAnimator()
-//                    .delay(500)
-//                    .duration(3000)
-//                    .listenerStart(new PathView.AnimatorBuilder.ListenerStart() {
-//                        @Override
-//                        public void onAnimationStart() {
-//
-//                        }
-//                    })
-//                    .listenerEnd(new PathView.AnimatorBuilder.ListenerEnd() {
-//                        @Override
-//                        public void onAnimationEnd() {
-//
-//                        }
-//                    })
-//                    .interpolator(new AccelerateDecelerateInterpolator())
-//                    .start();
-//            img_logo.useNaturalColors();
-//            img_logo.setFillAfter(true);
-            isInitialized = true;
-        }
+        checkVersion();
     }
 
     private void insertGoogleData() {
@@ -168,29 +155,8 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
         }
     }
 
-    @OnClick(R.id.btn_google_login)
-    public void next() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-//        if (requestCode == RC_SIGN_IN) {
-//            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-//            Log.d("status::", "" + result.getStatus().getStatusCode());
-//            handleSignInResult(result);
-//        } else {
-//            Animation expandIn = AnimationUtils.loadAnimation(Activity_Splash.this, R.anim.pop_in);
-//            btn_google_login.startAnimation(expandIn);
-//            btn_google_login.setVisibility(View.VISIBLE);
-//        }
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
@@ -297,6 +263,39 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
             if (dialog != null) {
                 dialog.dismiss();
             }
+        }
+    }
+
+    private class GetLatestVersion extends AsyncTask<String, String, String> {
+        String latestVersion;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                //It retrieves the latest version by scraping the content of current version from play store at runtime
+                String urlOfAppFromPlayStore = "https://play.google.com/store/apps/details?id=com.pratham.prathamdigital";
+                // Document doc = w3cDom.fromJsoup(Jsoup.connect(urlOfAppFromPlayStore).get());
+                //Log.d(TAG,"playstore doc "+getStringFromDoc(doc));
+                latestVersion = Jsoup.connect("https://play.google.com/store/apps/details?id=" + "com.pratham.prathamdigital" + "&hl=en")
+                        .timeout(30000)
+                        .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
+                        .referrer("http://www.google.com")
+                        .get()
+                        .select("div[itemprop=softwareVersion]")
+                        .first()
+                        .ownText();
+                Log.d("latest::", latestVersion);
+                //latestVersion = doc.getElementsByTagName("softwareVersion").first().text();
+                //latestVersion = "1.5";
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return latestVersion;
         }
     }
 }

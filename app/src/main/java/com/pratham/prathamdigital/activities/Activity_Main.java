@@ -16,7 +16,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v4.app.ActivityCompat;
@@ -87,9 +86,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -234,16 +231,12 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         // Location
         // First we need to check availability of play services
         if (checkPlayServices()) {
-
             // Building the GoogleApi client
             buildGoogleApiClient();
             // createLocationRequest();
         }
-
-
         // Checking Internet Connection
         checkConnection();
-
         if (isConnected) {
             // Push the new Score to Server if connected to Internet
             try {
@@ -252,15 +245,11 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-            // No Internet
         }
-
 /*
         // NO LONGER NEEDED AS WE ARE DOING THE SAME THING IN onResume() but STILL DONT DELETE
         // Show location
          displayLocation();
-
         // Toggling the periodic location updates
        new Handler().postDelayed(new Runnable() {
             @Override
@@ -270,12 +259,10 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 togglePeriodicLocationUpdates();
             }
         }, 2000);*/
-
     }
 
     // Push the new Score to Server if connected to Internet
     public class PushDataToServer extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected void onPreExecute() {
             // Runs on UI thread
@@ -292,7 +279,6 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         protected void onPostExecute(Void res) {
             // Runs on the UI thread
         }
-
     }
 
     // Check internet Connection
@@ -305,17 +291,13 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         // Get New Data from DB(sentFlag = 0)
         DatabaseHandler sdb = new DatabaseHandler(Activity_Main.this);
         List<Modal_Score> scores = sdb.getNewScores();
-
         if (scores.size() > 0) {
-
             JSONArray scoreData = new JSONArray();
             {
                 try {
-
                     for (int i = 0; i < scores.size(); i++) {
                         JSONObject _obj = new JSONObject();
                         Modal_Score scoreObj = (Modal_Score) scores.get(i);
-
                         try {
                             _obj.put("sessionId", scoreObj.SessionId);
                             _obj.put("deviceId", scoreObj.DeviceId);
@@ -327,19 +309,15 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                             _obj.put("startDateTime", scoreObj.StartTime);
                             _obj.put("endDateTime", scoreObj.EndTime);
                             _obj.put("level", scoreObj.Level);
-
                             scoreData.put(_obj);
-
                             // creating json file
 //                        String requestString = "{  \"scoreData\": " + scoreData + "}";
 //                        String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 //                        WriteSettings(Activity_Main.this, requestString, "pushNewDataToServer-" + (deviceId.equals(null) ? "0000" : deviceId));
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-
                     // Pushing File to Server
                     Log.d("array:::", scoreData.toString());
                     new PD_ApiRequest(Activity_Main.this, Activity_Main.this)
@@ -347,68 +325,28 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
-
         }
     }
-
-
-    // Json File Creation for Pushing Data
-    // Creating file in Transferred Usage
-    public void WriteSettings(Context context, String data, String fName) {
-
-        FileOutputStream fOut = null;
-        OutputStreamWriter osw = null;
-
-        try {
-            String MainPath = Environment.getExternalStorageDirectory() + fName + ".json";
-            File file = new File(MainPath);
-            try {
-                path.add(MainPath);
-                fOut = new FileOutputStream(file);
-                osw = new OutputStreamWriter(fOut);
-                osw.write(data);
-                osw.flush();
-                osw.close();
-                fOut.close();
-
-            } catch (Exception e) {
-            } finally {
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            //Toast.makeText(context, "Settings not saved", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 
     // Method to get Address
-
     public Address getAddress(double latitude, double longitude) {
         Geocoder geocoder;
         List<Address> addresses;
         geocoder = new Geocoder(this, Locale.getDefault());
-
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
             return addresses.get(0);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return null;
-
     }
 
     /**
      * Method to display the location on UI
      */
     private void displayLocation() {
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -420,14 +358,11 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
             return;
         }
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
         if (mLastLocation != null) {
             double latitude = mLastLocation.getLatitude();
             double longitude = mLastLocation.getLongitude();
-
             // pass latitude & longitude to address to get the Location Name
             Address locationAddress = getAddress(latitude, longitude);
-
             if (locationAddress != null) {
                 String address = locationAddress.getAddressLine(0);
                 String address1 = locationAddress.getAddressLine(1);
@@ -435,56 +370,23 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 String state = locationAddress.getAdminArea();
                 String country = locationAddress.getCountryName();
                 String postalCode = locationAddress.getPostalCode();
-
                 String currentLocation;
-
                 if (!TextUtils.isEmpty(address)) {
                     currentLocation = address;
-
-//                    if (!TextUtils.isEmpty(address1))
-//                        currentLocation += "\n" + address1;
-//
-//                    if (!TextUtils.isEmpty(city)) {
-//                        currentLocation += "\n" + city;
-//
-//                        if (!TextUtils.isEmpty(postalCode))
-//                            currentLocation += " - " + postalCode;
-//                    } else {
-//                        if (!TextUtils.isEmpty(postalCode))
-//                            currentLocation += "\n" + postalCode;
-//                    }
-//
-//                    if (!TextUtils.isEmpty(state))
-//                        currentLocation += "\n" + state;
-//
-//                    if (!TextUtils.isEmpty(country))
-//                        currentLocation += "\n" + country;
-
-                    // Toast.makeText(this, "" + currentLocation, Toast.LENGTH_LONG).show();
-
-                    // Store Address in Shared Pref for offline Usage
                     SharedPreferences.Editor editor = pref.edit();
-
                     // Clear Prev Data
                     editor.clear();
                     editor.commit(); // commit changes
-
                     // Store Last Known Location
                     editor.putString("prefLocation", currentLocation); // Storing string
                     editor.commit(); // commit changes
-
                 }
-
             }
-
             //Toast.makeText(this, "lat : " + latitude + ", lon : " + longitude, Toast.LENGTH_SHORT).show();
-
         } else {
             // Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_SHORT).show();
         }
     }
-
-    // Location
 
     /**
      * Creating google api client object
@@ -541,36 +443,6 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     }
 
 
-    // Update Location
-
-    /**
-     * Method to toggle periodic location updates
-     */
-    private void togglePeriodicLocationUpdates() {
-        if (!mRequestingLocationUpdates) {
-            // Changing the button text
-            //btnStartLocationUpdates.setText(getString(R.string.btn_stop_location_updates));
-
-            mRequestingLocationUpdates = true;
-
-            // Starting the location updates
-            startLocationUpdates();
-
-            Log.d(TAG, "Periodic location updates started!");
-
-        } else {
-            // Changing the button text
-            //   btnStartLocationUpdates.setText(getString(R.string.btn_start_location_updates));
-
-            mRequestingLocationUpdates = false;
-
-            // Stopping the location updates
-            stopLocationUpdates();
-
-            Log.d(TAG, "Periodic location updates stopped!");
-        }
-    }
-
     /**
      * Creating location request object
      */
@@ -586,7 +458,6 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
      * Starting the location updates
      */
     protected void startLocationUpdates() {
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -598,7 +469,6 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
     }
 
     /**
@@ -610,46 +480,32 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
 
     @Override
     public void onConnected(Bundle arg0) {
-
         // Once connected with google api, get the location
         displayLocation();
-
         if (mRequestingLocationUpdates) {
             startLocationUpdates();
         }
     }
 
-
     @Override
     public void onLocationChanged(Location location) {
         // Assign the new location
         mLastLocation = location;
-
-        Toast.makeText(getApplicationContext(), "Location changed!",
-                Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(getApplicationContext(), "Location changed!", Toast.LENGTH_SHORT).show();
         // Displaying the new location on UI
         displayLocation();
     }
 
-
-
-
-/*   -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*   */
-
     @Override
     protected void onResume() {
         super.onResume();
-
         PrathamApplication.getInstance().setConnectivityListener(this);
-
         // Location
         checkPlayServices();
         // Resuming the periodic location updates
         if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
             startLocationUpdates();
         }
-
         NetworkChangeReceiver.getObservable().addObserver(this);
         if ((!isInitialized)) {
             layoutManager = new GalleryLayoutManager(GalleryLayoutManager.VERTICAL);
@@ -671,7 +527,6 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 fab_my_library.performClick();
             }
         }
-
     }
 
     private void ShowIntro(final int target) {
@@ -915,40 +770,6 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         startActivityForResult(intent, ACTIVITY_LANGUAGE, options.toBundle());
     }
 
-
-
-    /*@OnClick(R.id.c_fab_search)
-    public void importData() {
-        //Creating the instance of PopupMenu
-        PopupMenu popup = new PopupMenu(Activity_Main.this, fab_search);
-        //Inflating the Popup using xml file
-        popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
-
-        //registering popup with OnMenuItemClickListener
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                // To Do on Import button Clicked
-
-                // File Picker
-
-                Toast.makeText(Activity_Main.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-
-        popup.show();//showing popup menu
-
-    }*/
-
-
-//    @OnClick(R.id.c_fab_search)
-//    public void setFabSearch() {
-//        Intent intent = new Intent(Activity_Main.this, Activity_Search.class);
-//        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Main.this,
-//                fab_search, "transition_search");
-//        startActivityForResult(intent, ACTIVITY_SEARCH, options.toBundle());
-//    }
-
     @OnClick(R.id.fab_my_library)
     public void setFabLibrary() {
         if (!db.CheckIntroShownStatus(googleId)) {
@@ -1025,12 +846,9 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                             public void permissionGranted() {
                                 openGameInWebView(subContents.get(position));
                             }
-
                             @Override
                             public void permissionDenied() {
-
                             }
-
                             @Override
                             public void permissionForeverDenied() {
                                 TastyToast.makeText(getApplicationContext(), getString(R.string.provide_audio_permission), TastyToast.LENGTH_LONG,
@@ -1116,7 +934,6 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
 
     @Override
     public void levelButtonClicked(int position) {
-
     }
 
     @Override
@@ -1143,10 +960,8 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                         }
                     }
                 }
-
                 @Override
                 public void permissionDenied() {
-
                 }
 
                 @Override
@@ -1300,7 +1115,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 }
             } else if (requestType.equalsIgnoreCase("SCORE")) {
                 // Reset sentFlag to 1 if Pushed
-                Log.d("success:::","score");
+                Log.d("success:::", "score");
                 resetSentFlag();
             }
         } catch (JsonSyntaxException e) {
@@ -1497,7 +1312,6 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
 
     @Override
     public void lengthOfTheFile(int length) {
-
     }
 
     int back = 0;
@@ -1535,12 +1349,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         }
     }
 
-    private void uploadScoreToServer() {
-
-    }
-
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
-
     }
 }
