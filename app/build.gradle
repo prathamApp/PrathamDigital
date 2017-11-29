@@ -61,6 +61,7 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+    compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.eftimoff:android-pathview:1.0.8@aar'
     compile 'com.aloj.progress:download-progress:1.0'
     compile 'com.facebook.rebound:rebound:0.3.8'
