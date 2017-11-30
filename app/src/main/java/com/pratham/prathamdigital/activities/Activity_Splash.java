@@ -96,7 +96,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
             e.printStackTrace();
         }
         // Force Update Code
-      /*  if ((!currentVersion.equals(latestVersion)) && latestVersion != null) {
+        if ((!currentVersion.equals(latestVersion)) && latestVersion != null) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Upgrade to a better version !");
             builder.setCancelable(false);
@@ -109,7 +109,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
                 }
             });
             builder.show();
-        } else */{
+        } else {
             if (!isInitialized) {
                 if (gdb.getGoogleID().equalsIgnoreCase("")) {
                     insertGoogleData();
@@ -242,7 +242,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
             Log.d("response:::", response);
             Log.d("response:::", "requestType:: " + requestType);
             gdb.insertNewGoogleUser(gObj);
-           // Toast.makeText(Activity_Splash.this, "Welcome " + personName, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(Activity_Splash.this, "Welcome " + personName, Toast.LENGTH_SHORT).show();
             updateUI(true, null);
         } catch (Exception e) {
             e.printStackTrace();

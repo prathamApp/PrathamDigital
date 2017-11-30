@@ -128,8 +128,8 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     RecyclerView gallery_rv;
     @BindView(R.id.c_fab_language)
     FloatingActionButton fab_language;
-    @BindView(R.id.c_fab_search) // import Function
-            FloatingActionButton fab_search;
+//    @BindView(R.id.c_fab_search)
+//    FloatingActionButton fab_search;
     @BindView(R.id.fab_recom)
     FloatingActionButton fab_recom;
     @BindView(R.id.fab_my_library)
@@ -787,28 +787,28 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         initializeGalleryAdapater(isLibrary);
     }
 
-    @OnClick(R.id.c_fab_search)
-    public void importData() {
-        //Creating the instance of PopupMenu
-        PopupMenu popup = new PopupMenu(Activity_Main.this, fab_search);
-        //Inflating the Popup using xml file
-        popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
-
-        //registering popup with OnMenuItemClickListener
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                // To Do on Import button Clicked
-
-                // File Picker
-
-                Toast.makeText(Activity_Main.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-
-        popup.show();//showing popup menu
-
-    }
+//    @OnClick(R.id.c_fab_search)
+//    public void importData() {
+//        //Creating the instance of PopupMenu
+//        PopupMenu popup = new PopupMenu(Activity_Main.this, fab_search);
+//        //Inflating the Popup using xml file
+//        popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+//
+//        //registering popup with OnMenuItemClickListener
+//        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            public boolean onMenuItemClick(MenuItem item) {
+//                // To Do on Import button Clicked
+//
+//                // File Picker
+//
+//                Toast.makeText(Activity_Main.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+//                return true;
+//            }
+//        });
+//
+//        popup.show();//showing popup menu
+//
+//    }
 
 
 //    @OnClick(R.id.c_fab_search)
