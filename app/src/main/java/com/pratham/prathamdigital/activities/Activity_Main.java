@@ -26,10 +26,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -126,8 +128,8 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     RecyclerView gallery_rv;
     @BindView(R.id.c_fab_language)
     FloatingActionButton fab_language;
-    //    @BindView(R.id.c_fab_search)        IMPORT FUNCTION
-//    FloatingActionButton fab_search;
+    @BindView(R.id.c_fab_search) // import Function
+            FloatingActionButton fab_search;
     @BindView(R.id.fab_recom)
     FloatingActionButton fab_recom;
     @BindView(R.id.fab_my_library)
@@ -380,7 +382,9 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                     // Store Last Known Location
                     editor.putString("prefLocation", currentLocation); // Storing string
                     editor.commit(); // commit changes
+                    //Toast.makeText(this, currentLocation, Toast.LENGTH_SHORT).show();
                 }
+
             }
             //Toast.makeText(this, "lat : " + latitude + ", lon : " + longitude, Toast.LENGTH_SHORT).show();
         } else {
@@ -783,6 +787,38 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         initializeGalleryAdapater(isLibrary);
     }
 
+    @OnClick(R.id.c_fab_search)
+    public void importData() {
+        //Creating the instance of PopupMenu
+        PopupMenu popup = new PopupMenu(Activity_Main.this, fab_search);
+        //Inflating the Popup using xml file
+        popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+
+        //registering popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                // To Do on Import button Clicked
+
+                // File Picker
+
+                Toast.makeText(Activity_Main.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        popup.show();//showing popup menu
+
+    }
+
+
+//    @OnClick(R.id.c_fab_search)
+//    public void setFabSearch() {
+//        Intent intent = new Intent(Activity_Main.this, Activity_Search.class);
+//        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(Activity_Main.this,
+//                fab_search, "transition_search");
+//        startActivityForResult(intent, ACTIVITY_SEARCH, options.toBundle());
+//    }
+
     @OnClick(R.id.fab_recom)
     public void setFabRecom() {
         if (!db.CheckIntroShownStatus(googleId)) {
@@ -846,9 +882,11 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                             public void permissionGranted() {
                                 openGameInWebView(subContents.get(position));
                             }
+
                             @Override
                             public void permissionDenied() {
                             }
+
                             @Override
                             public void permissionForeverDenied() {
                                 TastyToast.makeText(getApplicationContext(), getString(R.string.provide_audio_permission), TastyToast.LENGTH_LONG,
@@ -960,6 +998,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                         }
                     }
                 }
+
                 @Override
                 public void permissionDenied() {
                 }
