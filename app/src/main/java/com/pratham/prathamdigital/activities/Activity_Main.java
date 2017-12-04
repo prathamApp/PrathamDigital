@@ -128,7 +128,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     RecyclerView gallery_rv;
     @BindView(R.id.c_fab_language)
     FloatingActionButton fab_language;
-//    @BindView(R.id.c_fab_search)
+    //    @BindView(R.id.c_fab_search)
 //    FloatingActionButton fab_search;
     @BindView(R.id.fab_recom)
     FloatingActionButton fab_recom;
@@ -226,10 +226,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         googleId = db.getGoogleID();
         Log.d("googleId::", googleId);
         isInitialized = false;
-
-
         pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
-
         // Location
         // First we need to check availability of play services
         if (checkPlayServices()) {
@@ -293,7 +290,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         // Get New Data from DB(sentFlag = 0)
         DatabaseHandler sdb = new DatabaseHandler(Activity_Main.this);
         List<Modal_Score> scores = sdb.getNewScores();
-        if (scores.size() > 0) {
+        if (scores != null && scores.size() > 0) {
             JSONArray scoreData = new JSONArray();
             {
                 try {
@@ -503,6 +500,8 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     @Override
     protected void onResume() {
         super.onResume();
+
+
         PrathamApplication.getInstance().setConnectivityListener(this);
         // Location
         checkPlayServices();
@@ -1269,7 +1268,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     @Override
     public void onPause() {
         super.onPause();
-        stopLocationUpdates();
+//        stopLocationUpdates();
         NetworkChangeReceiver.getObservable().deleteObserver(this);
     }
 
