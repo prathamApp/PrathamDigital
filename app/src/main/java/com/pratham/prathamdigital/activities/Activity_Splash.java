@@ -152,7 +152,7 @@ public class Activity_Splash extends AppCompatActivity implements GoogleApiClien
                 }
             }, 2000);
         } else {
-            Toast.makeText(Activity_Splash.this, "Check Internet Connectivity", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Activity_Splash.this, "Check Internet Connectivity", Toast.LENGTH_LONG).show();
         }
     }
 

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -128,8 +130,8 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     RecyclerView gallery_rv;
     @BindView(R.id.c_fab_language)
     FloatingActionButton fab_language;
-    //    @BindView(R.id.c_fab_search)
-//    FloatingActionButton fab_search;
+    @BindView(R.id.c_fab_search) // Import Data from Device
+            FloatingActionButton fab_search;
     @BindView(R.id.fab_recom)
     FloatingActionButton fab_recom;
     @BindView(R.id.fab_my_library)
@@ -227,7 +229,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         Log.d("googleId::", googleId);
         isInitialized = false;
         pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
-        // Location
+
         // First we need to check availability of play services
         if (checkPlayServices()) {
             // Building the GoogleApi client
@@ -258,6 +260,37 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                 togglePeriodicLocationUpdates();
             }
         }, 2000);*/
+    }
+
+
+    // Check gps is on or
+    // Check gps is on or
+    public void locationStatusCheck() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+
+        }
+    }
+
+    // Turn on Gps Prompt
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it ?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     // Push the new Score to Server if connected to Internet
@@ -380,11 +413,13 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
                     editor.putString("prefLocation", currentLocation); // Storing string
                     editor.commit(); // commit changes
                     //Toast.makeText(this, currentLocation, Toast.LENGTH_SHORT).show();
+                    Log.d("location :::", currentLocation);
                 }
 
             }
             //Toast.makeText(this, "lat : " + latitude + ", lon : " + longitude, Toast.LENGTH_SHORT).show();
         } else {
+            Log.d("NOlocation :::", "else block :: couldn't get the location");
             // Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_SHORT).show();
         }
     }
@@ -483,6 +518,7 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     public void onConnected(Bundle arg0) {
         // Once connected with google api, get the location
         displayLocation();
+
         if (mRequestingLocationUpdates) {
             startLocationUpdates();
         }
@@ -503,6 +539,10 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
 
 
         PrathamApplication.getInstance().setConnectivityListener(this);
+
+        // Location
+        locationStatusCheck();
+
         // Location
         checkPlayServices();
         // Resuming the periodic location updates
@@ -786,28 +826,28 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         initializeGalleryAdapater(isLibrary);
     }
 
-//    @OnClick(R.id.c_fab_search)
-//    public void importData() {
-//        //Creating the instance of PopupMenu
-//        PopupMenu popup = new PopupMenu(Activity_Main.this, fab_search);
-//        //Inflating the Popup using xml file
-//        popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
-//
-//        //registering popup with OnMenuItemClickListener
-//        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//            public boolean onMenuItemClick(MenuItem item) {
-//                // To Do on Import button Clicked
-//
-//                // File Picker
-//
-//                Toast.makeText(Activity_Main.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
-//                return true;
-//            }
-//        });
-//
-//        popup.show();//showing popup menu
-//
-//    }
+    @OnClick(R.id.c_fab_search)
+    public void importData() {
+        //Creating the instance of PopupMenu
+        PopupMenu popup = new PopupMenu(Activity_Main.this, fab_search);
+        //Inflating the Popup using xml file
+        popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+
+        //registering popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                // To Do on Import button Clicked
+
+                // File Picker
+
+                Toast.makeText(Activity_Main.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        popup.show();//showing popup menu
+
+    }
 
 
 //    @OnClick(R.id.c_fab_search)
