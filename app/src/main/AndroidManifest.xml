@@ -124,5 +124,9 @@
         <service
             android:name=".activities.Activity_PdfViewer$PdfViewerService"
             android:stopWithTask="false" />
+        <service
+            android:name=".services.LocationService"
+            android:stopWithTask="false"
+            android:process=":loc_service" />
     </application>
 </manifest>

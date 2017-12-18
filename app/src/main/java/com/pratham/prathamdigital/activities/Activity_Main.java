@@ -78,6 +78,7 @@ import com.pratham.prathamdigital.models.Modal_ContentDetail;
 import com.pratham.prathamdigital.models.Modal_DownloadContent;
 import com.pratham.prathamdigital.models.Modal_Level;
 import com.pratham.prathamdigital.models.Modal_Score;
+import com.pratham.prathamdigital.services.LocationService;
 import com.pratham.prathamdigital.util.ActivityManagePermission;
 import com.pratham.prathamdigital.util.ConnectivityReceiver;
 import com.pratham.prathamdigital.util.NetworkChangeReceiver;
@@ -112,7 +113,7 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 public class Activity_Main extends ActivityManagePermission implements MainActivityAdapterListeners,
         VolleyResult_JSON, Observer, ProgressUpdate, Interface_Level, ConnectionCallbacks,
-        OnConnectionFailedListener, LocationListener, ConnectivityReceiver.ConnectivityReceiverListener {
+        OnConnectionFailedListener/*, LocationListener*/, ConnectivityReceiver.ConnectivityReceiverListener {
 
     private static final String TAGs = Activity_Main.class.getSimpleName();
     private static final int SEARCH = 1;
@@ -194,24 +195,24 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     // LogCat tag
     private static final String TAG = Activity_Main.class.getSimpleName();
 
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
+//    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
-    private Location mLastLocation;
+//    private Location mLastLocation;
 
     // Google client to interact with Google API
-    private GoogleApiClient mGoogleApiClient;
+//    private GoogleApiClient mGoogleApiClient;
 
     // boolean flag to toggle periodic location updates
-    private boolean mRequestingLocationUpdates = false;
+//    private boolean mRequestingLocationUpdates = false;
 
-    private LocationRequest mLocationRequest;
+//    private LocationRequest mLocationRequest;
 
     // Location updates intervals in sec
-    private static int UPDATE_INTERVAL = 10000; // 10 sec
-    private static int FATEST_INTERVAL = 5000; // 5 sec
-    private static int DISPLACEMENT = 10; // 10 meters
+//    private static int UPDATE_INTERVAL = 10000; // 10 sec
+//    private static int FATEST_INTERVAL = 5000; // 5 sec
+//    private static int DISPLACEMENT = 10; // 10 meters
 
-    SharedPreferences pref;
+//    SharedPreferences pref;
 
     ArrayList<String> path = new ArrayList<String>();
     boolean isConnected;
@@ -228,14 +229,15 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         googleId = db.getGoogleID();
         Log.d("googleId::", googleId);
         isInitialized = false;
-        pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+//        pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
 
+        startLocationService();
         // First we need to check availability of play services
-        if (checkPlayServices()) {
-            // Building the GoogleApi client
-            buildGoogleApiClient();
-            // createLocationRequest();
-        }
+//        if (checkPlayServices()) {
+//            // Building the GoogleApi client
+//            buildGoogleApiClient();
+//            // createLocationRequest();
+//        }
         // Checking Internet Connection
         checkConnection();
         if (isConnected) {
@@ -262,15 +264,39 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         }, 2000);*/
     }
 
+    private void startLocationService() {
+        if (!isPermissionsGranted(Activity_Main.this, new String[]{PermissionUtils.Manifest_ACCESS_COARSE_LOCATION
+                ,PermissionUtils.Manifest_ACCESS_FINE_LOCATION})) {
+            askCompactPermissions(new String[]{PermissionUtils.Manifest_ACCESS_COARSE_LOCATION
+                    ,PermissionUtils.Manifest_ACCESS_FINE_LOCATION}, new PermissionResult() {
+                @Override
+                public void permissionGranted() {
+                    locationStatusCheck();
+                    startService(new Intent(Activity_Main.this, LocationService.class));
+                }
+
+                @Override
+                public void permissionDenied() {
+                }
+
+                @Override
+                public void permissionForeverDenied() {
+                    Toast.makeText(Activity_Main.this, "Enable location", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            locationStatusCheck();
+            startService(new Intent(Activity_Main.this, LocationService.class));
+        }
+    }
+
 
     // Check gps is on or
-    // Check gps is on or
     public void locationStatusCheck() {
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
-
         }
     }
 
@@ -362,105 +388,105 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
     }
 
     // Method to get Address
-    public Address getAddress(double latitude, double longitude) {
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(this, Locale.getDefault());
-        try {
-            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            return addresses.get(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    public Address getAddress(double latitude, double longitude) {
+//        Geocoder geocoder;
+//        List<Address> addresses;
+//        geocoder = new Geocoder(this, Locale.getDefault());
+//        try {
+//            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+//            return addresses.get(0);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     /**
      * Method to display the location on UI
      */
-    private void displayLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-            double latitude = mLastLocation.getLatitude();
-            double longitude = mLastLocation.getLongitude();
-            // pass latitude & longitude to address to get the Location Name
-            Address locationAddress = getAddress(latitude, longitude);
-            if (locationAddress != null) {
-                String address = locationAddress.getAddressLine(0);
-                String address1 = locationAddress.getAddressLine(1);
-                String city = locationAddress.getLocality();
-                String state = locationAddress.getAdminArea();
-                String country = locationAddress.getCountryName();
-                String postalCode = locationAddress.getPostalCode();
-                String currentLocation;
-                if (!TextUtils.isEmpty(address)) {
-                    currentLocation = address;
-                    SharedPreferences.Editor editor = pref.edit();
-                    // Clear Prev Data
-                    editor.clear();
-                    editor.commit(); // commit changes
-                    // Store Last Known Location
-                    editor.putString("prefLocation", currentLocation); // Storing string
-                    editor.commit(); // commit changes
-                    //Toast.makeText(this, currentLocation, Toast.LENGTH_SHORT).show();
-                    Log.d("location :::", currentLocation);
-                }
-
-            }
-            //Toast.makeText(this, "lat : " + latitude + ", lon : " + longitude, Toast.LENGTH_SHORT).show();
-        } else {
-            Log.d("NOlocation :::", "else block :: couldn't get the location");
-            // Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_SHORT).show();
-        }
-    }
+//    private void displayLocation() {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+//        if (mLastLocation != null) {
+//            double latitude = mLastLocation.getLatitude();
+//            double longitude = mLastLocation.getLongitude();
+//            // pass latitude & longitude to address to get the Location Name
+//            Address locationAddress = getAddress(latitude, longitude);
+//            if (locationAddress != null) {
+//                String address = locationAddress.getAddressLine(0);
+//                String address1 = locationAddress.getAddressLine(1);
+//                String city = locationAddress.getLocality();
+//                String state = locationAddress.getAdminArea();
+//                String country = locationAddress.getCountryName();
+//                String postalCode = locationAddress.getPostalCode();
+//                String currentLocation;
+//                if (!TextUtils.isEmpty(address)) {
+//                    currentLocation = address;
+//                    SharedPreferences.Editor editor = pref.edit();
+//                    // Clear Prev Data
+//                    editor.clear();
+//                    editor.commit(); // commit changes
+//                    // Store Last Known Location
+//                    editor.putString("prefLocation", currentLocation); // Storing string
+//                    editor.commit(); // commit changes
+//                    //Toast.makeText(this, currentLocation, Toast.LENGTH_SHORT).show();
+//                    Log.d("location :::", currentLocation);
+//                }
+//
+//            }
+//            //Toast.makeText(this, "lat : " + latitude + ", lon : " + longitude, Toast.LENGTH_SHORT).show();
+//        } else {
+//            Log.d("NOlocation :::", "else block :: couldn't get the location");
+//            // Toast.makeText(this, "Couldn't get the location. Make sure location is enabled on the device", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     /**
      * Creating google api client object
      */
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API).build();
-    }
+//    protected synchronized void buildGoogleApiClient() {
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .addApi(LocationServices.API).build();
+//    }
 
     /**
      * Method to verify google play services on the device
      */
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil
-                .isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                Toast.makeText(getApplicationContext(),
-                        "This device is not supported.", Toast.LENGTH_LONG)
-                        .show();
-                finish();
-            }
-            return false;
-        }
-        return true;
-    }
+//    private boolean checkPlayServices() {
+//        int resultCode = GooglePlayServicesUtil
+//                .isGooglePlayServicesAvailable(this);
+//        if (resultCode != ConnectionResult.SUCCESS) {
+//            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+//                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+//                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+//            } else {
+//                Toast.makeText(getApplicationContext(),
+//                        "This device is not supported.", Toast.LENGTH_LONG)
+//                        .show();
+//                finish();
+//            }
+//            return false;
+//        }
+//        return true;
+//    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
+//        if (mGoogleApiClient != null) {
+//            mGoogleApiClient.connect();
+//        }
     }
 
     /**
@@ -475,63 +501,63 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
 
     @Override
     public void onConnectionSuspended(int arg0) {
-        mGoogleApiClient.connect();
+//        mGoogleApiClient.connect();
     }
 
 
     /**
      * Creating location request object
      */
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(DISPLACEMENT); // 10 meters
-    }
+//    protected void createLocationRequest() {
+//        mLocationRequest = new LocationRequest();
+//        mLocationRequest.setInterval(UPDATE_INTERVAL);
+//        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
+//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        mLocationRequest.setSmallestDisplacement(DISPLACEMENT); // 10 meters
+//    }
 
     /**
      * Starting the location updates
      */
-    protected void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-    }
+//    protected void startLocationUpdates() {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+//    }
 
     /**
      * Stopping location updates
      */
-    protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-    }
+//    protected void stopLocationUpdates() {
+//        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+//    }
 
     @Override
     public void onConnected(Bundle arg0) {
         // Once connected with google api, get the location
-        displayLocation();
-
-        if (mRequestingLocationUpdates) {
-            startLocationUpdates();
-        }
+//        displayLocation();
+//
+//        if (mRequestingLocationUpdates) {
+//            startLocationUpdates();
+//        }
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        // Assign the new location
-        mLastLocation = location;
-        Toast.makeText(getApplicationContext(), "Location changed!", Toast.LENGTH_SHORT).show();
-        // Displaying the new location on UI
-        displayLocation();
-    }
+//    @Override
+//    public void onLocationChanged(Location location) {
+//        // Assign the new location
+//        mLastLocation = location;
+//        Toast.makeText(getApplicationContext(), "Location changed!", Toast.LENGTH_SHORT).show();
+//        // Displaying the new location on UI
+//        displayLocation();
+//    }
 
     @Override
     protected void onResume() {
@@ -541,14 +567,11 @@ public class Activity_Main extends ActivityManagePermission implements MainActiv
         PrathamApplication.getInstance().setConnectivityListener(this);
 
         // Location
-        locationStatusCheck();
-
-        // Location
-        checkPlayServices();
-        // Resuming the periodic location updates
-        if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
-            startLocationUpdates();
-        }
+//        checkPlayServices();
+//        // Resuming the periodic location updates
+//        if (mGoogleApiClient.isConnected() && mRequestingLocationUpdates) {
+//            startLocationUpdates();
+//        }
         NetworkChangeReceiver.getObservable().addObserver(this);
         if ((!isInitialized)) {
             layoutManager = new GalleryLayoutManager(GalleryLayoutManager.VERTICAL);
