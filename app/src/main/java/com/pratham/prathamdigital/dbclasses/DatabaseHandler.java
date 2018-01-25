@@ -175,7 +175,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
     }
 
-    // Get Local Scores which are not sent to server yet
+    // Get Local Scores which are not senst to server yet
     public List<Modal_Score> getNewScores() {
         try {
             db = this.getWritableDatabase();

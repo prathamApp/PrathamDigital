@@ -26,7 +26,7 @@ public class LocationService extends Service {
 
     private static final String TAG = "PRATHAM_GPS";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 5000;
+    private static final int LOCATION_INTERVAL = 3000;
     private static final float LOCATION_DISTANCE = 0f;
     LocationListener[] mLocationListeners = new LocationListener[]{
             new LocationListener(LocationManager.GPS_PROVIDER),
