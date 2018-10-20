@@ -51,7 +51,7 @@ public class RV_ContentAdapter extends RecyclerView.Adapter<RV_ContentAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.c_name.setText(sub_content.get(position).getNodetitle());
-        Picasso.with(context).load(sub_content.get(position).getNodeserverimage()).into(holder.item_content_img);
+        Picasso.get().load(sub_content.get(position).getNodeserverimage()).into(holder.item_content_img);
         if (sub_content.get(position).getNodetype().equalsIgnoreCase("Resource")) {
             if (selectedIndex != -1 && selectedIndex == position) {
             } else {

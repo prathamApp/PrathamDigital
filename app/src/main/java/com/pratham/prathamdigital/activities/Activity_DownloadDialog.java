@@ -69,7 +69,7 @@ public class Activity_DownloadDialog extends AppCompatActivity implements Volley
         setupEnterTransitions();
         if (PD_Utility.isInternetAvailable(this)) {
             d_name.setText(getIntent().getExtras().getString("title"));
-            Picasso.with(this).load(getIntent().getExtras().getString("image")).into(d_content_img);
+            Picasso.get().load(getIntent().getExtras().getString("image")).into(d_content_img);
             new PD_ApiRequest(this, this).getDataVolley("DOWNLOAD",
                     PD_Constant.URL.DOWNLOAD_RESOURCE.toString() + getIntent().getExtras().getInt("ID"));
         } else {
@@ -185,3 +185,4 @@ public class Activity_DownloadDialog extends AppCompatActivity implements Volley
 
     }
 }
+

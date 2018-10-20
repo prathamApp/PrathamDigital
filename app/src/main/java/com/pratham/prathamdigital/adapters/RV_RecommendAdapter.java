@@ -58,7 +58,7 @@ public class RV_RecommendAdapter extends RecyclerView.Adapter<RV_RecommendAdapte
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.recom_name.setText(sub_content.get(holder.getAdapterPosition()).getNodetitle());
         PD_Utility.setFont(context, holder.recom_name);
-        Picasso.with(context).load(sub_content.get(holder.getAdapterPosition()).getNodeserverimage()).into(holder.recommend_content_img);
+        Picasso.get().load(sub_content.get(holder.getAdapterPosition()).getNodeserverimage()).into(holder.recommend_content_img);
         if (sub_content.get(holder.getAdapterPosition()).isDownloading()) {
             holder.rl_reveal.setVisibility(View.VISIBLE);
         } else if (sub_content.get(holder.getAdapterPosition()).getNodetype().equalsIgnoreCase("Resource")) {
